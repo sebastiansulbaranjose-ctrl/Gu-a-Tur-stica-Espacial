@@ -1,0 +1,1562 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#040614">
+<meta name="description" content="ÓRBITA — Falla Temporal: minijuego de escaneo de anomalías y reparación de la nave.">
+<title>FALLA TEMPORAL // ÓRBITA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ===================================================================
+     DESIGN TOKENS
+  =================================================================== */
+  :root{
+    --ink:#f2f7ff;
+    --muted:#93a3c8;
+    --bg:#040614;
+    --line:rgba(128,177,255,.2);
+    --cyan:#52e7ff;
+    --purple:#ae73ff;
+    --green:#75f7ab;
+    --red:#ff6389;
+    --amber:#ffb454;
+    --mono:"Space Mono",monospace;
+    --display:"Orbitron",sans-serif;
+    --hud-alert:var(--red);
+    --hud-alert-soft:rgba(255,99,137,.16);
+  }
+  .ft-root.is-repaired{
+    --hud-alert:var(--cyan);
+    --hud-alert-soft:rgba(82,231,255,.16);
+  }
+
+  /* ===================================================================
+     RESET
+  =================================================================== */
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    min-height:100vh;
+    color:var(--ink);
+    background:var(--bg);
+    font-family:var(--mono);
+    overflow-x:hidden;
+  }
+  button{font:inherit;cursor:pointer;}
+  p{margin:0;}
+  h1,h2,h3{font-family:var(--display);margin:0;}
+
+  /* ===================================================================
+     ROOT SHELL
+  =================================================================== */
+  .ft-root{
+    position:relative;
+    min-height:100vh;
+    overflow:hidden;
+    isolation:isolate;
+  }
+  .ft-bg{
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    background:
+      radial-gradient(circle at 12% 20%,#d6f5ff 0 1px,transparent 1.6px),
+      radial-gradient(circle at 82% 14%,#fff 0 1px,transparent 1.4px),
+      radial-gradient(circle at 40% 62%,#a5e8ff 0 1px,transparent 1.6px),
+      radial-gradient(circle at 66% 80%,#fff 0 1px,transparent 1.5px),
+      radial-gradient(circle at 15% 20%,rgba(255,99,137,.08),transparent 32%),
+      radial-gradient(circle at 85% 75%,rgba(82,231,255,.06),transparent 38%),
+      var(--bg);
+    background-size:240px 240px,180px 180px,270px 270px,210px 210px,auto,auto,auto;
+    transition:background 1s ease;
+  }
+  .ft-root.is-repaired .ft-bg{
+    background:
+      radial-gradient(circle at 12% 20%,#d6f5ff 0 1px,transparent 1.6px),
+      radial-gradient(circle at 82% 14%,#fff 0 1px,transparent 1.4px),
+      radial-gradient(circle at 40% 62%,#a5e8ff 0 1px,transparent 1.6px),
+      radial-gradient(circle at 66% 80%,#fff 0 1px,transparent 1.5px),
+      radial-gradient(circle at 15% 20%,rgba(82,231,255,.08),transparent 32%),
+      radial-gradient(circle at 85% 75%,rgba(117,247,171,.07),transparent 38%),
+      var(--bg);
+    background-size:240px 240px,180px 180px,270px 270px,210px 210px,auto,auto,auto;
+  }
+  .ft-root.is-repaired .ft-strobe{opacity:0;}
+
+  .ft-phase{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:48px clamp(20px,5vw,80px);
+  }
+  .ft-phase[hidden]{display:none;}
+
+  .ft-pulse-dot{
+    display:inline-block;
+    width:7px;height:7px;
+    margin-right:7px;
+    border-radius:50%;
+    background:var(--red);
+    box-shadow:0 0 10px var(--red);
+    animation:ft-blink 1.4s infinite;
+  }
+  @keyframes ft-blink{50%{opacity:.25;}}
+
+  /* ===================================================================
+     PHASE 1 — ALERTA HUD
+  =================================================================== */
+  .ft-strobe{
+    position:fixed;
+    left:0;right:0;
+    height:4px;
+    z-index:30;
+    pointer-events:none;
+    animation:ft-strobe-cycle 1.6s ease-in-out infinite;
+    transition:opacity .6s ease;
+  }
+  .ft-strobe.top{top:0;}
+  .ft-strobe.bottom{bottom:0;}
+  @keyframes ft-strobe-cycle{
+    0%,100%{background:var(--red);opacity:.85;box-shadow:0 0 22px var(--red);}
+    50%{background:var(--amber);opacity:.5;box-shadow:0 0 22px var(--amber);}
+  }
+
+  .ft-alert-frame{
+    width:min(720px,100%);
+    border:1px solid rgba(255,99,137,.45);
+    background:rgba(9,6,20,.72);
+    backdrop-filter:blur(16px);
+    box-shadow:0 0 60px rgba(255,99,137,.16),inset 0 0 60px rgba(255,99,137,.05);
+    position:relative;
+  }
+  .ft-alert-frame.is-success{
+    border-color:rgba(117,247,171,.5);
+    box-shadow:0 0 60px rgba(117,247,171,.18),inset 0 0 60px rgba(117,247,171,.06);
+  }
+  .ft-alert-frame.is-success .ft-alert-topbar{color:#c9ffdf;border-bottom-color:rgba(117,247,171,.3);}
+  .ft-alert-frame.is-success .ft-pulse-dot{background:var(--green);box-shadow:0 0 10px var(--green);}
+  .ft-alert-topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:13px 20px;
+    border-bottom:1px solid rgba(255,99,137,.3);
+    color:#ffc4d3;
+    font-size:.58rem;
+    letter-spacing:1.2px;
+  }
+  .ft-alert-body{padding:clamp(28px,5vw,52px);}
+  .ft-alert-eyebrow{color:var(--amber);font-size:.65rem;letter-spacing:2px;margin:0 0 16px;}
+  .ft-alert-title{
+    font-size:clamp(2rem,5vw,3.4rem);
+    line-height:1.08;
+    letter-spacing:-1.5px;
+  }
+  .ft-alert-title span{color:var(--red);text-shadow:0 0 26px rgba(255,99,137,.45);}
+  .ft-alert-frame.is-success .ft-alert-title span{color:var(--green);text-shadow:0 0 26px rgba(117,247,171,.45);}
+  .ft-alert-sub{
+    margin:20px 0 0;
+    max-width:520px;
+    color:var(--muted);
+    line-height:1.85;
+    font-size:.82rem;
+  }
+  .ft-diagnostic-log{
+    margin:28px 0 34px;
+    padding:16px 18px;
+    border:1px solid var(--line);
+    background:rgba(3,5,16,.6);
+    min-height:120px;
+  }
+  .ft-log-line{
+    margin:0 0 9px;
+    font-size:.68rem;
+    letter-spacing:.4px;
+    color:#ffb9c7;
+  }
+  .ft-log-line:last-child{margin-bottom:0;color:var(--amber);}
+
+  /* ===================================================================
+     PHASE 2 — LÍNEA TEMPORAL / MAPA DE ÉPOCAS
+  =================================================================== */
+  .ft-timeline{
+    position:relative;
+    width:min(720px,92vw);
+    height:56px;
+    margin:0 0 26px;
+  }
+  .ft-timeline-track{
+    position:absolute;
+    left:16px;right:16px;top:21px;
+    height:2px;
+    background:rgba(130,158,225,.25);
+  }
+  .ft-timeline-fill{
+    position:absolute;
+    left:16px;top:21px;
+    height:2px;
+    width:0%;
+    background:linear-gradient(90deg,var(--cyan),var(--purple));
+    box-shadow:0 0 10px rgba(82,231,255,.4);
+  }
+  .ft-timeline-node{
+    position:absolute;
+    top:9px;
+    width:24px;height:24px;
+    margin-left:-12px;
+    border-radius:50%;
+    border:2px solid rgba(130,158,225,.4);
+    background:#0a0f22;
+    display:grid;
+    place-items:center;
+    font:700 .56rem var(--display);
+    color:var(--muted);
+    transition:border-color .4s ease,background .4s ease,box-shadow .4s ease,color .4s ease;
+  }
+  .ft-timeline-node span{
+    position:absolute;
+    top:29px;
+    white-space:nowrap;
+    font-size:.5rem;
+    letter-spacing:.8px;
+    color:inherit;
+  }
+  .ft-timeline-node.is-active{
+    border-color:var(--cyan);
+    color:var(--cyan);
+    box-shadow:0 0 14px rgba(82,231,255,.5);
+  }
+  .ft-timeline-node.is-done{
+    border-color:var(--green);
+    background:var(--green);
+    color:#04180d;
+    box-shadow:0 0 14px rgba(117,247,171,.5);
+  }
+  .ft-timeline-ship{
+    position:absolute;
+    top:13px;left:0%;
+    width:16px;height:16px;
+    margin-left:-8px;
+    clip-path:polygon(0 50%,100% 0,68% 50%,100% 100%);
+    background:var(--amber);
+    box-shadow:0 0 14px var(--amber);
+    z-index:2;
+  }
+
+  /* ===================================================================
+     RADAR DE ANOMALÍAS
+  =================================================================== */
+  .ft-radar-hud-top{
+    width:min(720px,100%);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 6px 22px;
+    font-size:.6rem;
+    letter-spacing:1.1px;
+    color:#9eb2dc;
+  }
+  .ft-hud-id{color:var(--cyan);}
+  .ft-hud-status{color:var(--muted);transition:color .6s ease;}
+
+  .ft-radar-stage{
+    width:min(420px,80vw);
+    aspect-ratio:1;
+    position:relative;
+    margin-bottom:34px;
+  }
+  .ft-radar-disc{
+    position:absolute;inset:0;
+    border-radius:50%;
+    border:1px solid rgba(82,231,255,.28);
+    background:
+      repeating-radial-gradient(circle,rgba(82,231,255,.05) 0 1px,transparent 1px 16%),
+      radial-gradient(circle,rgba(53,42,124,.28),transparent 68%);
+    box-shadow:inset 0 0 70px rgba(63,100,255,.12),0 0 46px rgba(61,77,195,.16);
+    overflow:hidden;
+  }
+  .ft-radar-grid-lines{
+    position:absolute;inset:0;
+    background:
+      linear-gradient(90deg,transparent 49.6%,rgba(82,231,255,.22) 50%,transparent 50.4%),
+      linear-gradient(transparent 49.6%,rgba(82,231,255,.22) 50%,transparent 50.4%);
+  }
+  .ft-radar-rings{
+    position:absolute;inset:16%;
+    border:1px solid rgba(190,151,255,.32);
+    border-radius:50%;
+  }
+  .ft-radar-rings::before,
+  .ft-radar-rings::after{
+    content:"";
+    position:absolute;
+    border:1px solid rgba(190,151,255,.22);
+    border-radius:50%;
+  }
+  .ft-radar-rings::before{inset:-16%;}
+  .ft-radar-rings::after{inset:16%;}
+  .ft-radar-sweep{
+    position:absolute;inset:0;
+    background:conic-gradient(from 0deg,rgba(82,231,255,.45),transparent 34deg 360deg);
+    clip-path:polygon(50% 50%,50% 0,100% 0,100% 50%);
+    transform-origin:50% 50%;
+    mix-blend-mode:screen;
+    will-change:transform;
+  }
+  .ft-radar-core{
+    position:absolute;
+    width:16px;height:16px;
+    left:calc(50% - 8px);top:calc(50% - 8px);
+    border:3px solid var(--cyan);
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 0 24px var(--cyan);
+    z-index:2;
+  }
+
+  .ft-anomaly{
+    position:absolute;
+    width:38px;height:38px;
+    margin:-19px 0 0 -19px;
+    padding:0;
+    border:3px solid #fff;
+    border-radius:50%;
+    background:var(--dot-color,var(--purple));
+    box-shadow:0 0 22px var(--dot-color,var(--purple));
+    z-index:3;
+    display:grid;
+    place-items:center;
+    font:800 .82rem var(--display);
+    color:#04101e;
+    text-shadow:0 1px 0 rgba(255,255,255,.35);
+    animation:ft-anomaly-pulse 1.5s ease-out infinite;
+  }
+  .ft-anomaly:hover{filter:brightness(1.15);transform:scale(1.06);}
+  @keyframes ft-anomaly-pulse{
+    0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--dot-color,var(--purple)) 55%,transparent),0 0 22px var(--dot-color,var(--purple));}
+    70%{box-shadow:0 0 0 22px color-mix(in srgb,var(--dot-color,var(--purple)) 0%,transparent),0 0 22px var(--dot-color,var(--purple));}
+    100%{box-shadow:0 0 0 0 transparent,0 0 22px var(--dot-color,var(--purple));}
+  }
+  .ft-anomaly-ripple{
+    position:absolute;
+    width:22px;height:22px;
+    margin:-11px 0 0 -11px;
+    border:2px solid var(--cyan);
+    border-radius:50%;
+    pointer-events:none;
+    z-index:2;
+  }
+
+  .ft-exploration-hud{width:min(420px,80vw);}
+  .ft-exploration-label{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:10px;
+    font-size:.6rem;
+    letter-spacing:1.1px;
+    color:var(--muted);
+  }
+  .ft-exploration-label strong{
+    font:700 1.6rem var(--display);
+    color:var(--cyan);
+    letter-spacing:0;
+  }
+  .ft-progressbar{
+    width:100%;
+    height:14px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.06);
+    position:relative;
+    overflow:hidden;
+  }
+  .ft-progressbar-fill{
+    position:absolute;
+    inset:0;
+    width:0%;
+    background:linear-gradient(90deg,var(--cyan),var(--green));
+    box-shadow:0 0 16px rgba(82,231,255,.45);
+    transition:width .6s ease;
+  }
+  .ft-exploration-hint{
+    margin-top:14px;
+    font-size:.62rem;
+    letter-spacing:.5px;
+    color:#7c8bb3;
+    text-align:center;
+  }
+
+  /* ===================================================================
+     DOSSIER / DESAFÍO
+  =================================================================== */
+  .ft-dossier-modal{
+    width:min(920px,calc(100vw - 32px));
+    padding:0;
+    color:var(--ink);
+    background:transparent;
+    border:0;
+  }
+  .ft-dossier-modal::backdrop{
+    background:rgba(1,3,14,.8);
+    backdrop-filter:blur(8px);
+  }
+  .ft-dossier-frame{
+    border:1px solid var(--hud-alert);
+    background:#081127;
+    box-shadow:0 0 54px var(--hud-alert-soft);
+    transition:border-color .6s ease,box-shadow .6s ease;
+  }
+  .ft-dossier-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:13px 20px;
+    border-bottom:1px solid var(--line);
+    color:#91acd4;
+    font-size:.56rem;
+    letter-spacing:1.2px;
+  }
+  .ft-dossier-body{
+    min-height:440px;
+    display:grid;
+    grid-template-columns:.86fr 1.14fr;
+  }
+  .ft-dossier-visual{
+    position:relative;
+    min-height:340px;
+    display:grid;
+    place-items:center;
+    border-right:1px solid var(--line);
+    background:
+      radial-gradient(circle at center,rgba(94,52,162,.25),transparent 54%),
+      repeating-linear-gradient(0deg,transparent 0 28px,rgba(82,231,255,.06) 29px 30px),
+      repeating-linear-gradient(90deg,transparent 0 28px,rgba(82,231,255,.06) 29px 30px);
+  }
+  .ft-era-orb{
+    width:180px;aspect-ratio:1;
+    border-radius:50%;
+    background:var(--era-gradient,radial-gradient(circle,#52e7ff,#241d5c));
+    box-shadow:inset -26px -16px 30px rgba(0,0,0,.5),0 0 55px var(--era-glow,rgba(82,231,255,.4));
+    position:relative;z-index:1;
+    transition:background .4s ease,box-shadow .4s ease;
+  }
+  .ft-era-rings{
+    position:absolute;
+    width:250px;aspect-ratio:1;
+    border:1px solid rgba(82,231,255,.36);
+    border-radius:50%;
+    box-shadow:0 0 0 38px rgba(82,231,255,.05),0 0 0 76px rgba(82,231,255,.025);
+  }
+  .ft-dossier-data{padding:44px clamp(24px,4vw,52px) 36px;}
+  .ft-dossier-data h2{
+    font-size:clamp(1.7rem,3.4vw,2.7rem);
+    letter-spacing:-1px;
+    margin-bottom:14px;
+  }
+  .ft-dossier-data > p:not(.eyebrow){
+    color:var(--muted);
+    font-size:.76rem;
+    line-height:1.8;
+    margin:0 0 22px;
+  }
+  .ft-trivia-block{padding-top:20px;border-top:1px solid var(--line);}
+  .ft-fail-tracker{
+    color:var(--red);
+    font-size:.62rem;
+    letter-spacing:1px;
+    margin:0 0 12px;
+  }
+  .ft-trivia-block h3{
+    font-family:var(--mono);
+    font-size:clamp(.9rem,1.4vw,1.05rem);
+    line-height:1.6;
+    margin:12px 0 0;
+  }
+  .ft-trivia-continue{margin-top:16px;}
+
+  /* ===================================================================
+     COMPONENTES COMPARTIDOS
+  =================================================================== */
+  .eyebrow{color:var(--cyan);font-size:.62rem;letter-spacing:2px;margin:0 0 16px;}
+  .prompt{color:var(--purple);font-size:.58rem;letter-spacing:1.2px;margin:0 0 14px;}
+  .answer-list{display:grid;gap:8px;margin-top:16px;}
+  .answer-button{
+    border:1px solid rgba(130,158,225,.36);
+    color:#d9e6ff;
+    background:rgba(29,49,98,.25);
+    padding:12px 14px;
+    text-align:left;
+    font:.68rem var(--mono);
+    transition:.2s;
+  }
+  .answer-button:hover:not(:disabled){
+    border-color:var(--cyan);color:var(--cyan);background:rgba(82,231,255,.08);
+  }
+  .answer-button:disabled{cursor:default;}
+  .answer-button.correct{color:var(--green);border-color:var(--green);background:rgba(117,247,171,.1);}
+  .answer-button.incorrect{color:var(--red);border-color:var(--red);background:rgba(255,99,137,.1);}
+  .quiz-feedback{min-height:20px;margin:13px 0 0;color:var(--muted);font-size:.64rem;}
+  .quiz-feedback.success{color:var(--green);}
+  .quiz-feedback.error{color:var(--red);}
+
+  .primary-button{
+    display:inline-flex;gap:20px;align-items:center;
+    color:#04101e;font-weight:700;font-size:.7rem;letter-spacing:1.1px;
+    background:var(--cyan);padding:15px 19px;border:0;
+    box-shadow:0 0 27px rgba(82,231,255,.33);
+    transition:transform .2s,box-shadow .2s;
+  }
+  .primary-button:hover{transform:translateY(-3px);box-shadow:0 0 38px rgba(82,231,255,.5);}
+  .primary-button span:last-child{font-size:1.05rem;}
+  .primary-button.button-repair{background:var(--green);box-shadow:0 0 27px rgba(117,247,171,.35);}
+  .primary-button.button-repair:hover{box-shadow:0 0 40px rgba(117,247,171,.55);}
+  .primary-button.button-ghost{
+    background:transparent;color:var(--cyan);box-shadow:none;border:1px solid var(--cyan);
+  }
+
+  /* ===================================================================
+     RESPONSIVE
+  =================================================================== */
+  @media (max-width:760px){
+    .ft-dossier-body{grid-template-columns:1fr;}
+    .ft-dossier-visual{min-height:220px;border-right:0;border-bottom:1px solid var(--line);}
+    .ft-era-orb{width:130px;}
+    .ft-era-rings{width:180px;}
+    .ft-radar-stage{width:min(320px,86vw);}
+    .ft-anomaly{width:32px;height:32px;margin:-16px 0 0 -16px;font-size:.72rem;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+      animation-duration:.01ms!important;
+      animation-iteration-count:1!important;
+      scroll-behavior:auto!important;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="ft-root" id="ft-root" data-phase="alert">
+  <div class="ft-bg" aria-hidden="true"></div>
+  <div class="ft-strobe top" aria-hidden="true"></div>
+  <div class="ft-strobe bottom" aria-hidden="true"></div>
+
+  <!-- ============ FASE 1: ALERTA HUD ============ -->
+  <section class="ft-phase ft-phase-alert" id="phase-alert">
+    <div class="ft-alert-frame" id="alert-frame">
+      <div class="ft-alert-topbar">
+        <span><i class="ft-pulse-dot"></i> FALLA_TEMPORAL.SYS</span>
+        <span>CÓDIGO DE ERROR: 0x7F-CRONO</span>
+      </div>
+      <div class="ft-alert-body">
+        <p class="ft-alert-eyebrow">PROTOCOLO DE EMERGENCIA ACTIVADO</p>
+        <h1 class="ft-alert-title">FALLA <span>TEMPORAL</span><br>DETECTADA</h1>
+        <p class="ft-alert-sub">El núcleo de navegación ha perdido sincronía con la línea temporal. La nave se encuentra a la deriva entre eras del universo.</p>
+        <div class="ft-diagnostic-log" id="diagnostic-log" aria-live="polite"></div>
+        <button class="primary-button" id="start-scan-btn" type="button">
+          <span>INICIAR ESCANEO TEMPORAL</span><span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FASE 2: LÍNEA TEMPORAL + RADAR DE ANOMALÍAS ============ -->
+  <section class="ft-phase ft-phase-radar" id="phase-radar" hidden>
+    <div class="ft-timeline" id="ft-timeline" aria-hidden="true">
+      <div class="ft-timeline-track"></div>
+      <div class="ft-timeline-fill" id="timeline-fill"></div>
+      <div class="ft-timeline-node" data-node="0" style="left:0%"><span>ÉPOCA I</span></div>
+      <div class="ft-timeline-node" data-node="1" style="left:25%"><span>ÉPOCA II</span></div>
+      <div class="ft-timeline-node" data-node="2" style="left:50%"><span>ÉPOCA III</span></div>
+      <div class="ft-timeline-node" data-node="3" style="left:75%"><span>ÉPOCA IV</span></div>
+      <div class="ft-timeline-node" data-node="4" style="left:100%"><span>PRESENTE</span></div>
+      <div class="ft-timeline-ship" id="timeline-ship"></div>
+    </div>
+
+    <header class="ft-radar-hud-top">
+      <span class="ft-hud-id"><i class="ft-pulse-dot"></i> <span id="era-label">ÉPOCA I</span></span>
+      <span class="ft-hud-status" id="hud-status">RASTREANDO SEÑALES TEMPORALES</span>
+    </header>
+
+    <div class="ft-radar-stage">
+      <div class="ft-radar-disc" id="radar-disc">
+        <div class="ft-radar-grid-lines" aria-hidden="true"></div>
+        <div class="ft-radar-rings" aria-hidden="true"></div>
+        <div class="ft-radar-sweep" id="radar-sweep" aria-hidden="true"></div>
+        <div class="ft-radar-core" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div class="ft-exploration-hud">
+      <div class="ft-exploration-label">
+        <span>PROGRESO DE LA ÉPOCA</span>
+        <strong id="exploration-value">0%</strong>
+      </div>
+      <div class="ft-progressbar" aria-hidden="true">
+        <div class="ft-progressbar-fill" id="progress-fill"></div>
+      </div>
+      <p class="ft-exploration-hint" id="exploration-hint">Pulsa las 5 señales detectadas por el radar para escanearlas. Cada anomalía correctamente resuelta suma +20%.</p>
+    </div>
+  </section>
+
+  <!-- ============ MODAL: EXPEDIENTE + DESAFÍO + PRUEBA FINAL DE ÉPOCA ============ -->
+  <dialog class="ft-dossier-modal" id="dossier-modal" aria-labelledby="era-title">
+    <div class="ft-dossier-frame" id="dossier-frame">
+      <div class="ft-dossier-head">
+        <span><i class="ft-pulse-dot"></i> <span id="dossier-head-label">EXPEDIENTE TEMPORAL RECUPERADO</span></span>
+        <span id="dossier-tag">ENLACE SEGURO // ERA-01</span>
+      </div>
+
+      <div class="ft-dossier-body" id="dossier-main-view">
+        <div class="ft-dossier-visual" aria-hidden="true">
+          <div class="ft-era-rings"></div>
+          <div class="ft-era-orb" id="era-orb"></div>
+        </div>
+
+        <div class="ft-dossier-data" id="dossier-data-info">
+          <p class="eyebrow" id="era-period">PERÍODO</p>
+          <h2 id="era-title">SUBTEMA DESCUBIERTO</h2>
+          <p id="era-description"></p>
+          <button class="primary-button" id="continue-to-challenge-btn" type="button">
+            <span>CONTINUAR AL DESAFÍO</span><span aria-hidden="true">→</span>
+          </button>
+        </div>
+
+        <div class="ft-dossier-data" id="dossier-data-challenge" hidden>
+          <p class="prompt" id="challenge-eyebrow">&gt; VERIFICACIÓN DE MEMORIA</p>
+          <p class="ft-fail-tracker" id="fail-tracker" hidden>FALLOS REGISTRADOS: <span id="fail-count">0</span> / 2</p>
+          <h3 id="trivia-question"></h3>
+          <div class="answer-list" id="trivia-answers"></div>
+          <p class="quiz-feedback" id="trivia-feedback" aria-live="polite"></p>
+          <button class="primary-button button-ghost ft-trivia-continue" id="trivia-retry-btn" type="button" hidden>
+            <span>REINTENTAR</span><span aria-hidden="true">↻</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ============ FASE GAME OVER ============ -->
+  <section class="ft-phase ft-phase-gameover" id="phase-gameover" hidden>
+    <div class="ft-alert-frame" id="gameover-frame">
+      <div class="ft-alert-topbar">
+        <span><i class="ft-pulse-dot"></i> FALLA_TEMPORAL.SYS</span>
+        <span>MISIÓN ABORTADA</span>
+      </div>
+      <div class="ft-alert-body">
+        <p class="ft-alert-eyebrow">ERROR CRÍTICO IRRECUPERABLE</p>
+        <h1 class="ft-alert-title">GAME <span>OVER</span></h1>
+        <p class="ft-alert-sub">Has quedado atrapado en el inicio del universo. La tripulación no logró estabilizar el rumbo temporal antes de que la nave colapsara.</p>
+        <button class="primary-button" id="restart-btn" type="button">
+          <span>REINICIAR MISIÓN</span><span aria-hidden="true">↻</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FASE FINAL: RESTAURACIÓN TEMPORAL COMPLETA ============ -->
+  <section class="ft-phase ft-phase-final" id="phase-final" hidden>
+    <div class="ft-alert-frame is-success" id="final-frame">
+      <div class="ft-alert-topbar">
+        <span><i class="ft-pulse-dot"></i> FALLA_TEMPORAL.SYS</span>
+        <span>RUMBO RESTABLECIDO</span>
+      </div>
+      <div class="ft-alert-body">
+        <p class="ft-alert-eyebrow">DIAGNÓSTICO FINAL</p>
+        <h1 class="ft-alert-title">FELICITACIONES<br><span>RESTAURACIÓN TEMPORAL COMPLETA</span></h1>
+        <p class="ft-alert-sub">Las 4 épocas de la historia del universo fueron exploradas y todas las anomalías temporales corregidas. El cohete ha regresado a la Época Actual y el rumbo de la nave está completamente restablecido.</p>
+        <button class="primary-button button-repair" id="replay-btn" type="button">
+          <span>REINICIAR AVENTURA</span><span aria-hidden="true">↻</span>
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+/* Resguardo sin animación: si el CDN de GSAP no responde, define una versión mínima que aplica
+   el estado final de inmediato y sigue disparando onComplete, para que el minijuego siga siendo
+   jugable en vez de quedar inerte al pulsar "INICIAR ESCANEO TEMPORAL". */
+if (typeof window.gsap === "undefined") {
+  window.gsap = (function () {
+    const SKIP = { duration: 1, ease: 1, delay: 1, stagger: 1, repeat: 1, yoyo: 1, onComplete: 1, onStart: 1, x: 1, y: 1, rotation: 1, scale: 1 };
+    function applyVars(target, vars) {
+      if (!target || !vars) return;
+      for (const key in vars) {
+        if (SKIP[key]) continue;
+        try { target.style[key] = vars[key]; } catch (e) {}
+      }
+    }
+    function tweenTo(target, vars) {
+      let resolveFn;
+      const promise = new Promise((resolve) => { resolveFn = resolve; });
+      const timer = window.setTimeout(() => {
+        applyVars(target, vars);
+        if (vars && typeof vars.onComplete === "function") vars.onComplete();
+        resolveFn();
+      }, 0);
+      promise.kill = () => window.clearTimeout(timer);
+      promise.pause = () => promise;
+      promise.play = () => promise;
+      return promise;
+    }
+    return {
+      to: (target, vars) => tweenTo(target, vars),
+      fromTo: (target, fromVars, toVars) => { applyVars(target, fromVars); return tweenTo(target, toVars); },
+      set: (target, vars) => applyVars(target, vars),
+      timeline: () => {
+        const self = {
+          to: (target, vars) => { applyVars(target, vars); if (vars && typeof vars.onComplete === "function") vars.onComplete(); return self; },
+          set: (target, vars) => { applyVars(target, vars); return self; }
+        };
+        return self;
+      },
+      getProperty: () => 0,
+      utils: { random: (min, max) => (min + max) / 2 }
+    };
+  })();
+}
+</script>
+<script>
+(() => {
+  "use strict";
+
+  /* ============ Paleta de colores para anomalías ============ */
+  const DOT_COLORS = ["#ff6389", "#ffb454", "#52e7ff", "#75f7ab", "#ae73ff"];
+
+  function buildGradient(hex) {
+    return `radial-gradient(circle at 33% 29%,#fff,${hex} 42%,#0b0c1c 100%)`;
+  }
+
+  /* ============ Datos educativos: 4 épocas × 5 subtemas ============ */
+  const ERAS = [
+    {
+      id: "big-bang",
+      name: "Época I: El Big Bang y el Universo Temprano",
+      period: "HACE 13.800 MILLONES DE AÑOS",
+      subtopics: [
+        {
+          id: "singularidad-inicial",
+          title: "La Singularidad Inicial",
+          description: "Toda la materia, energía, espacio y tiempo que hoy conocemos estuvieron concentrados en un punto de densidad y temperatura extremas, conocido como singularidad. En ese instante no existían ni el espacio ni el tiempo tal como los entendemos: ambos comenzaron a existir junto con la expansión del universo. Los físicos no pueden describir con las leyes actuales qué ocurrió exactamente en el instante cero, ya que las ecuaciones de la relatividad general dejan de funcionar en esas condiciones extremas.",
+          questions: [
+            { question: "¿Qué ocurre con las leyes físicas actuales al intentar describir la singularidad inicial?", options: ["Dejan de funcionar en esas condiciones extremas", "Explican el fenómeno con total precisión", "Solo aplican a partir de esta singularidad", "No tienen ninguna relación con el tema"], correct: 0 },
+            { question: "¿Qué comenzó a existir junto con la expansión del universo?", options: ["El espacio y el tiempo", "Solo las estrellas", "Los planetas rocosos", "La vida microbiana"], correct: 0 }
+          ]
+        },
+        {
+          id: "inflacion-cosmica",
+          title: "La Inflación Cósmica",
+          description: "Fracciones de segundo después del Big Bang, el universo atravesó un período de expansión exponencial llamado inflación cósmica, en el que el espacio se expandió muchísimo más rápido que la velocidad de la luz. Este breve pero violento estallido de crecimiento explica por qué el universo observable es tan uniforme en todas direcciones y por qué es prácticamente plano. Las minúsculas variaciones de densidad generadas durante la inflación fueron la semilla de las futuras galaxias y estructuras cósmicas.",
+          questions: [
+            { question: "¿Qué característica tuvo la expansión durante la inflación cósmica?", options: ["Fue exponencial y extremadamente rápida", "Fue lenta y constante", "Se detuvo por completo", "Solo ocurrió en una dirección del espacio"], correct: 0 },
+            { question: "¿Qué originaron las minúsculas variaciones de densidad producidas durante la inflación?", options: ["Las futuras galaxias y estructuras cósmicas", "Los agujeros negros actuales", "La Luna", "Los océanos terrestres"], correct: 0 }
+          ]
+        },
+        {
+          id: "nucleosintesis-primordial",
+          title: "Nucleosíntesis Primordial",
+          description: "Minutos después del Big Bang, cuando el universo se enfrió lo suficiente, los protones y neutrones comenzaron a combinarse para formar los primeros núcleos atómicos: principalmente hidrógeno y helio, con trazas de litio. Este proceso, llamado nucleosíntesis primordial, solo pudo producir los elementos más ligeros de la tabla periódica, porque la temperatura y la densidad cayeron demasiado rápido para fusionar núcleos más pesados. Todos los elementos más pesados que conocemos hoy se formarían mucho después, en el interior de las estrellas.",
+          questions: [
+            { question: "¿Qué elementos se formaron principalmente durante la nucleosíntesis primordial?", options: ["Hidrógeno y helio", "Hierro y oro", "Carbono y oxígeno", "Uranio y plomo"], correct: 0 },
+            { question: "¿Por qué no se formaron elementos más pesados durante este proceso?", options: ["La temperatura y la densidad cayeron demasiado rápido", "No existían protones ni neutrones", "El universo era demasiado caliente para siempre", "No había suficiente espacio disponible"], correct: 0 }
+          ]
+        },
+        {
+          id: "radiacion-fondo",
+          title: "La Radiación Cósmica de Fondo",
+          description: "Unos 380.000 años después del Big Bang, el universo se enfrió lo suficiente como para que los electrones se combinaran con los núcleos atómicos y formaran los primeros átomos neutros, en un proceso llamado recombinación. Esto permitió que la luz viajara libremente por primera vez, generando una radiación que hoy conocemos como fondo cósmico de microondas. Detectada por primera vez en 1965, esta radiación es como una fotografía fósil del universo primitivo y una de las pruebas más sólidas de la teoría del Big Bang.",
+          questions: [
+            { question: "¿Qué proceso permitió que la luz viajara libremente por primera vez?", options: ["La recombinación de electrones y núcleos atómicos", "La formación de las galaxias", "La explosión de las primeras estrellas", "El nacimiento del Sol"], correct: 0 },
+            { question: "¿Qué es el fondo cósmico de microondas?", options: ["Una radiación fósil del universo primitivo", "Una señal de radio emitida por la Vía Láctea", "Un tipo de agujero negro pequeño", "La luz emitida directamente por el Sol"], correct: 0 }
+          ]
+        },
+        {
+          id: "era-oscura",
+          title: "La Era Oscura del Universo",
+          description: "Después de la recombinación, el universo entró en un largo período sin fuentes de luz propia conocido como la Era Oscura. Durante cientos de millones de años, el cosmos estuvo compuesto principalmente por gas de hidrógeno y helio neutro, sin estrellas ni galaxias que lo iluminaran. Esta etapa terminó cuando la gravedad logró concentrar suficiente gas para encender las primeras estrellas, dando paso a la llamada reionización, cuando la radiación estelar volvió a ionizar el gas del universo.",
+          questions: [
+            { question: "¿Por qué se llama 'Era Oscura' a este período del universo?", options: ["Porque no existían estrellas ni galaxias que emitieran luz propia", "Porque el universo dejó de expandirse", "Porque toda la luz fue absorbida por agujeros negros", "Porque el Sol todavía no existía"], correct: 0 },
+            { question: "¿Qué proceso puso fin a la Era Oscura?", options: ["El encendido de las primeras estrellas", "La formación de la Tierra", "El impacto de Theia", "La explosión de una supernova cercana"], correct: 0 }
+          ]
+        }
+      ],
+      finalTest: [
+        { question: "¿En qué orden ocurrieron estos eventos del universo temprano?", options: ["Singularidad → Inflación → Nucleosíntesis → Radiación de fondo", "Radiación de fondo → Inflación → Singularidad → Nucleosíntesis", "Nucleosíntesis → Singularidad → Era Oscura → Inflación", "Era Oscura → Singularidad → Inflación → Nucleosíntesis"], correct: 0 },
+        { question: "¿Qué tienen en común la nucleosíntesis primordial y la radiación cósmica de fondo?", options: ["Ambas ocurrieron en las primeras etapas del universo y dejaron evidencia observable hoy", "Ambas ocurrieron dentro de estrellas ya formadas", "Ambas describen la formación de planetas", "Ninguna está relacionada con el Big Bang"], correct: 0 },
+        { question: "¿Qué caracteriza a la Era Oscura del universo?", options: ["La ausencia de estrellas y galaxias que emitieran luz propia", "La existencia de vida microbiana", "La formación del sistema solar", "La existencia de agujeros negros supermasivos"], correct: 0 }
+      ]
+    },
+    {
+      id: "galaxias-estrellas",
+      name: "Época II: Formación de Galaxias y Estrellas",
+      period: "CIENTOS DE MILLONES DE AÑOS DESPUÉS DEL BIG BANG",
+      subtopics: [
+        {
+          id: "primeras-estrellas",
+          title: "Las Primeras Estrellas (Población III)",
+          description: "Las primeras estrellas del universo, conocidas como estrellas de Población III, se formaron a partir del colapso gravitacional de nubes de hidrógeno y helio primordial, sin ningún elemento pesado que hoy ayuda a enfriar el gas en las estrellas modernas. Como resultado, se cree que fueron mucho más masivas, calientes y de vida más corta que las estrellas actuales. Su intensa radiación ultravioleta contribuyó a reionizar el gas del universo, y su explosión como supernovas sembró el cosmos con los primeros elementos pesados.",
+          questions: [
+            { question: "¿De qué estaban formadas casi exclusivamente las primeras estrellas del universo?", options: ["Hidrógeno y helio primordial", "Hierro y carbono", "Roca y metal", "Agua congelada"], correct: 0 },
+            { question: "¿Qué efecto tuvo la explosión de las primeras estrellas como supernovas?", options: ["Sembró el universo con los primeros elementos pesados", "Detuvo por completo la expansión del universo", "Creó de inmediato un agujero negro supermasivo", "Formó la Vía Láctea instantáneamente"], correct: 0 }
+          ]
+        },
+        {
+          id: "primeras-galaxias",
+          title: "Formación de las Primeras Galaxias",
+          description: "La gravedad fue agrupando progresivamente el gas primordial y las primeras estrellas en estructuras cada vez más grandes, dando origen a las primeras galaxias. Estas galaxias primitivas eran más pequeñas y de formas irregulares comparadas con las galaxias espirales o elípticas actuales, y crecieron a lo largo de miles de millones de años mediante fusiones sucesivas con otras galaxias vecinas. Los telescopios modernos, como el James Webb, han logrado observar algunas de estas galaxias tempranas, permitiendo estudiar cómo lucía el universo en sus primeros cientos de millones de años.",
+          questions: [
+            { question: "¿Cómo eran las primeras galaxias en comparación con las actuales?", options: ["Más pequeñas e irregulares", "Idénticas a la Vía Láctea actual", "Mucho más grandes que las galaxias de hoy", "Perfectamente espirales desde su origen"], correct: 0 },
+            { question: "¿Qué telescopio ha permitido observar galaxias muy tempranas del universo?", options: ["El telescopio espacial James Webb", "Un telescopio de aficionados", "Un radiotelescopio lunar", "Ningún telescopio puede observarlas"], correct: 0 }
+          ]
+        },
+        {
+          id: "agujeros-negros-supermasivos",
+          title: "Los Agujeros Negros Supermasivos",
+          description: "En el centro de la mayoría de las galaxias, incluida la Vía Láctea, existe un agujero negro supermasivo con una masa de millones o incluso miles de millones de veces la del Sol. Se cree que estos objetos comenzaron a formarse en el universo temprano, posiblemente a partir del colapso directo de nubes de gas masivas o del crecimiento acelerado de agujeros negros más pequeños que se fusionaron entre sí. Su intensa gravedad influye en la estructura y evolución de toda la galaxia que los rodea.",
+          questions: [
+            { question: "¿Dónde se ubican típicamente los agujeros negros supermasivos?", options: ["En el centro de las galaxias", "En los bordes exteriores del universo observable", "Únicamente dentro del sistema solar", "Dentro de los planetas gaseosos"], correct: 0 },
+            { question: "¿Qué influencia tienen los agujeros negros supermasivos sobre su galaxia?", options: ["Afectan la estructura y evolución de toda la galaxia", "No tienen ningún efecto detectable", "Impiden por completo la formación de estrellas", "Solo afectan a los planetas más cercanos"], correct: 0 }
+          ]
+        },
+        {
+          id: "supernovas-elementos",
+          title: "Supernovas y Fabricación de Elementos Pesados",
+          description: "Cuando una estrella masiva agota su combustible nuclear, puede colapsar violentamente y producir una supernova, una de las explosiones más energéticas del universo. Durante estos eventos se generan y dispersan al espacio elementos pesados como el oxígeno, el hierro y el oro, que luego se incorporan a nuevas nubes de gas y polvo. En un sentido muy real, gran parte de los átomos que forman nuestro cuerpo y nuestro planeta fueron fabricados en el interior de estrellas que explotaron hace miles de millones de años.",
+          questions: [
+            { question: "¿Qué es una supernova?", options: ["La explosión de una estrella masiva al agotar su combustible", "El nacimiento de una nueva estrella pequeña", "La colisión de dos planetas rocosos", "Un tipo de agujero negro diminuto"], correct: 0 },
+            { question: "¿Qué tipo de elementos ayudan a producir y dispersar las supernovas?", options: ["Elementos pesados como oxígeno, hierro y oro", "Únicamente hidrógeno puro", "Únicamente helio puro", "Ningún elemento nuevo se produce"], correct: 0 }
+          ]
+        },
+        {
+          id: "via-lactea",
+          title: "La Vía Láctea: Nuestra Galaxia",
+          description: "Nuestra galaxia, la Vía Láctea, es una galaxia espiral barrada que contiene entre 100.000 y 400.000 millones de estrellas, además de gas, polvo y grandes cantidades de materia oscura. Se formó y creció durante miles de millones de años mediante la fusión con galaxias más pequeñas y la formación continua de nuevas generaciones estelares. El sistema solar se ubica en uno de los brazos espirales exteriores, a unos 27.000 años luz del centro galáctico, donde reside un agujero negro supermasivo llamado Sagitario A*.",
+          questions: [
+            { question: "¿Qué tipo de galaxia es la Vía Láctea?", options: ["Espiral barrada", "Elíptica gigante", "Irregular enana", "Un simple cúmulo globular"], correct: 0 },
+            { question: "¿Cómo se llama el agujero negro supermasivo en el centro de la Vía Láctea?", options: ["Sagitario A*", "Theia", "Andrómeda Central", "Cygnus X-1"], correct: 0 }
+          ]
+        }
+      ],
+      finalTest: [
+        { question: "¿Qué relación existe entre las primeras estrellas y los elementos pesados que existen hoy?", options: ["Las estrellas fabricaron y dispersaron esos elementos al explotar como supernovas", "No existe ninguna relación entre ambos", "Los elementos pesados existieron antes que las estrellas", "Los elementos pesados provienen solo de los agujeros negros"], correct: 0 },
+        { question: "¿Qué papel juegan los agujeros negros supermasivos en las galaxias?", options: ["Se ubican en su centro e influyen en su estructura", "Se ubican siempre en los bordes de la galaxia", "Impiden que existan estrellas en la galaxia", "No tienen ninguna relación con las galaxias"], correct: 0 },
+        { question: "¿Cómo se formaron las galaxias, incluida la Vía Láctea?", options: ["Mediante la agrupación gravitacional de gas y estrellas, y fusiones sucesivas", "De manera instantánea, tal como se ven hoy", "A partir de un único planeta gigante", "Por el enfriamiento repentino del Sol"], correct: 0 }
+      ]
+    },
+    {
+      id: "sistema-solar",
+      name: "Época III: Nacimiento del Sistema Solar",
+      period: "HACE 4.600 MILLONES DE AÑOS",
+      subtopics: [
+        {
+          id: "nebulosa-solar",
+          title: "La Nebulosa Solar",
+          description: "El sistema solar se originó a partir de una enorme nube de gas y polvo interestelar llamada nebulosa solar, que probablemente comenzó a colapsar bajo su propia gravedad tras ser perturbada por la onda de choque de una supernova cercana. A medida que la nube colapsaba, comenzó a girar cada vez más rápido y a aplanarse, formando un disco protoplanetario giratorio con una concentración de material mucho más densa en su centro, donde más tarde nacería el Sol.",
+          questions: [
+            { question: "¿Qué es la nebulosa solar?", options: ["La nube de gas y polvo que dio origen al sistema solar", "Un antiguo planeta gaseoso", "Una galaxia vecina a la Vía Láctea", "El núcleo actual del Sol"], correct: 0 },
+            { question: "¿Qué pudo haber provocado el colapso inicial de la nebulosa solar?", options: ["La onda de choque de una supernova cercana", "El impacto de un cometa solitario", "La explosión de Júpiter", "Un agujero negro cercano al Sol"], correct: 0 }
+          ]
+        },
+        {
+          id: "formacion-sol",
+          title: "Formación del Sol",
+          description: "En el centro del disco de la nebulosa solar, la gravedad concentró cada vez más gas e hidrógeno, aumentando la presión y la temperatura del material acumulado. Cuando la temperatura en el núcleo alcanzó varios millones de grados, se iniciaron las reacciones de fusión nuclear que convierten hidrógeno en helio, liberando enormes cantidades de energía y dando origen a una estrella estable: nuestro Sol. Desde entonces, el Sol ha estado fusionando hidrógeno de manera continua durante unos 4.600 millones de años.",
+          questions: [
+            { question: "¿Qué proceso hizo que el Sol comenzara a brillar como una estrella?", options: ["La fusión nuclear de hidrógeno en helio", "La combustión de oxígeno atmosférico", "La radiación proveniente de otras estrellas", "El impacto continuo de asteroides"], correct: 0 },
+            { question: "¿Qué elemento fusiona principalmente el Sol para producir energía?", options: ["Hidrógeno", "Hierro", "Carbono", "Oro"], correct: 0 }
+          ]
+        },
+        {
+          id: "planetas-rocosos",
+          title: "Formación de los Planetas Rocosos",
+          description: "Cerca del Sol, las altas temperaturas del disco protoplanetario impidieron que sustancias volátiles como el agua o el metano se condensaran en sólidos, por lo que solo el material rocoso y metálico pudo agruparse. Pequeñas partículas de polvo chocaron y se fusionaron formando cuerpos cada vez más grandes, llamados planetesimales, que a su vez colisionaron entre sí hasta formar los planetas interiores: Mercurio, Venus, la Tierra y Marte. Este proceso de acumulación, llamado acreción, tomó varios millones de años.",
+          questions: [
+            { question: "¿Por qué los planetas cercanos al Sol son rocosos y no gaseosos?", options: ["Las altas temperaturas impidieron que se condensaran sustancias volátiles", "Porque el Sol los repelía activamente", "Porque no había suficiente polvo cerca del Sol", "Porque son mucho más antiguos que los gaseosos"], correct: 0 },
+            { question: "¿Cómo se llama el proceso mediante el cual pequeños cuerpos se unen para formar planetas?", options: ["Acreción", "Fusión nuclear", "Reionización", "Nucleosíntesis"], correct: 0 }
+          ]
+        },
+        {
+          id: "planetas-gaseosos",
+          title: "Formación de los Planetas Gaseosos",
+          description: "Más allá de la llamada 'línea de hielo', donde las temperaturas eran suficientemente bajas, el agua, el amoníaco y el metano pudieron congelarse, aportando mucho más material disponible para la formación de planetas. Esto permitió que núcleos rocosos y helados crecieran rápidamente hasta ser lo bastante masivos como para atraer y retener grandes envolturas de hidrógeno y helio directamente de la nebulosa solar, dando origen a los gigantes gaseosos Júpiter y Saturno, y a los gigantes helados Urano y Neptuno.",
+          questions: [
+            { question: "¿Qué es la 'línea de hielo' en la formación del sistema solar?", options: ["El límite más allá del cual el agua y otros compuestos podían congelarse", "La órbita actual de la Tierra", "El borde exterior de la Vía Láctea", "La distancia entre el Sol y Mercurio"], correct: 0 },
+            { question: "¿Qué gases componen principalmente a Júpiter y Saturno?", options: ["Hidrógeno y helio", "Oxígeno y nitrógeno", "Dióxido de carbono", "Roca y metal sólidos"], correct: 0 }
+          ]
+        },
+        {
+          id: "bombardeo-intenso",
+          title: "El Bombardeo Intenso Tardío",
+          description: "Varios cientos de millones de años después de la formación del sistema solar, se produjo un período conocido como el Bombardeo Intenso Tardío, durante el cual un número inusualmente alto de asteroides y cometas impactó contra los planetas interiores y sus lunas. Se cree que este bombardeo pudo haber sido causado por cambios en las órbitas de los planetas gigantes, que perturbaron el cinturón de asteroides y la región más allá de Neptuno. Los cráteres que aún se observan en la Luna son evidencia directa de este violento período.",
+          questions: [
+            { question: "¿Qué caracterizó al Bombardeo Intenso Tardío?", options: ["Un número inusualmente alto de impactos de asteroides y cometas", "La formación del primer océano terrestre", "El nacimiento del Sol", "La aparición de la vida en la Tierra"], correct: 0 },
+            { question: "¿Dónde se observa evidencia directa del Bombardeo Intenso Tardío?", options: ["En los cráteres de la superficie lunar", "En los anillos de Saturno", "En la atmósfera de Júpiter", "En el núcleo del Sol"], correct: 0 }
+          ]
+        }
+      ],
+      finalTest: [
+        { question: "¿Cuál fue el origen común de todos los cuerpos del sistema solar?", options: ["La nebulosa solar, una nube de gas y polvo en colapso", "Cada planeta se formó de manera totalmente independiente", "Todos los planetas fueron capturados de otra estrella", "El sistema solar siempre existió tal como es hoy"], correct: 0 },
+        { question: "¿Por qué existen dos tipos de planetas tan distintos (rocosos y gaseosos) en el sistema solar?", options: ["Por la diferencia de temperatura y materiales disponibles según la distancia al Sol", "Porque se formaron en épocas completamente distintas", "Porque los gaseosos llegaron de otra galaxia", "Por pura casualidad, sin relación con la temperatura"], correct: 0 },
+        { question: "¿Qué evidencia queda hoy del Bombardeo Intenso Tardío?", options: ["Los cráteres visibles en la superficie de la Luna", "Los anillos de Saturno", "La atmósfera de Venus", "El color rojizo de Marte"], correct: 0 }
+      ]
+    },
+    {
+      id: "tierra-vida",
+      name: "Época IV: La Tierra y el Origen de la Vida",
+      period: "DESDE HACE 4.500 MILLONES DE AÑOS",
+      subtopics: [
+        {
+          id: "formacion-luna",
+          title: "Formación de la Luna (Impacto de Theia)",
+          description: "Poco después de formarse, la Tierra habría sido golpeada por un protoplaneta del tamaño de Marte, al que los científicos llaman Theia. El violento impacto habría fundido gran parte de la Tierra y expulsado al espacio una enorme cantidad de escombros incandescentes, que con el tiempo se agruparon por gravedad en órbita hasta formar la Luna. Esta hipótesis, conocida como la teoría del gran impacto, explica muy bien tanto el tamaño de la Luna como la composición similar de las rocas lunares y terrestres.",
+          questions: [
+            { question: "¿Cómo se llama el objeto que habría chocado contra la Tierra primitiva?", options: ["Theia", "Ceres", "Vesta", "Titán"], correct: 0 },
+            { question: "¿Qué explica muy bien la teoría del gran impacto?", options: ["El tamaño de la Luna y su composición similar a la terrestre", "El color de los océanos actuales", "El origen del Sol", "La velocidad de rotación de Júpiter"], correct: 0 }
+          ]
+        },
+        {
+          id: "atmosfera-oceanos",
+          title: "Formación de la Atmósfera y los Océanos",
+          description: "La atmósfera y los océanos primitivos de la Tierra surgieron principalmente de la liberación de gases atrapados en el interior del planeta, a través de una intensa actividad volcánica, en un proceso llamado desgasificación. Vapor de agua, dióxido de carbono y nitrógeno fueron expulsados a la superficie; cuando la Tierra se enfrió lo suficiente, el vapor de agua se condensó y cayó en forma de lluvias torrenciales durante millones de años, llenando las cuencas y formando los primeros océanos. Es posible que impactos de cometas helados también hayan aportado parte de esa agua.",
+          questions: [
+            { question: "¿Qué proceso liberó los gases que formaron la atmósfera primitiva?", options: ["La desgasificación volcánica", "La fotosíntesis de las plantas", "La respiración de los primeros animales", "La fusión nuclear del Sol"], correct: 0 },
+            { question: "¿Cómo se formaron los primeros océanos de la Tierra?", options: ["Por la condensación del vapor de agua al enfriarse el planeta", "Por el derretimiento instantáneo de la Luna", "Únicamente por el impacto de meteoritos de hielo", "Los océanos existieron siempre desde el Big Bang"], correct: 0 }
+          ]
+        },
+        {
+          id: "origen-vida",
+          title: "Origen de la Vida (LUCA y las Primeras Células)",
+          description: "Hace aproximadamente 3.800 millones de años, en un planeta joven y todavía inestable, surgieron las primeras formas de vida: organismos unicelulares extremadamente simples capaces de replicarse y realizar reacciones químicas básicas. Los científicos llaman a este posible ancestro común de toda la vida actual LUCA (Last Universal Common Ancestor). Se cree que la vida pudo haberse originado en ambientes como fuentes hidrotermales submarinas, donde existían la energía química y los compuestos necesarios para formar las primeras moléculas orgánicas complejas.",
+          questions: [
+            { question: "¿Qué representa la sigla LUCA en biología evolutiva?", options: ["El último ancestro común universal de toda la vida", "La última célula antigua descubierta", "Un tipo de bacteria moderna", "Ninguna de las anteriores"], correct: 0 },
+            { question: "¿Dónde se cree que pudo haberse originado la vida en la Tierra?", options: ["En fuentes hidrotermales submarinas", "En la cima de las montañas más altas", "Dentro del núcleo del planeta", "En la atmósfera superior"], correct: 0 }
+          ]
+        },
+        {
+          id: "gran-oxidacion",
+          title: "La Gran Oxidación",
+          description: "Hace unos 2.400 millones de años, la aparición de cianobacterias capaces de realizar fotosíntesis comenzó a liberar oxígeno como subproducto en cantidades masivas, transformando radicalmente la atmósfera terrestre en un evento conocido como la Gran Oxidación. Este oxígeno, tóxico para la mayoría de los organismos anaeróbicos de la época, provocó una de las primeras grandes extinciones de la historia de la vida, pero también abrió el camino para la evolución de organismos capaces de usar el oxígeno para obtener energía de forma mucho más eficiente.",
+          questions: [
+            { question: "¿Qué organismos fueron responsables de liberar el oxígeno durante la Gran Oxidación?", options: ["Las cianobacterias fotosintéticas", "Los dinosaurios", "Los primeros peces", "Las plantas terrestres actuales"], correct: 0 },
+            { question: "¿Qué consecuencia tuvo el aumento de oxígeno en la atmósfera?", options: ["Provocó la extinción de muchos organismos anaeróbicos", "No tuvo ningún efecto sobre la vida existente", "Hizo desaparecer el agua de los océanos", "Detuvo por completo la evolución biológica"], correct: 0 }
+          ]
+        },
+        {
+          id: "explosion-cambrica",
+          title: "La Explosión Cámbrica",
+          description: "Hace unos 540 millones de años ocurrió un evento evolutivo extraordinario conocido como la explosión cámbrica, durante el cual, en un lapso relativamente breve a escala geológica, surgió una diversidad enorme de formas de vida animal, incluyendo los ancestros de la mayoría de los grandes grupos de animales que existen hoy. Antes de este período, la vida era mayoritariamente microscópica y de estructura muy simple; después de él, los océanos se llenaron de una asombrosa variedad de organismos con caparazones, ojos, patas y otras estructuras complejas.",
+          questions: [
+            { question: "¿Qué caracterizó a la explosión cámbrica?", options: ["Una diversificación extraordinariamente rápida de formas de vida animal", "La extinción total de la vida en la Tierra", "El nacimiento del primer océano", "La formación de la capa de ozono"], correct: 0 },
+            { question: "¿Cómo era la vida antes de la explosión cámbrica?", options: ["Mayoritariamente microscópica y de estructura simple", "Ya dominada por dinosaurios gigantes", "Compuesta principalmente por mamíferos", "Igual de compleja que la actual"], correct: 0 }
+          ]
+        }
+      ],
+      finalTest: [
+        { question: "¿Qué relación existe entre la formación de la Luna y la historia geológica temprana de la Tierra?", options: ["El impacto que formó la Luna también influyó en la historia geológica temprana del planeta", "No existe ninguna relación entre ambos eventos", "La Luna se formó después de la aparición de la vida", "La Luna impidió que se formaran los océanos"], correct: 0 },
+        { question: "¿Qué llevó a la Gran Oxidación de la atmósfera terrestre?", options: ["La fotosíntesis de las cianobacterias", "La erupción simultánea de todos los volcanes", "El impacto de un gran asteroide", "La explosión cámbrica"], correct: 0 },
+        { question: "¿Qué orden cronológico siguen estos eventos en la historia de la Tierra?", options: ["Formación de la Luna → Formación de océanos → Origen de la vida → Gran Oxidación → Explosión cámbrica", "Explosión cámbrica → Origen de la vida → Formación de la Luna", "Gran Oxidación → Formación de la Luna → Océanos", "Origen de la vida → Formación de la Luna → Océanos"], correct: 0 }
+      ]
+    }
+  ];
+
+  const DIAGNOSTIC_LINES = [
+    "> ANALIZANDO NÚCLEO DE PROPULSIÓN TEMPORAL...",
+    "> ERROR 0x7F // DESINCRONIZACIÓN CRONOESPACIAL",
+    "> RUMBO TEMPORAL: PERDIDO",
+    "> COORDENADAS ESPACIO-TIEMPO: INESTABLES",
+    "> INICIANDO PROTOCOLO DE ESCANEO DE EMERGENCIA..."
+  ];
+
+  const MAX_FAILS = 2;
+  const TIMELINE_NODE_COUNT = 5;
+
+  /* ============ Referencias DOM ============ */
+  const ftRoot = document.getElementById("ft-root");
+  const phaseAlert = document.getElementById("phase-alert");
+  const phaseRadar = document.getElementById("phase-radar");
+  const phaseGameover = document.getElementById("phase-gameover");
+  const phaseFinal = document.getElementById("phase-final");
+  const alertFrame = document.getElementById("alert-frame");
+  const gameoverFrame = document.getElementById("gameover-frame");
+  const finalFrame = document.getElementById("final-frame");
+  const diagnosticLog = document.getElementById("diagnostic-log");
+  const startScanBtn = document.getElementById("start-scan-btn");
+  const restartBtn = document.getElementById("restart-btn");
+  const replayBtn = document.getElementById("replay-btn");
+
+  const timelineShip = document.getElementById("timeline-ship");
+  const timelineFill = document.getElementById("timeline-fill");
+  const timelineNodes = Array.from(document.querySelectorAll(".ft-timeline-node"));
+
+  const eraLabel = document.getElementById("era-label");
+  const hudStatus = document.getElementById("hud-status");
+  const radarDisc = document.getElementById("radar-disc");
+  const radarSweep = document.getElementById("radar-sweep");
+  const explorationValue = document.getElementById("exploration-value");
+  const progressFill = document.getElementById("progress-fill");
+  const explorationHint = document.getElementById("exploration-hint");
+
+  const dossierModal = document.getElementById("dossier-modal");
+  const dossierFrame = document.getElementById("dossier-frame");
+  const dossierHeadLabel = document.getElementById("dossier-head-label");
+  const dossierTag = document.getElementById("dossier-tag");
+  const eraOrb = document.getElementById("era-orb");
+  const eraPeriod = document.getElementById("era-period");
+  const eraTitle = document.getElementById("era-title");
+  const eraDescription = document.getElementById("era-description");
+  const mainView = document.getElementById("dossier-main-view");
+  const infoData = document.getElementById("dossier-data-info");
+  const challengeData = document.getElementById("dossier-data-challenge");
+  const continueToChallengeBtn = document.getElementById("continue-to-challenge-btn");
+  const challengeEyebrow = document.getElementById("challenge-eyebrow");
+  const failTracker = document.getElementById("fail-tracker");
+  const failCountEl = document.getElementById("fail-count");
+  const triviaQuestion = document.getElementById("trivia-question");
+  const triviaAnswers = document.getElementById("trivia-answers");
+  const triviaFeedback = document.getElementById("trivia-feedback");
+  const triviaRetryBtn = document.getElementById("trivia-retry-btn");
+
+  /* ============ Estado ============ */
+  let currentEraIndex = 0;
+  let currentEra = null;
+  let collectedInEra = 0;
+  let progressPercent = 0;
+  let anomalyPositions = [];
+  let sweepTween = null;
+  let ambientTremorId = null;
+  let currentSubtopic = null;
+  let currentAnomalyEl = null;
+  let currentFinalQuestion = null;
+  let questionQueue = [];
+  let answerLocked = false;
+  let anomalyFailCount = 0;
+  let sessionMode = null; // "anomaly" | "levelFinal"
+  let finalQueueLevel = [];
+  let finalTotalLevel = 0;
+  let finalStepLevel = 0;
+
+  /* ============ Utilidades ============ */
+  function shuffle(items) {
+    return [...items].sort(() => Math.random() - 0.5);
+  }
+
+  function distance(a, b) {
+    return Math.hypot(a.x - b.x, a.y - b.y);
+  }
+
+  function randomPointInDisc(minR = 15, maxR = 42) {
+    const angle = Math.random() * Math.PI * 2;
+    const radius = minR + Math.random() * (maxR - minR);
+    return {
+      x: 50 + radius * Math.cos(angle),
+      y: 50 + radius * Math.sin(angle)
+    };
+  }
+
+  function pickAnomalyPosition() {
+    let point;
+    let attempts = 0;
+    let tooClose;
+    do {
+      point = randomPointInDisc();
+      tooClose = anomalyPositions.some((p) => distance(point, p) < 24);
+      attempts += 1;
+    } while (tooClose && attempts < 30);
+    anomalyPositions.push(point);
+    return point;
+  }
+
+  /* ============ Sacudida de la nave ============ */
+  function shipShake(target, power = 8) {
+    const tl = gsap.timeline();
+    for (let i = 0; i < 6; i += 1) {
+      tl.to(target, {
+        x: gsap.utils.random(-power, power),
+        y: gsap.utils.random(-power / 2, power / 2),
+        rotation: gsap.utils.random(-0.5, 0.5),
+        duration: 0.06,
+        ease: "power1.inOut"
+      });
+    }
+    tl.to(target, { x: 0, y: 0, rotation: 0, duration: 0.18, ease: "power2.out" });
+    return tl;
+  }
+
+  function startAmbientTremor() {
+    ambientTremorId = window.setInterval(() => shipShake(alertFrame, 4), 3200);
+  }
+
+  function stopAmbientTremor() {
+    if (ambientTremorId) {
+      window.clearInterval(ambientTremorId);
+      ambientTremorId = null;
+    }
+  }
+
+  /* ============ Fase 1: Alerta ============ */
+  function renderDiagnosticLog() {
+    diagnosticLog.innerHTML = DIAGNOSTIC_LINES
+      .map((line) => `<p class="ft-log-line">${line}</p>`)
+      .join("");
+    const lines = diagnosticLog.querySelectorAll(".ft-log-line");
+    gsap.set(lines, { opacity: 0, x: -14 });
+    gsap.to(lines, {
+      opacity: 1,
+      x: 0,
+      duration: 0.4,
+      stagger: 0.18,
+      delay: 0.3,
+      ease: "power2.out"
+    });
+  }
+
+  function goToRadarPhase() {
+    stopAmbientTremor();
+    gsap.to(alertFrame, {
+      opacity: 0,
+      y: -20,
+      duration: 0.45,
+      ease: "power2.in",
+      onComplete: () => {
+        phaseAlert.hidden = true;
+        ftRoot.dataset.phase = "radar";
+        phaseRadar.hidden = false;
+        gsap.fromTo(
+          phaseRadar,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.6, ease: "power2.out" }
+        );
+        moveShipToNode(0, true);
+        startEra(0);
+      }
+    });
+  }
+
+  /* ============ Línea temporal / mapa de épocas ============ */
+  function updateTimelineNodes() {
+    timelineNodes.forEach((node, i) => {
+      node.classList.toggle("is-done", i < currentEraIndex);
+      node.classList.toggle("is-active", i === currentEraIndex);
+    });
+    timelineFill.style.width = `${(currentEraIndex / (TIMELINE_NODE_COUNT - 1)) * 100}%`;
+  }
+
+  function moveShipToNode(index, instant) {
+    const pct = (index / (TIMELINE_NODE_COUNT - 1)) * 100;
+    if (instant) {
+      gsap.set(timelineShip, { left: `${pct}%` });
+      timelineFill.style.width = `${pct}%`;
+      return Promise.resolve();
+    }
+    return gsap.to(timelineShip, { left: `${pct}%`, duration: 1.4, ease: "power2.inOut" })
+      .then(() => {
+        timelineFill.style.width = `${pct}%`;
+      });
+  }
+
+  /* ============ Fase 2: Radar por época ============ */
+  function startSweep() {
+    sweepTween = gsap.to(radarSweep, {
+      rotation: 360,
+      duration: 4,
+      repeat: -1,
+      ease: "none"
+    });
+  }
+
+  function stopSweep() {
+    if (!sweepTween) return;
+    const current = gsap.getProperty(radarSweep, "rotation");
+    sweepTween.kill();
+    gsap.to(radarSweep, {
+      rotation: current + 140,
+      duration: 1.1,
+      ease: "power3.out"
+    });
+    sweepTween = null;
+  }
+
+  function startEra(index) {
+    currentEraIndex = index;
+    currentEra = ERAS[index];
+    collectedInEra = 0;
+    progressPercent = 0;
+    updateProgressUI();
+    eraLabel.textContent = currentEra.name.toUpperCase();
+    hudStatus.textContent = "RASTREANDO SEÑALES TEMPORALES";
+    explorationHint.textContent = `Pulsa las 5 señales de "${currentEra.name}" para escanearlas. Cada anomalía correctamente resuelta suma +20%.`;
+    updateTimelineNodes();
+    spawnEraAnomalies(currentEra);
+    startSweep();
+  }
+
+  function spawnEraAnomalies(era) {
+    anomalyPositions = [];
+    radarDisc.querySelectorAll(".ft-anomaly").forEach((node) => node.remove());
+    const order = shuffle(era.subtopics.map((subtopic, index) => ({ subtopic, index })));
+    order.forEach(({ subtopic, index }, orderIndex) => {
+      const pos = pickAnomalyPosition();
+      const el = document.createElement("button");
+      el.type = "button";
+      el.className = "ft-anomaly";
+      el.style.left = `${pos.x}%`;
+      el.style.top = `${pos.y}%`;
+      el.style.setProperty("--dot-color", DOT_COLORS[index % DOT_COLORS.length]);
+      el.textContent = String(index + 1);
+      el.dataset.subtopicId = subtopic.id;
+      el.setAttribute("aria-label", `Anomalía temporal: ${subtopic.title}. Pulsar para escanear.`);
+      el.addEventListener("click", () => openAnomalyDossier(subtopic, el));
+      radarDisc.appendChild(el);
+      gsap.fromTo(
+        el,
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.4, delay: orderIndex * 0.08, ease: "back.out(2)" }
+      );
+    });
+  }
+
+  function spawnRipple(pos, color) {
+    const ripple = document.createElement("span");
+    ripple.className = "ft-anomaly-ripple";
+    ripple.style.left = `${pos.x}%`;
+    ripple.style.top = `${pos.y}%`;
+    ripple.style.borderColor = color;
+    radarDisc.appendChild(ripple);
+    gsap.fromTo(
+      ripple,
+      { scale: 0.2, opacity: 0.8 },
+      {
+        scale: 2.8,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power2.out",
+        onComplete: () => ripple.remove()
+      }
+    );
+  }
+
+  function collectCurrentAnomaly() {
+    const el = currentAnomalyEl;
+    if (el) {
+      el.dataset.scanned = "true";
+      el.style.pointerEvents = "none";
+      const pos = { x: parseFloat(el.style.left), y: parseFloat(el.style.top) };
+      spawnRipple(pos, getComputedStyle(el).getPropertyValue("--dot-color") || "#52e7ff");
+      gsap.to(el, {
+        scale: 1.8,
+        opacity: 0,
+        duration: 0.4,
+        ease: "power2.out",
+        onComplete: () => el.remove()
+      });
+    }
+
+    collectedInEra += 1;
+    progressPercent = Math.min(100, Math.round(collectedInEra * 20));
+    updateProgressUI();
+
+    if (collectedInEra >= 5) {
+      hudStatus.textContent = "ESCANEO COMPLETO // INICIANDO PRUEBA FINAL DE ÉPOCA";
+      explorationHint.textContent = "Todas las anomalías de esta época fueron recolectadas.";
+      stopSweep();
+      gsap.to(radarDisc, { scale: 1.04, duration: 0.4, ease: "power2.out", yoyo: true, repeat: 1 });
+    } else {
+      hudStatus.textContent = `ANOMALÍA RECOLECTADA // ${5 - collectedInEra} SEÑALES RESTANTES`;
+      explorationHint.textContent = "Pulsa la siguiente señal detectada por el radar.";
+    }
+  }
+
+  function updateProgressUI() {
+    explorationValue.textContent = `${progressPercent}%`;
+    progressFill.style.width = `${progressPercent}%`;
+  }
+
+  /* ============ Fase 3: Expediente educativo + desafío por anomalía ============ */
+  function openAnomalyDossier(subtopic, anomalyEl) {
+    if (anomalyEl.dataset.scanned === "true") return;
+    sessionMode = "anomaly";
+    currentSubtopic = subtopic;
+    currentAnomalyEl = anomalyEl;
+    anomalyFailCount = 0;
+    questionQueue = shuffle(subtopic.questions);
+
+    dossierHeadLabel.textContent = "EXPEDIENTE TEMPORAL RECUPERADO";
+    dossierTag.textContent = `ÉPOCA ${currentEraIndex + 1}/4 // ${subtopic.id.toUpperCase()}`;
+    eraOrb.style.setProperty("--era-gradient", buildGradient(anomalyEl.style.getPropertyValue("--dot-color")));
+    eraOrb.style.setProperty("--era-glow", `${anomalyEl.style.getPropertyValue("--dot-color")}88`);
+    eraPeriod.textContent = currentEra.period;
+    eraTitle.textContent = subtopic.title;
+    eraDescription.textContent = subtopic.description;
+
+    showInfoPanel();
+    mainView.hidden = false;
+    dossierModal.showModal();
+    gsap.fromTo(
+      dossierFrame,
+      { opacity: 0, y: 26, scale: 0.96 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power3.out" }
+    );
+  }
+
+  function showInfoPanel() {
+    infoData.hidden = false;
+    challengeData.hidden = true;
+  }
+
+  function showChallengePanel() {
+    infoData.hidden = true;
+    challengeData.hidden = false;
+  }
+
+  function renderNextAnomalyQuestion() {
+    if (questionQueue.length === 0) {
+      questionQueue = shuffle(currentSubtopic.questions);
+    }
+    renderQuestion(questionQueue.pop());
+  }
+
+  function renderQuestion(q) {
+    answerLocked = false;
+    triviaQuestion.textContent = q.question;
+    triviaFeedback.textContent = "";
+    triviaFeedback.className = "quiz-feedback";
+    triviaRetryBtn.hidden = true;
+
+    const correctText = q.options[q.correct];
+    const shuffledOptions = shuffle(q.options);
+
+    triviaAnswers.innerHTML = shuffledOptions
+      .map(
+        (opt, i) =>
+          `<button class="answer-button" type="button" data-answer="${opt}"><span>${String.fromCharCode(65 + i)}.</span> ${opt}</button>`
+      )
+      .join("");
+
+    triviaAnswers.querySelectorAll("button").forEach((btn) => {
+      btn.addEventListener("click", () => handleAnswer(btn, correctText, q), { once: true });
+    });
+  }
+
+  function handleAnswer(selected, correctText, q) {
+    if (answerLocked) return;
+    answerLocked = true;
+
+    const isCorrect = selected.dataset.answer === correctText;
+    triviaAnswers.querySelectorAll("button").forEach((btn) => {
+      btn.disabled = true;
+      if (btn.dataset.answer === correctText) btn.classList.add("correct");
+    });
+
+    if (isCorrect) {
+      triviaFeedback.textContent = "✓ MEMORIA CONFIRMADA // DATOS CORRECTOS";
+      triviaFeedback.classList.add("success");
+      window.setTimeout(() => {
+        if (sessionMode === "levelFinal") {
+          advanceLevelFinalQuestion();
+        } else {
+          closeDossierThenCollect();
+        }
+      }, 1000);
+      return;
+    }
+
+    selected.classList.add("incorrect");
+    triviaFeedback.textContent = `✕ REGISTRO INCORRECTO // RESPUESTA CORRECTA: ${correctText.toUpperCase()}`;
+    triviaFeedback.classList.add("error");
+
+    if (sessionMode === "anomaly") {
+      anomalyFailCount += 1;
+      failCountEl.textContent = String(anomalyFailCount);
+      if (anomalyFailCount > MAX_FAILS) {
+        window.setTimeout(triggerGameOver, 900);
+        return;
+      }
+    }
+
+    triviaRetryBtn.hidden = false;
+    gsap.fromTo(
+      triviaRetryBtn,
+      { opacity: 0, y: 6 },
+      { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }
+    );
+  }
+
+  function closeDossierThenCollect() {
+    gsap.to(dossierFrame, {
+      opacity: 0,
+      y: 16,
+      duration: 0.4,
+      ease: "power2.in",
+      onComplete: () => {
+        dossierModal.close();
+        collectCurrentAnomaly();
+        if (collectedInEra >= 5) {
+          window.setTimeout(startLevelFinalTest, 900);
+        }
+      }
+    });
+  }
+
+  function guardDossierClose(event) {
+    event.preventDefault();
+  }
+
+  /* ============ Fase 4: Prueba final de época ============ */
+  function startLevelFinalTest() {
+    sessionMode = "levelFinal";
+    finalQueueLevel = shuffle(currentEra.finalTest);
+    finalTotalLevel = finalQueueLevel.length;
+    finalStepLevel = 0;
+
+    dossierHeadLabel.textContent = "PRUEBA FINAL DE ÉPOCA";
+    eraOrb.style.setProperty("--era-gradient", buildGradient(DOT_COLORS[currentEraIndex % DOT_COLORS.length]));
+    eraOrb.style.setProperty("--era-glow", `${DOT_COLORS[currentEraIndex % DOT_COLORS.length]}88`);
+    eraPeriod.textContent = currentEra.period;
+    eraTitle.textContent = currentEra.name;
+    eraDescription.textContent = "Responde correctamente el cuestionario integrador para superar esta época y avanzar en la línea temporal.";
+    failTracker.hidden = true;
+
+    showChallengePanel();
+    mainView.hidden = false;
+
+    if (!dossierModal.open) {
+      dossierModal.showModal();
+      gsap.fromTo(
+        dossierFrame,
+        { opacity: 0, y: 26, scale: 0.96 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power3.out" }
+      );
+    } else {
+      gsap.fromTo(dossierFrame, { opacity: 0.4 }, { opacity: 1, duration: 0.35, ease: "power2.out" });
+    }
+
+    advanceLevelFinalQuestion();
+  }
+
+  function advanceLevelFinalQuestion() {
+    if (finalQueueLevel.length === 0) {
+      completeLevel();
+      return;
+    }
+    finalStepLevel += 1;
+    currentFinalQuestion = finalQueueLevel.pop();
+    challengeEyebrow.textContent = `> PRUEBA FINAL DE ÉPOCA — PREGUNTA ${finalStepLevel}/${finalTotalLevel}`;
+    dossierTag.textContent = `ÉPOCA ${currentEraIndex + 1}/4 // PRUEBA FINAL`;
+    renderQuestion(currentFinalQuestion);
+  }
+
+  /* ============ Transición entre épocas ============ */
+  function completeLevel() {
+    gsap.to(dossierFrame, {
+      opacity: 0,
+      y: 16,
+      duration: 0.4,
+      ease: "power2.in",
+      onComplete: () => {
+        dossierModal.close();
+        const finishedIndex = currentEraIndex;
+        const nextIndex = finishedIndex + 1;
+        timelineNodes[finishedIndex].classList.add("is-done");
+        timelineNodes[finishedIndex].classList.remove("is-active");
+        hudStatus.textContent =
+          nextIndex < ERAS.length
+            ? "ÉPOCA SUPERADA // AVANZANDO EN LA LÍNEA TEMPORAL"
+            : "TODAS LAS ÉPOCAS SUPERADAS // REGRESANDO AL PRESENTE";
+        explorationHint.textContent = "El cohete temporal avanza hacia el siguiente punto...";
+
+        moveShipToNode(nextIndex).then(() => {
+          if (nextIndex < ERAS.length) {
+            startEra(nextIndex);
+          } else {
+            timelineNodes[TIMELINE_NODE_COUNT - 1].classList.add("is-done");
+            showFinalCongrats();
+          }
+        });
+      }
+    });
+  }
+
+  /* ============ Fase Game Over ============ */
+  function triggerGameOver() {
+    stopSweep();
+    if (dossierModal.open) dossierModal.close();
+    ftRoot.dataset.phase = "gameover";
+    gsap.to(phaseRadar, {
+      opacity: 0,
+      duration: 0.4,
+      ease: "power2.in",
+      onComplete: () => {
+        phaseRadar.hidden = true;
+        phaseGameover.hidden = false;
+        gsap.fromTo(
+          gameoverFrame,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }
+        );
+        shipShake(gameoverFrame, 14);
+      }
+    });
+  }
+
+  /* ============ Fase Final: Restauración Temporal Completa ============ */
+  function showFinalCongrats() {
+    ftRoot.classList.add("is-repaired");
+    ftRoot.dataset.phase = "final";
+    gsap.to(phaseRadar, {
+      opacity: 0,
+      duration: 0.4,
+      ease: "power2.in",
+      onComplete: () => {
+        phaseRadar.hidden = true;
+        phaseFinal.hidden = false;
+        gsap.fromTo(
+          finalFrame,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }
+        );
+      }
+    });
+  }
+
+  function restartGame() {
+    window.location.reload();
+  }
+
+  /* ============ Inicialización ============ */
+  function init() {
+    renderDiagnosticLog();
+    window.setTimeout(() => shipShake(alertFrame, 10), 250);
+    startAmbientTremor();
+
+    startScanBtn.addEventListener("click", goToRadarPhase);
+    continueToChallengeBtn.addEventListener("click", () => {
+      challengeEyebrow.textContent = "> VERIFICACIÓN DE MEMORIA";
+      failTracker.hidden = false;
+      failCountEl.textContent = "0";
+      showChallengePanel();
+      renderNextAnomalyQuestion();
+    });
+    triviaRetryBtn.addEventListener("click", () => {
+      if (sessionMode === "anomaly") {
+        renderNextAnomalyQuestion();
+      } else {
+        renderQuestion(currentFinalQuestion);
+      }
+    });
+    dossierModal.addEventListener("cancel", guardDossierClose);
+    restartBtn.addEventListener("click", restartGame);
+    replayBtn.addEventListener("click", restartGame);
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>

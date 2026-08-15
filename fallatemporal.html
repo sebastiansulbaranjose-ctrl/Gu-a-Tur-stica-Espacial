@@ -438,21 +438,6 @@
       repeating-linear-gradient(0deg,transparent 0 28px,rgba(82,231,255,.06) 29px 30px),
       repeating-linear-gradient(90deg,transparent 0 28px,rgba(82,231,255,.06) 29px 30px);
   }
-  .ft-era-orb{
-    width:180px;aspect-ratio:1;
-    border-radius:50%;
-    background:var(--era-gradient,radial-gradient(circle,#52e7ff,#241d5c));
-    box-shadow:inset -26px -16px 30px rgba(0,0,0,.5),0 0 55px var(--era-glow,rgba(82,231,255,.4));
-    position:relative;z-index:1;
-    transition:background .4s ease,box-shadow .4s ease;
-  }
-  .ft-era-rings{
-    position:absolute;
-    width:250px;aspect-ratio:1;
-    border:1px solid rgba(82,231,255,.36);
-    border-radius:50%;
-    box-shadow:0 0 0 38px rgba(82,231,255,.05),0 0 0 76px rgba(82,231,255,.025);
-  }
   .ft-dossier-data{padding:44px clamp(24px,4vw,52px) 36px;}
   .ft-dossier-data h2{
     font-size:clamp(1.7rem,3.4vw,2.7rem);
@@ -526,8 +511,6 @@
   @media (max-width:760px){
     .ft-dossier-body{grid-template-columns:1fr;}
     .ft-dossier-visual{min-height:220px;border-right:0;border-bottom:1px solid var(--line);}
-    .ft-era-orb{width:130px;}
-    .ft-era-rings{width:180px;}
     .ft-radar-stage{width:min(320px,86vw);}
     .ft-anomaly{width:32px;height:32px;margin:-16px 0 0 -16px;font-size:.72rem;}
   }
@@ -538,16 +521,775 @@
       scroll-behavior:auto!important;
     }
   }
+  /* ===================================================================
+     ACTUALIZACIÓN INTEGRAL — bloque añadido
+     Intro narrativa · nodos agujero de gusano · anomalías cyberpunk ·
+     fondos por época · cohete vectorial · diario · contexto · dispositivo · insignia
+     =================================================================== */
+
+  /* ---------- 1. Fondo dinámico por época ---------- */
+  .ft-root{
+    --era-accent:var(--cyan);
+    --era-glow-a:rgba(82,231,255,.10);
+    --era-glow-b:rgba(174,115,255,.08);
+    transition:--era-accent .8s ease;
+  }
+  .ft-bg{
+    background:
+      radial-gradient(circle at 12% 20%,#d6f5ff 0 1px,transparent 1.6px),
+      radial-gradient(circle at 82% 14%,#fff 0 1px,transparent 1.4px),
+      radial-gradient(circle at 40% 62%,#a5e8ff 0 1px,transparent 1.6px),
+      radial-gradient(circle at 66% 80%,#fff 0 1px,transparent 1.5px),
+      radial-gradient(circle at 18% 24%,var(--era-glow-a),transparent 42%),
+      radial-gradient(circle at 82% 74%,var(--era-glow-b),transparent 46%),
+      var(--bg);
+    background-size:240px 240px,180px 180px,270px 270px,210px 210px,auto,auto,auto;
+    transition:background 1.1s ease;
+  }
+  /* Velo de color de la época, por encima del campo de estrellas */
+  .ft-era-veil{
+    position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:radial-gradient(ellipse at 50% 0%,var(--era-glow-a),transparent 62%);
+    opacity:0;transition:opacity 1.1s ease;
+  }
+  .ft-root[data-era]:not([data-era=""]) .ft-era-veil{opacity:1;}
+
+  /* ---------- 2. Cohete vectorial (sustituye la flecha) ---------- */
+  .ft-rocket-icon{
+    width:18px;height:18px;flex:none;
+    fill:currentColor;
+    filter:drop-shadow(0 0 6px currentColor);
+  }
+  .ft-rocket-icon.is-large{width:46px;height:46px;}
+  .ft-rocket-icon .ft-rocket-window{fill:#04101e;opacity:.85;}
+  .ft-rocket-icon .ft-rocket-flame{fill:var(--amber);}
+  .ft-timeline-ship{
+    clip-path:none;
+    background:transparent;
+    box-shadow:none;
+    width:26px;height:26px;
+    margin-left:-13px;top:6px;
+    display:grid;place-items:center;
+    color:var(--amber);
+    transform:rotate(90deg);
+  }
+  .ft-timeline-ship .ft-rocket-icon{
+    width:22px;height:22px;
+    filter:drop-shadow(0 0 8px var(--amber)) drop-shadow(0 0 14px rgba(255,180,84,.5));
+  }
+
+  /* ---------- 3. Nodos de progresión: agujeros de gusano ---------- */
+  .ft-timeline-node{
+    width:30px;height:30px;margin-left:-15px;top:6px;
+    border:0;background:transparent;box-shadow:none;
+    overflow:visible;
+  }
+  .ft-timeline-node::before{
+    content:"";position:absolute;inset:0;border-radius:50%;
+    background:conic-gradient(from 0deg,transparent 0deg,rgba(130,158,225,.55) 90deg,transparent 200deg,rgba(130,158,225,.35) 300deg,transparent 360deg);
+    -webkit-mask:radial-gradient(circle,transparent 34%,#000 36%);
+            mask:radial-gradient(circle,transparent 34%,#000 36%);
+    animation:ft-wormhole 5.5s linear infinite;
+    transition:filter .4s ease;
+  }
+  .ft-timeline-node::after{
+    content:"";position:absolute;inset:32%;border-radius:50%;
+    background:radial-gradient(circle at 42% 38%,rgba(255,255,255,.5),rgba(10,15,34,.95) 68%);
+    border:1px solid rgba(130,158,225,.45);
+    transition:background .4s ease,border-color .4s ease,box-shadow .4s ease;
+  }
+  @keyframes ft-wormhole{to{transform:rotate(360deg);}}
+  .ft-timeline-node span{top:34px;}
+  .ft-timeline-node.is-active::before{
+    background:conic-gradient(from 0deg,transparent 0deg,var(--cyan) 80deg,transparent 190deg,rgba(82,231,255,.6) 300deg,transparent 360deg);
+    filter:drop-shadow(0 0 8px var(--cyan));
+    animation-duration:2.4s;
+  }
+  .ft-timeline-node.is-active::after{
+    background:radial-gradient(circle at 42% 38%,#fff,var(--cyan) 55%,#05304a 100%);
+    border-color:var(--cyan);
+    box-shadow:0 0 16px rgba(82,231,255,.75);
+  }
+  .ft-timeline-node.is-active{color:var(--cyan);}
+  .ft-timeline-node.is-done::before{
+    background:conic-gradient(from 0deg,transparent 0deg,var(--green) 110deg,transparent 240deg,rgba(117,247,171,.5) 330deg,transparent 360deg);
+    filter:drop-shadow(0 0 7px var(--green));
+    animation-duration:8s;
+  }
+  .ft-timeline-node.is-done::after{
+    background:radial-gradient(circle at 42% 38%,#fff,var(--green) 60%,#08341f 100%);
+    border-color:var(--green);
+    box-shadow:0 0 14px rgba(117,247,171,.6);
+  }
+  .ft-timeline-node.is-done{color:var(--green);}
+
+  /* ---------- 4. Anomalías cyberpunk ---------- */
+  .ft-anomaly{
+    width:46px;height:46px;margin:-23px 0 0 -23px;
+    border:0;background:transparent;box-shadow:none;
+    color:#eaf6ff;font:800 .74rem var(--display);
+    text-shadow:0 0 8px var(--dot-color,var(--purple));
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+    cursor:pointer;
+    transition:transform .28s cubic-bezier(.22,1,.36,1),filter .28s ease;
+    animation:none;
+  }
+  /* anillo neón exterior con corte tipo HUD */
+  .ft-anomaly::before{
+    content:"";position:absolute;inset:0;border-radius:50%;
+    border:2px solid var(--dot-color,var(--purple));
+    box-shadow:0 0 14px var(--dot-color,var(--purple)),inset 0 0 12px color-mix(in srgb,var(--dot-color,var(--purple)) 45%,transparent);
+    clip-path:polygon(0 0,100% 0,100% 34%,86% 50%,100% 66%,100% 100%,0 100%,0 66%,14% 50%,0 34%);
+    animation:ft-anomaly-spin 7s linear infinite;
+    transition:box-shadow .28s ease;
+  }
+  /* núcleo latente */
+  .ft-anomaly::after{
+    content:"";position:absolute;inset:8px;border-radius:50%;
+    background:radial-gradient(circle at 36% 32%,#fff,var(--dot-color,var(--purple)) 52%,#080b1c 100%);
+    box-shadow:0 0 18px var(--dot-color,var(--purple));
+    animation:ft-anomaly-core 1.6s ease-in-out infinite;
+  }
+  .ft-anomaly > *{position:relative;z-index:1;}
+  @keyframes ft-anomaly-spin{to{transform:rotate(360deg);}}
+  @keyframes ft-anomaly-core{
+    0%,100%{transform:scale(1);opacity:.94;}
+    50%{transform:scale(1.09);opacity:1;}
+  }
+  .ft-anomaly:hover,.ft-anomaly:focus-visible{
+    transform:scale(1.16);
+    filter:brightness(1.25) saturate(1.2);
+  }
+  .ft-anomaly:hover::before,.ft-anomaly:focus-visible::before{
+    box-shadow:0 0 26px var(--dot-color,var(--purple)),0 0 46px var(--dot-color,var(--purple)),inset 0 0 16px color-mix(in srgb,var(--dot-color,var(--purple)) 60%,transparent);
+    animation-duration:1.6s;
+  }
+  .ft-anomaly:focus-visible{outline:2px solid #fff;outline-offset:6px;border-radius:50%;}
+  .ft-anomaly:active{transform:scale(1.02);}
+  .ft-anomaly.is-scanning{animation:ft-anomaly-lock .5s ease-out;}
+  @keyframes ft-anomaly-lock{
+    0%{transform:scale(1.16);}
+    55%{transform:scale(.82);filter:brightness(2.2);}
+    100%{transform:scale(1.16);}
+  }
+
+  /* ---------- 5. Intro de simulación ---------- */
+  .ft-alert-frame.is-sim{border-color:rgba(82,231,255,.45);}
+  .ft-alert-frame.is-sim .ft-alert-title span{color:var(--cyan);}
+  .ft-pulse-dot.is-calm{background:var(--green);box-shadow:0 0 8px var(--green);}
+  .ft-sim-visual{
+    position:relative;width:min(190px,44vw);aspect-ratio:1;margin:20px auto 6px;
+    display:grid;place-items:center;
+  }
+  .ft-sim-ring{
+    position:absolute;inset:0;border-radius:50%;
+    border:1px dashed rgba(82,231,255,.4);
+    animation:ft-sim-spin 14s linear infinite;
+  }
+  .ft-sim-ring.delay{inset:16%;border-style:solid;border-color:rgba(174,115,255,.3);animation-duration:9s;animation-direction:reverse;}
+  @keyframes ft-sim-spin{to{transform:rotate(360deg);}}
+  .ft-sim-core{
+    width:44%;aspect-ratio:1;border-radius:50%;
+    background:radial-gradient(circle at 36% 30%,#fff,var(--cyan) 48%,#06243a 100%);
+    box-shadow:0 0 30px rgba(82,231,255,.55);
+    transition:background .5s ease,box-shadow .5s ease,transform .4s ease;
+  }
+  .ft-sim-core.is-critical{
+    background:radial-gradient(circle at 36% 30%,#fff,var(--red) 48%,#3a0612 100%);
+    box-shadow:0 0 46px rgba(255,99,137,.85);
+    animation:ft-sim-crit .32s steps(2) infinite;
+  }
+  @keyframes ft-sim-crit{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
+  .ft-intro-dots{display:flex;gap:8px;justify-content:center;margin:14px 0 20px;}
+  .ft-intro-dots i{
+    width:26px;height:3px;border-radius:2px;background:rgba(130,158,225,.3);
+    transition:background .35s ease,box-shadow .35s ease;
+  }
+  .ft-intro-dots i.is-on{background:var(--cyan);box-shadow:0 0 8px var(--cyan);}
+  .ft-intro-dots i.is-crit{background:var(--red);box-shadow:0 0 8px var(--red);}
+
+  /* ---------- 6. Herramientas del HUD ---------- */
+  /* El HUD pasa a rejilla para que el nombre de la época, el estado y las
+     herramientas no se aplasten entre sí al añadir los botones nuevos. */
+  .ft-radar-hud-top{
+    width:min(980px,100%);
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-areas:"id tools" "status tools";
+    gap:6px 18px;
+    align-items:center;
+  }
+  .ft-hud-id{grid-area:id;}
+  .ft-hud-status{grid-area:status;}
+  .ft-hud-tools{grid-area:tools;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+  /* El número de la anomalía debe quedar por encima del núcleo luminoso. */
+  .ft-anomaly{isolation:isolate;}
+  .ft-anomaly::after{z-index:-1;}
+  .ft-anomaly::before{z-index:1;}
+  .ft-tool-btn{
+    display:inline-flex;align-items:center;gap:7px;min-height:38px;
+    padding:8px 13px;
+    font:700 .52rem var(--display);letter-spacing:1px;
+    color:#9eacd0;background:rgba(9,15,36,.6);
+    border:1px solid rgba(130,158,225,.35);
+    cursor:pointer;transition:.22s;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  }
+  .ft-tool-btn:hover,.ft-tool-btn:focus-visible{
+    color:var(--cyan);border-color:var(--cyan);
+    background:rgba(82,231,255,.09);
+    box-shadow:0 0 14px rgba(82,231,255,.28);
+  }
+  .ft-tool-count{
+    display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 5px;
+    border-radius:10px;background:var(--cyan);color:#04101e;font-size:.5rem;
+  }
+  .ft-tool-btn.is-new{border-color:var(--amber);color:var(--amber);animation:ft-tool-ping 1.4s ease-in-out 3;}
+  @keyframes ft-tool-ping{0%,100%{box-shadow:0 0 0 0 rgba(255,180,84,0);}50%{box-shadow:0 0 0 7px rgba(255,180,84,.18);}}
+
+  /* ---------- 7. Inventario del dispositivo ---------- */
+  .ft-device{
+    position:absolute;left:clamp(14px,4vw,46px);bottom:clamp(96px,16vh,150px);
+    width:min(232px,46vw);z-index:4;
+    padding:13px 15px;
+    border:1px solid rgba(130,158,225,.3);
+    background:rgba(6,10,26,.78);
+    backdrop-filter:blur(6px);
+  }
+  .ft-device-title{
+    margin:0 0 10px;display:flex;justify-content:space-between;gap:8px;align-items:baseline;
+    font:700 .48rem var(--display);letter-spacing:1.1px;color:var(--muted);
+  }
+  .ft-device-title strong{color:var(--cyan);font-size:.68rem;}
+  .ft-device-list{list-style:none;margin:0;padding:0;display:grid;gap:7px;}
+  .ft-device-list li{
+    display:flex;align-items:center;gap:9px;
+    padding:7px 9px;
+    border:1px solid rgba(130,158,225,.22);
+    background:rgba(255,255,255,.015);
+    font-size:.5rem;letter-spacing:.7px;color:#6f7ea3;
+    transition:.4s;
+  }
+  .ft-device-list li i{
+    flex:none;width:11px;height:11px;border-radius:50%;
+    border:1px solid rgba(130,158,225,.4);background:transparent;transition:.4s;
+  }
+  .ft-device-list li.is-owned{
+    color:#eaf6ff;border-color:var(--era-accent,var(--cyan));
+    background:color-mix(in srgb,var(--era-accent,var(--cyan)) 8%,transparent);
+    box-shadow:0 0 13px color-mix(in srgb,var(--era-accent,var(--cyan)) 28%,transparent);
+  }
+  .ft-device-list li.is-owned i{
+    background:var(--piece-color,var(--cyan));
+    border-color:var(--piece-color,var(--cyan));
+    box-shadow:0 0 9px var(--piece-color,var(--cyan));
+  }
+  .ft-device-list li.just-added{animation:ft-piece-in .8s cubic-bezier(.22,1,.36,1);}
+  @keyframes ft-piece-in{
+    0%{transform:translateX(-14px) scale(.9);opacity:0;}
+    60%{transform:translateX(3px) scale(1.04);opacity:1;}
+    100%{transform:none;opacity:1;}
+  }
+
+  /* ---------- 8. Modales laterales: contexto y diario ---------- */
+  .ft-side-modal{
+    width:min(680px,92vw);padding:0;border:0;background:transparent;color:var(--ink);
+  }
+  .ft-side-modal::backdrop{background:rgba(1,3,14,.8);backdrop-filter:blur(6px);}
+  .ft-side-frame{
+    border:1px solid var(--cyan);background:#070c1d;
+    box-shadow:0 0 50px rgba(82,231,255,.2);
+  }
+  .ft-side-body{
+    padding:24px clamp(20px,3.4vw,34px) 28px;
+    max-height:min(72vh,620px);max-height:min(72dvh,620px);
+    overflow-y:auto;
+  }
+  .ft-side-body h2{margin:0 0 14px;font-size:clamp(1.4rem,3vw,2.1rem);letter-spacing:-1px;}
+  .ft-side-intro{margin:0 0 20px;color:var(--muted);font-size:.76rem;line-height:1.85;}
+  .ft-side-label{
+    margin:0 0 11px;font:700 .5rem var(--display);letter-spacing:1.4px;color:var(--cyan);
+  }
+  .ft-side-foot{
+    margin:20px 0 0;padding-top:14px;border-top:1px solid rgba(130,158,225,.22);
+    color:var(--muted);font-size:.62rem;line-height:1.75;
+  }
+  .ft-close-btn{
+    width:38px;height:38px;display:grid;place-items:center;padding:0;
+    background:transparent;border:0;color:var(--cyan);font-size:1.6rem;line-height:1;
+    cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  }
+  .ft-close-btn:hover{color:#fff;}
+  .ft-context-list{list-style:none;margin:0;padding:0;display:grid;gap:9px;}
+  .ft-context-list li{
+    position:relative;padding:11px 13px 11px 34px;
+    border:1px solid rgba(130,158,225,.25);background:rgba(255,255,255,.02);
+    font-size:.7rem;line-height:1.7;color:#c9d3ef;
+  }
+  .ft-context-list li::before{
+    content:"◈";position:absolute;left:13px;top:11px;color:var(--era-accent,var(--cyan));font-size:.6rem;
+  }
+  .ft-journal-list{list-style:none;margin:0;padding:0;display:grid;gap:14px;counter-reset:jr;}
+  .ft-journal-list li{
+    position:relative;padding:15px 17px 15px 19px;
+    border:1px solid rgba(130,158,225,.25);
+    border-left:2px solid var(--entry-color,var(--cyan));
+    background:rgba(255,255,255,.02);
+  }
+  .ft-journal-entry-head{
+    display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    margin:0 0 8px;font:700 .46rem var(--display);letter-spacing:1.1px;
+    color:var(--entry-color,var(--cyan));
+  }
+  .ft-journal-list p{margin:0;font-size:.72rem;line-height:1.9;color:#d5dcf0;font-style:italic;}
+  .ft-journal-empty{color:var(--muted);font-size:.72rem;line-height:1.8;padding:16px 0;}
+
+  /* ---------- 9. Expediente: imagen intercalada y datos clave ---------- */
+  .ft-topic-figure{
+    margin:0 0 18px;border:1px solid rgba(130,158,225,.3);background:#050a18;overflow:hidden;
+  }
+  .ft-topic-figure[hidden]{display:none;}
+  .ft-topic-figure img{
+    display:block;width:100%;height:clamp(140px,20vh,208px);object-fit:cover;
+    filter:saturate(1.05) contrast(1.04);
+  }
+  .ft-topic-figure figcaption{
+    padding:8px 12px;border-top:1px solid rgba(130,158,225,.22);
+    font-size:.53rem;letter-spacing:.8px;color:var(--muted);line-height:1.6;
+  }
+  .ft-topic-figure.is-broken img{display:none;}
+  .ft-topic-figure.is-broken{
+    background:radial-gradient(circle at 34% 30%,color-mix(in srgb,var(--era-accent,var(--cyan)) 30%,transparent),transparent 62%),#050a18;
+  }
+  /* dato clave resaltado dentro de la teoría */
+  mark.ft-key{
+    background:color-mix(in srgb,var(--era-accent,var(--cyan)) 17%,transparent);
+    color:#fff;font-weight:700;padding:1px 5px;border-radius:3px;
+    box-shadow:0 0 10px color-mix(in srgb,var(--era-accent,var(--cyan)) 26%,transparent);
+  }
+  .ft-keycard{
+    margin:16px 0 20px;padding:13px 15px;
+    border:1px solid color-mix(in srgb,var(--era-accent,var(--cyan)) 50%,transparent);
+    border-left:3px solid var(--era-accent,var(--cyan));
+    background:color-mix(in srgb,var(--era-accent,var(--cyan)) 6%,transparent);
+  }
+  .ft-keycard[hidden]{display:none;}
+  .ft-keycard-label{
+    display:block;margin-bottom:9px;
+    font:700 .46rem var(--display);letter-spacing:1.4px;color:var(--era-accent,var(--cyan));
+  }
+  .ft-keycard ul{list-style:none;margin:0;padding:0;display:grid;gap:6px;}
+  .ft-keycard li{
+    position:relative;padding-left:16px;font-size:.63rem;line-height:1.65;color:#e4ebff;
+  }
+  .ft-keycard li::before{
+    content:"▸";position:absolute;left:0;color:var(--era-accent,var(--cyan));
+  }
+
+  /* ---------- 10. Insignia de Explorador Temporal ---------- */
+  .ft-badge{
+    display:grid;grid-template-columns:auto minmax(0,1fr);gap:20px;align-items:start;
+    margin:24px 0;padding:20px;
+    border:1px solid var(--amber);
+    background:linear-gradient(140deg,rgba(255,180,84,.11),rgba(174,115,255,.07));
+    box-shadow:0 0 34px rgba(255,180,84,.22),inset 0 0 26px rgba(255,180,84,.05);
+  }
+  .ft-badge-medal{
+    width:86px;height:86px;display:grid;place-items:center;border-radius:50%;
+    color:var(--amber);
+    background:radial-gradient(circle at 36% 30%,rgba(255,255,255,.22),rgba(6,10,26,.9) 68%);
+    border:2px solid var(--amber);
+    box-shadow:0 0 26px rgba(255,180,84,.45),inset 0 0 18px rgba(255,180,84,.16);
+    animation:ft-badge-glow 2.8s ease-in-out infinite;
+  }
+  @keyframes ft-badge-glow{
+    0%,100%{box-shadow:0 0 26px rgba(255,180,84,.45),inset 0 0 18px rgba(255,180,84,.16);}
+    50%{box-shadow:0 0 40px rgba(255,180,84,.7),inset 0 0 24px rgba(255,180,84,.24);}
+  }
+  .ft-badge-rank{margin:0 0 6px;font:700 .48rem var(--display);letter-spacing:1.6px;color:var(--amber);}
+  .ft-badge-name{margin:0 0 11px;font-size:clamp(1.3rem,3.4vw,2rem);letter-spacing:-.8px;color:#fff;}
+  .ft-badge-desc{margin:0 0 14px;font-size:.7rem;line-height:1.8;color:#d5dcf0;}
+  .ft-badge-desc strong{color:var(--amber);}
+  .ft-badge-pieces{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px;}
+  .ft-badge-pieces li{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:5px 9px;border:1px solid rgba(255,180,84,.4);
+    background:rgba(255,180,84,.07);
+    font:700 .44rem var(--display);letter-spacing:.9px;color:#ffd9a0;
+  }
+  .ft-final-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+  .ft-final-actions .primary-button{text-decoration:none;}
+
+  /* ---------- 11. Responsive ---------- */
+  @media (max-width:820px){
+    .ft-device{
+      position:static;width:auto;margin:14px auto 0;max-width:420px;
+    }
+    .ft-hud-tools{width:100%;}
+    .ft-tool-btn{flex:1;justify-content:center;min-height:44px;}
+    .ft-badge{grid-template-columns:1fr;justify-items:center;text-align:center;}
+    .ft-badge-pieces{justify-content:center;}
+    .ft-final-actions .primary-button{width:100%;justify-content:center;}
+  }
+  @media (max-width:560px){
+    .ft-anomaly{width:52px;height:52px;margin:-26px 0 0 -26px;}
+    .ft-side-body{max-height:min(76vh,620px);max-height:min(76dvh,620px);}
+    .ft-close-btn{width:44px;height:44px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .ft-timeline-node::before,.ft-anomaly::before,.ft-anomaly::after,
+    .ft-sim-ring,.ft-badge-medal{animation:none!important;}
+  }
+  /* ===================================================================
+     FASE 2 — imágenes en lugar de esferas · anomalías en órbita ·
+     diario acordeón · animación de candados
+     =================================================================== */
+
+  /* ---------- 1. Fuera las esferas CSS ---------- */
+  /* Las esferas CSS quedaron eliminadas del hoja de estilos: todo cuerpo
+     se representa ahora con una imagen real. */
+  .ft-anomaly::after{content:none!important;}
+  .ft-sim-core{
+    background:none;box-shadow:none;
+    width:100%;height:100%;border-radius:0;
+    overflow:hidden;position:relative;
+    border:1px solid rgba(82,231,255,.35);
+  }
+  .ft-sim-core img{
+    width:100%;height:100%;object-fit:cover;display:block;
+    filter:saturate(1.1) contrast(1.05);
+    transition:filter .5s ease;
+  }
+  .ft-sim-core::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(160deg,rgba(82,231,255,.18),transparent 55%),
+               repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.22) 3px 4px);
+    transition:background .5s ease;
+  }
+  .ft-sim-core.is-critical{animation:ft-sim-crit .32s steps(2) infinite;}
+  .ft-sim-core.is-critical img{filter:saturate(1.5) contrast(1.2) hue-rotate(-35deg);}
+  .ft-sim-core.is-critical::after{
+    background:linear-gradient(160deg,rgba(255,99,137,.4),transparent 55%),
+               repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.28) 3px 4px);
+  }
+  .ft-sim-visual{width:min(300px,66vw);aspect-ratio:16/10;}
+
+  /* ---------- 2. Panel visual del expediente = imagen real ---------- */
+  .ft-dossier-visual{padding:20px;overflow:hidden;}
+  .ft-dossier-visual .ft-topic-figure{
+    margin:0;width:100%;max-width:420px;border:1px solid rgba(130,158,225,.35);
+    background:#050a18;overflow:hidden;position:relative;z-index:1;
+    box-shadow:0 0 34px rgba(0,0,0,.5);
+  }
+  .ft-dossier-visual .ft-topic-figure img{
+    height:clamp(190px,30vh,290px);
+    transition:transform .6s cubic-bezier(.22,1,.36,1);
+  }
+  .ft-dossier-visual .ft-topic-figure:hover img{transform:scale(1.05);}
+  /* marco de escáner que sustituye a los antiguos anillos de la esfera */
+  .ft-scan-frame{
+    position:absolute;inset:12px;pointer-events:none;
+    border:1px solid rgba(82,231,255,.22);
+  }
+  .ft-scan-frame::before,.ft-scan-frame::after{
+    content:"";position:absolute;width:22px;height:22px;
+    border:2px solid var(--era-accent,var(--cyan));
+  }
+  .ft-scan-frame::before{top:-1px;left:-1px;border-right:0;border-bottom:0;}
+  .ft-scan-frame::after{bottom:-1px;right:-1px;border-left:0;border-top:0;}
+
+  /* ---------- 3. Anomalías: miniatura real + órbita continua ---------- */
+  .ft-orbit{
+    position:absolute;
+    inset:var(--orbit-inset,25%);
+    pointer-events:none;
+    animation:ft-orbit-spin var(--orbit-dur,110s) linear infinite;
+  }
+  @keyframes ft-orbit-spin{
+    from{transform:rotate(var(--orbit-start,0deg));}
+    to{transform:rotate(calc(var(--orbit-start,0deg) + 360deg));}
+  }
+  .ft-orbit-pos{
+    position:absolute;top:0;left:50%;
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+  }
+  /* contrarrotación: el icono nunca se pone del revés */
+  .ft-orbit-counter{
+    animation:ft-orbit-counter var(--orbit-dur,110s) linear infinite;
+    pointer-events:none;
+  }
+  @keyframes ft-orbit-counter{
+    from{transform:rotate(calc(var(--orbit-start,0deg) * -1));}
+    to{transform:rotate(calc((var(--orbit-start,0deg) * -1) - 360deg));}
+  }
+  /* huella tenue de la órbita, para que el movimiento se lea */
+  .ft-orbit-path{
+    position:absolute;inset:var(--orbit-inset,25%);
+    border-radius:50%;
+    border:1px dashed rgba(130,158,225,.14);
+    pointer-events:none;
+  }
+  .ft-anomaly{
+    position:relative;left:auto;top:auto;margin:0;
+    width:56px;height:56px;
+    pointer-events:auto;
+    overflow:visible;
+  }
+  .ft-anomaly-img{
+    position:absolute;inset:4px;
+    width:calc(100% - 8px);height:calc(100% - 8px);
+    object-fit:cover;border-radius:50%;
+    z-index:0;
+    background:radial-gradient(circle at 34% 30%,#2a3560,#070b1c 72%);
+    transition:filter .28s ease;
+  }
+  .ft-anomaly-num{
+    position:absolute;right:-3px;bottom:-3px;z-index:2;
+    min-width:19px;height:19px;padding:0 4px;
+    display:grid;place-items:center;border-radius:10px;
+    background:var(--dot-color,var(--purple));
+    color:#04101e;font:800 .56rem var(--display);
+    box-shadow:0 0 10px var(--dot-color,var(--purple));
+    text-shadow:none;
+  }
+  .ft-anomaly:hover .ft-anomaly-img,.ft-anomaly:focus-visible .ft-anomaly-img{
+    filter:brightness(1.2) saturate(1.15);
+  }
+
+  /* ---------- 4. Imágenes en contexto y diario ---------- */
+  .ft-context-figure{
+    margin:0 0 20px;border:1px solid rgba(130,158,225,.3);
+    background:#050a18;overflow:hidden;
+  }
+  .ft-context-figure img{
+    display:block;width:100%;height:clamp(150px,24vh,230px);object-fit:cover;
+  }
+  .ft-context-figure figcaption{
+    padding:9px 13px;border-top:1px solid rgba(130,158,225,.22);
+    font-size:.55rem;letter-spacing:.7px;color:var(--muted);line-height:1.6;
+  }
+  .ft-context-figure.is-broken img,.ft-journal-figure.is-broken img{display:none;}
+  .ft-context-figure.is-broken,.ft-journal-figure.is-broken{
+    background:radial-gradient(circle at 32% 28%,color-mix(in srgb,var(--era-accent,var(--cyan)) 26%,transparent),transparent 64%),#050a18;
+  }
+
+  /* ---------- 5. Diario del Viajero en acordeón ---------- */
+  .ft-journal-list li{padding:0;overflow:hidden;}
+  .ft-journal-toggle{
+    width:100%;display:flex;align-items:center;gap:12px;
+    padding:14px 15px;
+    background:transparent;border:0;cursor:pointer;text-align:left;
+    color:inherit;font:inherit;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+    transition:background .22s ease;
+  }
+  .ft-journal-toggle:hover,.ft-journal-toggle:focus-visible{
+    background:color-mix(in srgb,var(--entry-color,var(--cyan)) 8%,transparent);
+  }
+  .ft-journal-toggle:focus-visible{outline:2px solid var(--entry-color,var(--cyan));outline-offset:-2px;}
+  .ft-journal-index{
+    flex:none;display:grid;place-items:center;
+    width:30px;height:30px;border-radius:50%;
+    border:1px solid var(--entry-color,var(--cyan));
+    color:var(--entry-color,var(--cyan));
+    font:800 .5rem var(--display);
+    box-shadow:0 0 10px color-mix(in srgb,var(--entry-color,var(--cyan)) 30%,transparent);
+  }
+  .ft-journal-heading{
+    flex:1;min-width:0;
+    font:700 .58rem var(--display);letter-spacing:1px;
+    color:#eaf6ff;line-height:1.5;
+  }
+  .ft-journal-heading small{
+    display:block;margin-top:3px;
+    font:400 .48rem var(--display);letter-spacing:.9px;
+    color:var(--entry-color,var(--cyan));opacity:.85;
+  }
+  .ft-journal-arrow{
+    flex:none;width:22px;height:22px;display:grid;place-items:center;
+    color:var(--entry-color,var(--cyan));font-size:.7rem;
+    transition:transform .32s cubic-bezier(.22,1,.36,1);
+  }
+  .ft-journal-toggle[aria-expanded="true"] .ft-journal-arrow{transform:rotate(180deg);}
+  .ft-journal-panel{
+    display:grid;grid-template-rows:0fr;
+    transition:grid-template-rows .38s cubic-bezier(.22,1,.36,1);
+  }
+  .ft-journal-panel > div{overflow:hidden;min-height:0;}
+  .ft-journal-panel.is-open{grid-template-rows:1fr;}
+  .ft-journal-inner{padding:0 15px 16px 57px;}
+  .ft-journal-figure{
+    margin:0 0 12px;border:1px solid rgba(130,158,225,.28);
+    background:#050a18;overflow:hidden;
+  }
+  .ft-journal-figure img{display:block;width:100%;height:clamp(110px,16vh,158px);object-fit:cover;}
+  .ft-journal-list p{margin:0;font-size:.72rem;line-height:1.9;color:#d5dcf0;font-style:italic;}
+  .ft-journal-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;}
+  .ft-journal-toolbar button{
+    padding:8px 12px;min-height:38px;
+    font:700 .48rem var(--display);letter-spacing:1px;
+    color:#9eacd0;background:rgba(9,15,36,.6);
+    border:1px solid rgba(130,158,225,.35);cursor:pointer;transition:.22s;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  }
+  .ft-journal-toolbar button:hover{color:var(--cyan);border-color:var(--cyan);}
+
+  /* ---------- 6. Desbloqueo: candados rompiéndose ---------- */
+  .ft-unlock{
+    position:fixed;inset:0;z-index:60;
+    display:grid;place-items:center;
+    background:rgba(1,3,14,.86);backdrop-filter:blur(7px);
+    animation:ft-fade-in .32s ease;
+  }
+  .ft-unlock[hidden]{display:none;}
+  @keyframes ft-fade-in{from{opacity:0;}to{opacity:1;}}
+  .ft-unlock-card{
+    width:min(460px,90vw);padding:30px 28px 26px;text-align:center;
+    border:1px solid var(--era-accent,var(--cyan));
+    background:linear-gradient(160deg,rgba(10,16,38,.97),rgba(6,10,26,.99));
+    box-shadow:0 0 60px color-mix(in srgb,var(--era-accent,var(--cyan)) 30%,transparent);
+  }
+  .ft-unlock-eyebrow{
+    margin:0 0 20px;font:700 .5rem var(--display);letter-spacing:1.6px;
+    color:var(--era-accent,var(--cyan));
+  }
+  .ft-unlock-stage{
+    position:relative;width:170px;height:170px;margin:0 auto 20px;
+    display:grid;place-items:center;
+  }
+  .ft-unlock-piece{
+    width:112px;height:112px;display:grid;place-items:center;
+    color:var(--era-accent,var(--cyan));
+    filter:grayscale(1) brightness(.55);
+    transition:filter .7s ease,transform .7s cubic-bezier(.22,1,.36,1);
+  }
+  .ft-piece-glyph{width:100%;height:100%;}
+  .ft-piece-shell{fill:none;stroke:currentColor;stroke-width:2;opacity:.55;}
+  .ft-piece-core{fill:color-mix(in srgb,currentColor 16%,transparent);stroke:currentColor;stroke-width:1.5;}
+  .ft-piece-spark{fill:currentColor;opacity:0;}
+  .ft-unlock-piece.is-free{
+    filter:none;transform:scale(1.06);
+    animation:ft-piece-pulse 1.6s ease-in-out infinite;
+  }
+  .ft-unlock-piece.is-free .ft-piece-spark{opacity:1;animation:ft-spark 1.2s ease-in-out infinite;}
+  @keyframes ft-piece-pulse{
+    0%,100%{filter:drop-shadow(0 0 10px currentColor);}
+    50%{filter:drop-shadow(0 0 24px currentColor);}
+  }
+  @keyframes ft-spark{0%,100%{opacity:.5;}50%{opacity:1;}}
+  /* los tres candados, repartidos alrededor de la pieza */
+  .ft-locks{position:absolute;inset:0;pointer-events:none;}
+  .ft-lock{
+    position:absolute;top:50%;left:50%;
+    width:34px;height:34px;margin:-17px 0 0 -17px;
+    color:var(--amber);
+    transform:rotate(var(--lock-a)) translateY(-70px) rotate(calc(var(--lock-a) * -1));
+    transition:opacity .3s ease;
+  }
+  .ft-lock svg{width:100%;height:100%;overflow:visible;}
+  .ft-lock .ft-lock-body{
+    fill:rgba(10,16,38,.95);stroke:currentColor;stroke-width:2;
+  }
+  .ft-lock .ft-lock-shackle{
+    fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;
+    transform-origin:12px 9px;
+    transition:transform .35s cubic-bezier(.22,1,.36,1);
+  }
+  .ft-lock.is-breaking{animation:ft-lock-shake .3s ease-in-out 2;}
+  @keyframes ft-lock-shake{
+    0%,100%{transform:rotate(var(--lock-a)) translateY(-70px) rotate(calc(var(--lock-a) * -1)) translateX(0);}
+    25%{transform:rotate(var(--lock-a)) translateY(-70px) rotate(calc(var(--lock-a) * -1)) translateX(-3px);}
+    75%{transform:rotate(var(--lock-a)) translateY(-70px) rotate(calc(var(--lock-a) * -1)) translateX(3px);}
+  }
+  .ft-lock.is-open .ft-lock-shackle{transform:rotate(-38deg) translateY(-3px);}
+  .ft-lock.is-open{color:var(--green);}
+  .ft-lock.is-gone{
+    animation:ft-lock-burst .55s cubic-bezier(.22,1,.36,1) forwards;
+  }
+  @keyframes ft-lock-burst{
+    0%{opacity:1;}
+    100%{
+      opacity:0;
+      transform:rotate(var(--lock-a)) translateY(-118px) rotate(calc(var(--lock-a) * -1)) scale(.4);
+    }
+  }
+  /* esquirlas al romperse */
+  .ft-shard{
+    position:absolute;top:50%;left:50%;width:4px;height:11px;
+    background:var(--amber);margin:-5px 0 0 -2px;
+    box-shadow:0 0 8px var(--amber);
+    animation:ft-shard-fly .7s ease-out forwards;
+    pointer-events:none;
+  }
+  @keyframes ft-shard-fly{
+    from{opacity:1;transform:rotate(var(--sa)) translateY(-70px) scale(1);}
+    to{opacity:0;transform:rotate(var(--sa)) translateY(-150px) scale(.3) rotate(180deg);}
+  }
+  .ft-unlock-code{
+    margin:0 0 6px;font:700 .5rem var(--display);letter-spacing:1.8px;
+    color:var(--era-accent,var(--cyan));
+  }
+  .ft-unlock-name{
+    margin:0 0 10px;font-size:clamp(1.1rem,3vw,1.6rem);letter-spacing:-.5px;color:#fff;
+  }
+  .ft-unlock-role{margin:0 0 16px;font-size:.68rem;line-height:1.75;color:#c9d3ef;}
+  .ft-unlock-status{
+    margin:0;font:700 .5rem var(--display);letter-spacing:1.3px;color:var(--muted);
+    min-height:1.2em;transition:color .4s ease;
+  }
+  .ft-unlock-status.is-done{color:var(--green);}
+
+  @media (max-width:560px){
+    .ft-anomaly{width:52px;height:52px;}
+    .ft-unlock-stage{width:150px;height:150px;}
+    .ft-lock{transform:rotate(var(--lock-a)) translateY(-60px) rotate(calc(var(--lock-a) * -1));}
+    .ft-journal-inner{padding-left:15px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .ft-orbit,.ft-orbit-counter{animation:none!important;}
+  }
 </style>
 </head>
 <body>
 <div class="ft-root" id="ft-root" data-phase="alert">
   <div class="ft-bg" aria-hidden="true"></div>
+  <div class="ft-era-veil" aria-hidden="true"></div>
   <div class="ft-strobe top" aria-hidden="true"></div>
   <div class="ft-strobe bottom" aria-hidden="true"></div>
 
+  <!-- ============ FASE 0: SIMULACIÓN DE ENTRENAMIENTO (INTRO NARRATIVA) ============ -->
+  <section class="ft-phase ft-phase-intro" id="phase-intro">
+    <div class="ft-alert-frame is-sim" id="intro-frame">
+      <div class="ft-alert-topbar">
+        <span><i class="ft-pulse-dot is-calm"></i> SIM_CRONOS.EXE // MÓDULO DE ENTRENAMIENTO</span>
+        <span id="intro-step-tag">SECUENCIA 1 / 4</span>
+      </div>
+      <div class="ft-alert-body">
+        <p class="ft-alert-eyebrow" id="intro-eyebrow">ACADEMIA ÓRBITA // SIMULACIÓN CONTROLADA</p>
+        <h1 class="ft-alert-title" id="intro-title">CADETE <span>VIAJERO</span></h1>
+        <p class="ft-alert-sub" id="intro-text"></p>
+        <div class="ft-sim-visual" id="intro-visual" aria-hidden="true">
+          <div class="ft-sim-ring"></div>
+          <div class="ft-sim-ring delay"></div>
+          <div class="ft-sim-core" id="intro-core"><img id="intro-core-img" src="" alt=""></div>
+        </div>
+        <div class="ft-intro-dots" id="intro-dots" aria-hidden="true"></div>
+        <button class="primary-button" id="intro-next-btn" type="button">
+          <span id="intro-btn-label">INICIAR SIMULACIÓN</span>
+          <svg class="ft-rocket-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 1.6c2.9 2.3 4.6 5.9 4.6 9.7v3.3l2.2 2.2c.3.3.4.6.4 1v3.4c0 .6-.6 1-1.1.7l-3.6-2-.6.6c-.3.3-.7.5-1.1.5h-1.6l-.5 1.7c-.1.4-.5.6-.9.6s-.7-.2-.9-.6l-.5-1.7H6.8c-.4 0-.8-.2-1.1-.5l-.6-.6-3.6 2c-.5.3-1.1-.1-1.1-.7v-3.4c0-.4.1-.7.4-1l2.2-2.2v-3.3c0-3.8 1.7-7.4 4.6-9.7L12 1.6z" opacity=".18"/>
+            <path d="M12 2c2.6 2.5 4.1 6 4.1 9.6v3.1l2 2c.2.2.3.4.3.7v2.9c0 .5-.5.8-.9.6l-3.2-1.8-.4.4c-.2.2-.5.4-.8.4h-1.2l-.4 1.4c-.1.3-.4.5-.7.5s-.6-.2-.7-.5l-.4-1.4H8.5c-.3 0-.6-.1-.8-.4l-.4-.4-3.2 1.8c-.4.2-.9-.1-.9-.6v-2.9c0-.3.1-.5.3-.7l2-2v-3.1C5.5 8 7 4.5 9.6 2L12 2z"/>
+            <circle cx="12" cy="9.4" r="2.1" class="ft-rocket-window"/>
+            <path d="M10.4 19.8c.4 1.1 1 2 1.6 2.7.6-.7 1.2-1.6 1.6-2.7-.5.2-1 .3-1.6.3s-1.1-.1-1.6-.3z" class="ft-rocket-flame"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ FASE 1: ALERTA HUD ============ -->
-  <section class="ft-phase ft-phase-alert" id="phase-alert">
+  <section class="ft-phase ft-phase-alert" id="phase-alert" hidden>
     <div class="ft-alert-frame" id="alert-frame">
       <div class="ft-alert-topbar">
         <span><i class="ft-pulse-dot"></i> FALLA_TEMPORAL.SYS</span>
@@ -575,13 +1317,23 @@
       <div class="ft-timeline-node" data-node="2" style="left:50%"><span>ÉPOCA III</span></div>
       <div class="ft-timeline-node" data-node="3" style="left:75%"><span>ÉPOCA IV</span></div>
       <div class="ft-timeline-node" data-node="4" style="left:100%"><span>PRESENTE</span></div>
-      <div class="ft-timeline-ship" id="timeline-ship"></div>
+      <div class="ft-timeline-ship" id="timeline-ship"><svg class="ft-rocket-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c2.6 2.5 4.1 6 4.1 9.6v3.1l2 2c.2.2.3.4.3.7v2.9c0 .5-.5.8-.9.6l-3.2-1.8-.4.4c-.2.2-.5.4-.8.4h-1.2l-.4 1.4c-.1.3-.4.5-.7.5s-.6-.2-.7-.5l-.4-1.4H8.5c-.3 0-.6-.1-.8-.4l-.4-.4-3.2 1.8c-.4.2-.9-.1-.9-.6v-2.9c0-.3.1-.5.3-.7l2-2v-3.1C5.5 8 7 4.5 9.6 2L12 2z"/><circle cx="12" cy="9.4" r="2.1" class="ft-rocket-window"/><path d="M10.4 19.8c.4 1.1 1 2 1.6 2.7.6-.7 1.2-1.6 1.6-2.7-.5.2-1 .3-1.6.3s-1.1-.1-1.6-.3z" class="ft-rocket-flame"/></svg></div>
     </div>
 
     <header class="ft-radar-hud-top">
       <span class="ft-hud-id"><i class="ft-pulse-dot"></i> <span id="era-label">ÉPOCA I</span></span>
       <span class="ft-hud-status" id="hud-status">RASTREANDO SEÑALES TEMPORALES</span>
+      <span class="ft-hud-tools">
+        <button class="ft-tool-btn" id="open-context-btn" type="button">CONTEXTO DE LA ÉPOCA</button>
+        <button class="ft-tool-btn" id="open-journal-btn" type="button">DIARIO <span class="ft-tool-count" id="journal-count">0</span></button>
+      </span>
     </header>
+
+    <!-- Inventario de piezas del dispositivo de salto temporal -->
+    <aside class="ft-device" id="ft-device">
+      <p class="ft-device-title">DISPOSITIVO DE SALTO TEMPORAL <strong id="device-progress">0/4</strong></p>
+      <ul class="ft-device-list" id="device-list"></ul>
+    </aside>
 
     <div class="ft-radar-stage">
       <div class="ft-radar-disc" id="radar-disc">
@@ -613,15 +1365,23 @@
       </div>
 
       <div class="ft-dossier-body" id="dossier-main-view">
-        <div class="ft-dossier-visual" aria-hidden="true">
-          <div class="ft-era-rings"></div>
-          <div class="ft-era-orb" id="era-orb"></div>
+        <!-- Panel visual: imagen real de la anomalía (sustituye la antigua esfera CSS) -->
+        <div class="ft-dossier-visual">
+          <figure class="ft-topic-figure" id="topic-figure">
+            <img id="topic-image" src="" alt="">
+            <figcaption id="topic-caption"></figcaption>
+          </figure>
+          <div class="ft-scan-frame" aria-hidden="true"></div>
         </div>
 
         <div class="ft-dossier-data" id="dossier-data-info">
           <p class="eyebrow" id="era-period">PERÍODO</p>
           <h2 id="era-title">SUBTEMA DESCUBIERTO</h2>
           <p id="era-description"></p>
+          <div class="ft-keycard" id="topic-keycard" hidden>
+            <span class="ft-keycard-label">DATOS QUE SE EVALUARÁN</span>
+            <ul id="topic-keylist"></ul>
+          </div>
           <button class="primary-button" id="continue-to-challenge-btn" type="button">
             <span>CONTINUAR AL DESAFÍO</span><span aria-hidden="true">→</span>
           </button>
@@ -637,6 +1397,68 @@
             <span>REINTENTAR</span><span aria-hidden="true">↻</span>
           </button>
         </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ============ OVERLAY: DESBLOQUEO DE PIEZA (CANDADOS ROMPIÉNDOSE) ============ -->
+  <div class="ft-unlock" id="unlock-overlay" hidden>
+    <div class="ft-unlock-card" id="unlock-card">
+      <p class="ft-unlock-eyebrow" id="unlock-eyebrow">ÉPOCA SUPERADA // LIBERANDO COMPONENTE</p>
+      <div class="ft-unlock-stage">
+        <div class="ft-unlock-piece" id="unlock-piece">
+          <svg viewBox="0 0 64 64" class="ft-piece-glyph" aria-hidden="true" focusable="false">
+            <path d="M32 6 54 18v28L32 58 10 46V18z" class="ft-piece-shell"/>
+            <path d="M32 16 44 23v14l-12 7-12-7V23z" class="ft-piece-core"/>
+            <circle cx="32" cy="30" r="4" class="ft-piece-spark"/>
+          </svg>
+        </div>
+        <div class="ft-locks" id="unlock-locks" aria-hidden="true"></div>
+      </div>
+      <p class="ft-unlock-code" id="unlock-code">PZ-01</p>
+      <h3 class="ft-unlock-name" id="unlock-name">COMPONENTE</h3>
+      <p class="ft-unlock-role" id="unlock-role"></p>
+      <p class="ft-unlock-status" id="unlock-status">ROMPIENDO SELLOS TEMPORALES…</p>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: CONTEXTO LIBRE DE LA ÉPOCA (SIN EVALUACIÓN) ============ -->
+  <dialog class="ft-side-modal" id="context-modal" aria-labelledby="context-title">
+    <div class="ft-side-frame" id="context-frame">
+      <div class="ft-dossier-head">
+        <span><i class="ft-pulse-dot"></i> CONTEXTO DE LA ÉPOCA // LECTURA LIBRE</span>
+        <button class="ft-close-btn" id="context-close" type="button" aria-label="Cerrar contexto">×</button>
+      </div>
+      <div class="ft-side-body">
+        <p class="eyebrow" id="context-period"></p>
+        <h2 id="context-title"></h2>
+        <figure class="ft-context-figure" id="context-figure">
+          <img id="context-image" src="" alt="">
+          <figcaption id="context-caption"></figcaption>
+        </figure>
+        <p class="ft-side-intro" id="context-intro"></p>
+        <p class="ft-side-label">CLAVES QUE VERÁS EN ESTA ÉPOCA</p>
+        <ul class="ft-context-list" id="context-list"></ul>
+        <p class="ft-side-foot">Explora con calma: aquí no se evalúa nada. Cuando escanees las anomalías del radar encontrarás estos conceptos en detalle.</p>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ============ MODAL: DIARIO DEL VIAJERO ============ -->
+  <dialog class="ft-side-modal" id="journal-modal" aria-labelledby="journal-title">
+    <div class="ft-side-frame" id="journal-frame">
+      <div class="ft-dossier-head">
+        <span><i class="ft-pulse-dot"></i> BITÁCORA PERSONAL // CADETE VIAJERO</span>
+        <button class="ft-close-btn" id="journal-close" type="button" aria-label="Cerrar diario">×</button>
+      </div>
+      <div class="ft-side-body">
+        <h2 id="journal-title">Diario del Viajero</h2>
+        <p class="ft-side-intro" id="journal-intro">Registro personal escrito durante el salto. Se actualiza solo con lo que voy comprendiendo. Pulsa cualquier entrada para desplegarla.</p>
+        <div class="ft-journal-toolbar">
+          <button type="button" id="journal-expand-all">DESPLEGAR TODO</button>
+          <button type="button" id="journal-collapse-all">PLEGAR TODO</button>
+        </div>
+        <ol class="ft-journal-list" id="journal-list"></ol>
       </div>
     </div>
   </dialog>
@@ -669,10 +1491,41 @@
       <div class="ft-alert-body">
         <p class="ft-alert-eyebrow">DIAGNÓSTICO FINAL</p>
         <h1 class="ft-alert-title">FELICITACIONES<br><span>RESTAURACIÓN TEMPORAL COMPLETA</span></h1>
-        <p class="ft-alert-sub">Las 4 épocas de la historia del universo fueron exploradas y todas las anomalías temporales corregidas. El cohete ha regresado a la Época Actual y el rumbo de la nave está completamente restablecido.</p>
-        <button class="primary-button button-repair" id="replay-btn" type="button">
-          <span>REINICIAR AVENTURA</span><span aria-hidden="true">↻</span>
-        </button>
+        <p class="ft-alert-sub">Las 4 piezas del dispositivo de salto temporal fueron recuperadas y el aparato está completamente reparado. El Viajero ha regresado a su época de origen con el registro completo de la historia del universo.</p>
+
+        <!-- Insignia de Explorador Temporal -->
+        <div class="ft-badge" id="explorer-badge">
+          <div class="ft-badge-medal" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="ft-rocket-icon is-large" focusable="false">
+              <path d="M12 2c2.6 2.5 4.1 6 4.1 9.6v3.1l2 2c.2.2.3.4.3.7v2.9c0 .5-.5.8-.9.6l-3.2-1.8-.4.4c-.2.2-.5.4-.8.4h-1.2l-.4 1.4c-.1.3-.4.5-.7.5s-.6-.2-.7-.5l-.4-1.4H8.5c-.3 0-.6-.1-.8-.4l-.4-.4-3.2 1.8c-.4.2-.9-.1-.9-.6v-2.9c0-.3.1-.5.3-.7l2-2v-3.1C5.5 8 7 4.5 9.6 2L12 2z"/>
+              <circle cx="12" cy="9.4" r="2.1" class="ft-rocket-window"/>
+              <path d="M10.4 19.8c.4 1.1 1 2 1.6 2.7.6-.7 1.2-1.6 1.6-2.7-.5.2-1 .3-1.6.3s-1.1-.1-1.6-.3z" class="ft-rocket-flame"/>
+            </svg>
+          </div>
+          <div class="ft-badge-data">
+            <p class="ft-badge-rank">INSIGNIA OTORGADA</p>
+            <h2 class="ft-badge-name">EXPLORADOR TEMPORAL</h2>
+            <p class="ft-badge-desc">Acreditación concedida por recorrer las <strong>4 eras</strong> de la historia del universo, resolver las <strong>20 anomalías</strong> y reparar el dispositivo de salto temporal.</p>
+            <ul class="ft-badge-pieces" id="badge-pieces"></ul>
+          </div>
+        </div>
+
+        <div class="ft-final-actions">
+          <a class="primary-button button-repair" id="badge-link" href="index.html#mapa">
+            <span>EXPLORAR ÓRBITA CON LA INSIGNIA</span>
+            <svg class="ft-rocket-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M12 2c2.6 2.5 4.1 6 4.1 9.6v3.1l2 2c.2.2.3.4.3.7v2.9c0 .5-.5.8-.9.6l-3.2-1.8-.4.4c-.2.2-.5.4-.8.4h-1.2l-.4 1.4c-.1.3-.4.5-.7.5s-.6-.2-.7-.5l-.4-1.4H8.5c-.3 0-.6-.1-.8-.4l-.4-.4-3.2 1.8c-.4.2-.9-.1-.9-.6v-2.9c0-.3.1-.5.3-.7l2-2v-3.1C5.5 8 7 4.5 9.6 2L12 2z"/>
+              <circle cx="12" cy="9.4" r="2.1" class="ft-rocket-window"/>
+              <path d="M10.4 19.8c.4 1.1 1 2 1.6 2.7.6-.7 1.2-1.6 1.6-2.7-.5.2-1 .3-1.6.3s-1.1-.1-1.6-.3z" class="ft-rocket-flame"/>
+            </svg>
+          </a>
+          <button class="primary-button button-ghost" id="final-journal-btn" type="button">
+            <span>LEER EL DIARIO COMPLETO</span><span aria-hidden="true">◈</span>
+          </button>
+          <button class="primary-button button-ghost" id="replay-btn" type="button">
+            <span>REINICIAR AVENTURA</span><span aria-hidden="true">↻</span>
+          </button>
+        </div>
       </div>
     </div>
   </section>
@@ -966,6 +1819,54 @@ if (typeof window.gsap === "undefined") {
     }
   ];
 
+  /* ============ Media, datos evaluables y bitácora por subtema ============ */
+  const SUBTOPIC_MEDIA = {
+    "singularidad-inicial": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/Observable_Universe_logarithmic_illustration_(circular_layout_english_annotations).png?width=1200", caption: "El universo observable representado a escala logarítmica desde su origen", keys: ["singularidad","las ecuaciones de la relatividad general dejan de funcionar","ambos comenzaron a existir junto con la expansión del universo"], journal: "No entiendo nada. Hace un minuto estaba en un simulacro y ahora floto frente al instante cero del universo. Todo lo que existe cabía en un punto. Anoto esto porque necesito creer que hay una lógica: el espacio y el tiempo no estaban aquí antes, nacieron con la expansión." },
+    "inflacion-cosmica": { image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=85", caption: "Expansión primordial: el cosmos creciendo más rápido que la luz", keys: ["expansión exponencial","más rápido que la velocidad de la luz","fueron la semilla de las futuras galaxias y estructuras cósmicas"], journal: "El dispositivo registra una expansión imposible: el espacio creció más rápido que la luz sin romper ninguna ley, porque lo que se estira es el espacio mismo. Las arrugas diminutas de esa expansión son las semillas de todas las galaxias. Empiezo a sospechar que mi accidente me está enseñando algo." },
+    "nucleosintesis-primordial": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/Orion_Nebula_-_Hubble_2006_mosaic_edit.jpg?width=1200", caption: "Nubes de hidrógeno y helio, los primeros elementos que existieron", keys: ["hidrógeno y helio","la temperatura y la densidad cayeron demasiado rápido","en el interior de las estrellas"], journal: "Minutos después del origen ya había materia: hidrógeno y helio, nada más pesado. El universo se enfrió demasiado rápido para cocinar otra cosa. Todo lo demás —el hierro de mi casco, el calcio de mis huesos— tuvo que esperar a las estrellas." },
+    "radiacion-fondo": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/WMAP_image_of_the_CMB_anisotropy.jpg?width=1200", caption: "El fondo cósmico de microondas: la fotografía más antigua que existe", keys: ["recombinación","la luz viajara libremente por primera vez","fondo cósmico de microondas","1965"], journal: "380.000 años después del origen los electrones se unieron a los núcleos y la luz quedó libre. Esa primera luz sigue viajando: es el fondo cósmico de microondas, detectado por accidente en 1965. Un accidente reveló el origen del universo. Quizá el mío también sirva para algo." },
+    "era-oscura": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/Boovoid.png?width=1100", caption: "Una vasta región de vacío cósmico, imagen de un universo aún sin estrellas", keys: ["sin fuentes de luz propia","gas de hidrógeno y helio neutro","encender las primeras estrellas","reionización"], journal: "Atravieso cientos de millones de años de oscuridad absoluta. No hay estrellas todavía, solo gas neutro. La gravedad trabaja en silencio, juntando material hasta que algo se encienda. Nunca había entendido que el universo tuvo una noche antes de tener su primer amanecer." },
+    "primeras-estrellas": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/Image_of_Betelgeuse%E2%80%99s_surface_taken_in_January_2020_(eso2109d).jpg?width=1100", caption: "Superficie de una estrella supergigante, parecida a las primeras del cosmos", keys: ["hidrógeno y helio primordial","más masivas, calientes y de vida más corta","sembró el cosmos con los primeros elementos pesados"], journal: "El primer amanecer del universo. Estrellas de Población III: enormes, ardientes y de vida brevísima, hechas solo de hidrógeno y helio. Al morir sembraron los primeros elementos pesados. Cada estrella que explotó aquí es la razón de que exista algo tan complejo como yo." },
+    "primeras-galaxias": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/Webb%27s_First_Deep_Field_(adjusted).jpg?width=1200", caption: "Campo profundo del James Webb: miles de galaxias del universo temprano", keys: ["más pequeñas y de formas irregulares","fusiones sucesivas","James Webb"], journal: "Las primeras galaxias no se parecen a las de mi época: son pequeñas, deformes, y crecen chocando unas con otras. El James Webb las observa desde mi presente; yo las estoy viendo desde aquí. Dos formas de mirar lo mismo separadas por 13.000 millones de años." },
+    "agujeros-negros-supermasivos": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/Black_hole_-_Messier_87.jpg?width=1100", caption: "Primera imagen real de un agujero negro supermasivo (M87*)", keys: ["En el centro de la mayoría de las galaxias","millones o incluso miles de millones de veces la del Sol","influye en la estructura y evolución de toda la galaxia"], journal: "En el corazón de casi toda galaxia hay un agujero negro supermasivo. No es un monstruo devorador: es un ancla que ordena la estructura entera de la galaxia a su alrededor. Mi dispositivo se estabiliza cerca de ellos. Curioso: lo que más deforma el tiempo es también lo que me da una referencia." },
+    "supernovas-elementos": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/Crab_Nebula_NGC_1952_(composite_from_Chandra,_Hubble_and_Spitzer).jpg?width=1200", caption: "Nebulosa del Cangrejo: los restos dispersos de una estrella que explotó", keys: ["colapsar violentamente y producir una supernova","oxígeno, el hierro y el oro","fabricados en el interior de estrellas"], journal: "Hoy vi morir una estrella masiva. En esos segundos fabricó y lanzó al espacio oxígeno, hierro y oro. Miro mis manos: los átomos que las forman salieron de una explosión así. Somos, literalmente, restos de estrellas muertas que aprendieron a preguntarse cosas." },
+    "via-lactea": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/Artist%27s_impression_of_the_Milky_Way.jpg?width=1200", caption: "Nuestra galaxia vista desde fuera: una espiral barrada", keys: ["espiral barrada","entre 100.000 y 400.000 millones de estrellas","27.000 años luz del centro","Sagitario A*"], journal: "Por fin algo familiar: mi galaxia. Espiral barrada, con cientos de miles de millones de estrellas y un agujero negro llamado Sagitario A* en el centro. Estamos a 27.000 años luz de él, en un brazo exterior. Nunca me había sentido tan lejos de casa y tan cerca a la vez." },
+    "nebulosa-solar": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/HL_Tau_protoplanetary_disk.jpg?width=1100", caption: "Disco protoplanetario real alrededor de la joven estrella HL Tauri", keys: ["nebulosa solar","girar cada vez más rápido y a aplanarse","disco protoplanetario giratorio"], journal: "Estoy dentro del disco que dará origen a mi sistema solar. Una nube colapsó, giró cada vez más rápido y se aplanó en un disco. Los surcos que veo en el polvo son planetas formándose. Nunca imaginé que mi hogar empezara siendo un remolino de escombros." },
+    "formacion-sol": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.jpg?width=1200", caption: "El Sol observado en ultravioleta por el Solar Dynamics Observatory", keys: ["fusión nuclear","hidrógeno en helio","4.600 millones de años"], journal: "El centro del disco se encendió: la fusión del hidrógeno en helio acaba de arrancar. El Sol se queda con el 99,8% de toda la masa disponible; el resto —los planetas, las lunas, yo— somos las sobras de su formación. Una humildad incómoda." },
+    "planetas-rocosos": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/OSIRIS_Mars_true_color.jpg?width=1100", caption: "Marte en color real, uno de los cuatro mundos rocosos interiores", keys: ["Cerca del Sol","impidieron que sustancias volátiles como el agua o el metano se condensaran","acreción"], journal: "Cerca del Sol hacía demasiado calor para que sobrevivieran los gases y los hielos, así que solo quedó roca y metal. Los granos chocaron y se pegaron durante millones de años hasta formar Mercurio, Venus, la Tierra y Marte. La paciencia como mecanismo de construcción." },
+    "planetas-gaseosos": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/Jupiter_and_its_shrunken_Great_Red_Spot.jpg?width=1100", caption: "Júpiter y su Gran Mancha Roja, la mayor tormenta del sistema solar", keys: ["línea de hielo","atraer y retener grandes envolturas de hidrógeno y helio","Júpiter y Saturno"], journal: "Más allá de la línea de hielo el frío permitió que los núcleos crecieran tanto que empezaron a capturar gas directamente. Así nacieron Júpiter y Saturno: no son mundos con superficie, son atmósferas gigantes con un corazón oculto." },
+    "bombardeo-intenso": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/Callisto.jpg?width=1100", caption: "Calisto, el cuerpo más craterizado del sistema solar: un archivo del bombardeo", keys: ["Bombardeo Intenso Tardío","asteroides y cometas","Los cráteres que aún se observan en la Luna"], journal: "Una lluvia de asteroides y cometas castiga a los planetas jóvenes. Cada cráter que veo es una cicatriz de esa época. Pero los mismos impactos que destruían pudieron traer agua y moléculas orgánicas. Destrucción y siembra con el mismo gesto." },
+    "formacion-luna": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/Full_Moon_(201507310003HQ).jpg?width=1100", caption: "La Luna: el resultado de la mayor colisión de la historia de la Tierra", keys: ["Theia","teoría del gran impacto","composición similar de las rocas lunares y terrestres"], journal: "Un cuerpo del tamaño de Marte llamado Theia chocó contra la Tierra primitiva y de esos escombros se formó la Luna. Esa colisión brutal terminó estabilizando el eje de la Tierra y, con él, su clima. La catástrofe que hizo posible la vida. Igual mi accidente no es solo un accidente." },
+    "atmosfera-oceanos": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/Top_of_Atmosphere.jpg?width=1200", caption: "Las capas de la atmósfera terrestre vistas desde la órbita", keys: ["desgasificación","Vapor de agua, dióxido de carbono y nitrógeno","cometas helados"], journal: "La primera atmósfera de la Tierra no tenía oxígeno: era vapor, CO₂ y nitrógeno expulsados por volcanes, más el agua que trajeron cometas y asteroides. Cuando el planeta se enfrió, ese vapor llovió durante siglos y llenó los océanos. Respiro por costumbre; aquí no podría hacerlo." },
+    "origen-vida": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/Stromatolite_(Strelley_Pool_Formation,_Paleoarchean,_3.35-3.46_Ga;_East_Strelley_Greenstone_Belt,_Pilbara_Craton,_Western_Australia)_1_(17346619166).jpg?width=1100", caption: "Estromatolitos de 3.400 millones de años: las huellas de vida más antiguas", keys: ["3.800 millones de años","organismos unicelulares extremadamente simples","fuentes hidrotermales submarinas","LUCA"], journal: "Las primeras señales de vida aparecen hace unos 3.800 millones de años, probablemente en fuentes hidrotermales del fondo marino. Nada de criaturas: solo células únicas y simples. Todo lo que vino después —los bosques, los dinosaurios, yo— es una ramificación de eso." },
+    "gran-oxidacion": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/Banded_iron_formation.jpg?width=1100", caption: "Formación de hierro bandeado: el registro mineral del oxígeno primitivo", keys: ["cianobacterias","fotosíntesis","Gran Oxidación","primeras grandes extinciones"], journal: "Las cianobacterias inventaron la fotosíntesis y llenaron la atmósfera de oxígeno. Para casi toda la vida de entonces ese oxígeno fue un veneno: provocaron una extinción masiva sin proponérselo. El aire que me mantiene vivo empezó siendo un residuo tóxico." },
+    "explosion-cambrica": { image: "https://commons.wikimedia.org/wiki/Special:FilePath/20191203_Anomalocaris_canadensis.png?width=1100", caption: "Anomalocaris, uno de los grandes depredadores de la explosión cámbrica", keys: ["540 millones de años","explosión cámbrica","microscópica y de estructura muy simple"], journal: "Hace 541 millones de años la vida estalla en formas nuevas en un abrir y cerrar de ojos geológico. Antes era microscópica y simple; después hay ojos, caparazones, depredadores. Aquí empieza el linaje que termina en un cadete perdido en el tiempo escribiendo esto." }
+  };
+
+  /* ============ Tema visual, contexto libre y pieza del dispositivo por época ============ */
+  const ERA_META = {
+    "big-bang": {
+      accent: "#ff6389", glowA: "rgba(255,99,137,.14)", glowB: "rgba(174,115,255,.10)",
+      context: { image: "https://commons.wikimedia.org/wiki/Special:FilePath/Large-scale_structure_of_light_distribution_in_the_universe.jpg?width=1200", caption: "Estructura a gran escala del universo: la red cósmica que germinó del Big Bang", period: "El instante cero y los primeros 380.000 años", intro: "Todo lo que existe —materia, energía, espacio y tiempo— surge de un estado de densidad y temperatura extremas y se expande sin parar. En menos de un segundo el cosmos crece de forma exponencial; en minutos fabrica sus primeros núcleos; en 380.000 años libera la luz que aún hoy podemos detectar.", highlights: ["El espacio y el tiempo no existían antes: nacen con la expansión.","La inflación explica por qué el universo es tan uniforme y tan plano.","Solo se formaron los elementos ligeros: hidrógeno, helio y algo de litio.","El fondo cósmico de microondas es la prueba fósil del Big Bang."] },
+      piece: { name: "NÚCLEO DE CRONOSINCRONÍA", code: "PZ-01", role: "Fija el instante cero como referencia absoluta del salto temporal." }
+    },
+    "galaxias-estrellas": {
+      accent: "#ae73ff", glowA: "rgba(174,115,255,.15)", glowB: "rgba(82,231,255,.10)",
+      context: { image: "https://commons.wikimedia.org/wiki/Special:FilePath/Andromeda_Galaxy_M31_-_Heic1502a_Full_resolution.jpg?width=1200", caption: "La galaxia de Andrómeda, vecina espiral de la Vía Láctea", period: "Cientos de millones de años después del Big Bang", intro: "La gravedad convierte el gas primordial en las primeras estrellas y las agrupa en galaxias. Esas estrellas viven poco y mueren violentamente, y al hacerlo fabrican los elementos pesados que harán posible todo lo demás, incluidos los planetas y la vida.", highlights: ["Las primeras estrellas eran enormes, calientes y de vida muy corta.","Las galaxias crecieron fusionándose unas con otras durante eones.","Casi toda galaxia esconde un agujero negro supermasivo en su centro.","Los átomos de tu cuerpo se fabricaron dentro de estrellas que explotaron."] },
+      piece: { name: "ESTABILIZADOR DE MASA ESTELAR", code: "PZ-02", role: "Compensa la distorsión gravitatoria de los agujeros negros supermasivos." }
+    },
+    "sistema-solar": {
+      accent: "#ffb454", glowA: "rgba(255,180,84,.15)", glowB: "rgba(255,99,137,.09)",
+      context: { image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=85", caption: "El sistema solar formándose a partir del disco de la nebulosa", period: "Hace 4.600 millones de años", intro: "Una nube de gas y polvo colapsa y se aplana en un disco giratorio. En su centro se enciende el Sol; en el disco, el polvo se aglutina hasta formar planetas. La distancia al Sol decide quién será un mundo rocoso y quién un gigante gaseoso.", highlights: ["El colapso y el giro convierten la nube en un disco por el momento angular.","El Sol concentra el 99,8% de toda la masa del sistema.","Cerca del Sol solo sobrevive la roca; más allá de la línea de hielo, el gas.","El bombardeo intenso tardío pudo traer agua y moléculas orgánicas."] },
+      piece: { name: "BRÚJULA ORBITAL", code: "PZ-03", role: "Reconstruye las coordenadas del sistema solar en cualquier época." }
+    },
+    "tierra-vida": {
+      accent: "#75f7ab", glowA: "rgba(117,247,171,.14)", glowB: "rgba(82,231,255,.10)",
+      context: { image: "https://commons.wikimedia.org/wiki/Special:FilePath/The_Earth_seen_from_Apollo_17.jpg?width=1200", caption: "La Tierra vista desde el Apolo 17: el único mundo con vida conocida", period: "Desde hace 4.500 millones de años hasta el Cámbrico", intro: "La Tierra recibe un impacto colosal que forma la Luna, se enfría, se cubre de océanos y, en algún punto, la química se convierte en biología. La vida transforma después la atmósfera del planeta entero y termina estallando en una diversidad sin precedentes.", highlights: ["El impacto de Theia formó la Luna y estabilizó el eje terrestre.","La atmósfera primitiva no tenía oxígeno libre.","La vida surge hace ~3.800 millones de años, probablemente en fuentes hidrotermales.","La fotosíntesis oxigenó el aire y causó una extinción masiva."] },
+      piece: { name: "SEMILLA BIOGÉNICA", code: "PZ-04", role: "Ancla el salto a la línea temporal donde existe la vida conocida." }
+    }
+  };
+
   const DIAGNOSTIC_LINES = [
     "> ANALIZANDO NÚCLEO DE PROPULSIÓN TEMPORAL...",
     "> ERROR 0x7F // DESINCRONIZACIÓN CRONOESPACIAL",
@@ -1007,7 +1908,6 @@ if (typeof window.gsap === "undefined") {
   const dossierFrame = document.getElementById("dossier-frame");
   const dossierHeadLabel = document.getElementById("dossier-head-label");
   const dossierTag = document.getElementById("dossier-tag");
-  const eraOrb = document.getElementById("era-orb");
   const eraPeriod = document.getElementById("era-period");
   const eraTitle = document.getElementById("era-title");
   const eraDescription = document.getElementById("era-description");
@@ -1041,6 +1941,400 @@ if (typeof window.gsap === "undefined") {
   let finalQueueLevel = [];
   let finalTotalLevel = 0;
   let finalStepLevel = 0;
+
+  /* ============ Guion de la intro: simulación → falla crítica ============ */
+  const INTRO_BEATS = [
+    {
+      eyebrow: "ACADEMIA ÓRBITA // SIMULACIÓN CONTROLADA",
+      title: 'CADETE <span>VIAJERO</span>',
+      text: "Estás en la cabina de entrenamiento. Hoy toca la práctica número 47: un salto temporal simulado de apenas tres segundos, sin salir del hangar. El instructor repite lo de siempre — el dispositivo nunca ha fallado.",
+      btn: "INICIAR SIMULACIÓN",
+      tag: "SECUENCIA 1 / 4"
+    },
+    {
+      eyebrow: "SIMULACIÓN EN CURSO // PARÁMETROS NOMINALES",
+      title: 'SALTO <span>DE PRUEBA</span>',
+      text: "El núcleo de cronosincronía se enciende. Todo va bien: las coordenadas están fijadas al hangar, el margen de error es de milisegundos. Colocas la mano sobre el activador y confirmas la secuencia.",
+      btn: "CONFIRMAR SECUENCIA",
+      tag: "SECUENCIA 2 / 4"
+    },
+    {
+      eyebrow: "ADVERTENCIA // LECTURA ANÓMALA",
+      title: 'ALGO <span>NO ENCAJA</span>',
+      text: "Un pico de energía sacude la cabina. El indicador de anclaje temporal parpadea y se apaga. La simulación deja de responder a los controles y el dispositivo empieza a cargar energía por su cuenta, sin que nadie se lo haya ordenado.",
+      btn: "ABORTAR SIMULACIÓN",
+      tag: "SECUENCIA 3 / 4",
+      critical: true
+    },
+    {
+      eyebrow: "FALLA CRÍTICA // ANCLAJE PERDIDO",
+      title: 'SALTO <span>INVOLUNTARIO</span>',
+      text: "Demasiado tarde. El dispositivo se activa solo, se fractura en pleno salto y te arranca del hangar. No hay coordenadas, no hay retorno programado: estás cayendo a través del tiempo y del espacio, y las piezas del aparato se han dispersado por las eras del universo.",
+      btn: "SOPORTAR EL IMPACTO",
+      tag: "SECUENCIA 4 / 4",
+      critical: true
+    }
+  ];
+
+  /* ============ Referencias DOM de los módulos nuevos ============ */
+  const phaseIntro = document.getElementById("phase-intro");
+  const introFrame = document.getElementById("intro-frame");
+  const introEyebrow = document.getElementById("intro-eyebrow");
+  const introTitle = document.getElementById("intro-title");
+  const introText = document.getElementById("intro-text");
+  const introTag = document.getElementById("intro-step-tag");
+  const introBtn = document.getElementById("intro-next-btn");
+  const introBtnLabel = document.getElementById("intro-btn-label");
+  const introDots = document.getElementById("intro-dots");
+  const introCore = document.getElementById("intro-core");
+
+  const openContextBtn = document.getElementById("open-context-btn");
+  const openJournalBtn = document.getElementById("open-journal-btn");
+  const journalCountEl = document.getElementById("journal-count");
+  const contextModal = document.getElementById("context-modal");
+  const contextClose = document.getElementById("context-close");
+  const contextPeriod = document.getElementById("context-period");
+  const contextTitle = document.getElementById("context-title");
+  const contextIntro = document.getElementById("context-intro");
+  const contextList = document.getElementById("context-list");
+  const journalModal = document.getElementById("journal-modal");
+  const journalClose = document.getElementById("journal-close");
+  const journalList = document.getElementById("journal-list");
+  const finalJournalBtn = document.getElementById("final-journal-btn");
+
+  const deviceList = document.getElementById("device-list");
+  const deviceProgress = document.getElementById("device-progress");
+  const badgePieces = document.getElementById("badge-pieces");
+
+  const introCoreImg = document.getElementById("intro-core-img");
+  const contextFigure = document.getElementById("context-figure");
+  const contextImage = document.getElementById("context-image");
+  const contextCaption = document.getElementById("context-caption");
+
+  const unlockOverlay = document.getElementById("unlock-overlay");
+  const unlockCard = document.getElementById("unlock-card");
+  const unlockEyebrow = document.getElementById("unlock-eyebrow");
+  const unlockLocks = document.getElementById("unlock-locks");
+  const unlockPiece = document.getElementById("unlock-piece");
+  const unlockCode = document.getElementById("unlock-code");
+  const unlockName = document.getElementById("unlock-name");
+  const unlockRole = document.getElementById("unlock-role");
+  const unlockStatus = document.getElementById("unlock-status");
+
+  const topicFigure = document.getElementById("topic-figure");
+  const topicImage = document.getElementById("topic-image");
+  const topicCaption = document.getElementById("topic-caption");
+  const topicKeycard = document.getElementById("topic-keycard");
+  const topicKeylist = document.getElementById("topic-keylist");
+
+  /* ============ Estado de los módulos nuevos ============ */
+  let introStep = 0;
+  let journalEntries = [];
+  let ownedPieces = [];
+  let retryUsed = false;          // el reintento se consume una sola vez por pregunta
+  let pendingQuestion = null;     // la pregunta exacta que debe repetirse al reintentar
+
+  /* ============ Utilidades de texto ============ */
+  function escapeHtml(text) {
+    return String(text).replace(/[&<>"']/g, (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  /* Resalta dentro de la teoría exactamente las frases que después se evalúan. */
+  function highlightTheory(text, keys) {
+    let html = escapeHtml(text);
+    (keys || []).forEach((key) => {
+      const safe = escapeHtml(key);
+      if (!html.includes(safe)) return;
+      html = html.split(safe).join('<mark class="ft-key">' + safe + "</mark>");
+    });
+    return html;
+  }
+
+  /* ============ Fase 0: intro narrativa ============ */
+  function renderIntroDots() {
+    introDots.innerHTML = INTRO_BEATS.map(() => "<i></i>").join("");
+    updateIntroDots();
+  }
+
+  function updateIntroDots() {
+    Array.from(introDots.children).forEach((dot, i) => {
+      dot.classList.toggle("is-on", i <= introStep && !INTRO_BEATS[i].critical);
+      dot.classList.toggle("is-crit", i <= introStep && !!INTRO_BEATS[i].critical);
+    });
+  }
+
+  const INTRO_IMG = "https://commons.wikimedia.org/wiki/Special:FilePath/International_Space_Station.jpg?width=1100";
+  const INTRO_IMG_CRIT = "https://commons.wikimedia.org/wiki/Special:FilePath/Gravitational_lensing_by_a_black_hole.jpg?width=1100";
+
+  function renderIntroBeat() {
+    const beat = INTRO_BEATS[introStep];
+    introCoreImg.src = beat.critical ? INTRO_IMG_CRIT : INTRO_IMG;
+    introCoreImg.alt = beat.critical ? "Distorsión del espacio-tiempo" : "Cabina de entrenamiento orbital";
+    introEyebrow.textContent = beat.eyebrow;
+    introTitle.innerHTML = beat.title;
+    introText.textContent = beat.text;
+    introTag.textContent = beat.tag;
+    introBtnLabel.textContent = beat.btn;
+    introFrame.classList.toggle("is-sim", !beat.critical);
+    introCore.classList.toggle("is-critical", !!beat.critical);
+    updateIntroDots();
+    if (beat.critical) shipShake(introFrame, introStep === INTRO_BEATS.length - 1 ? 16 : 7);
+    gsap.fromTo(introText, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" });
+  }
+
+  function advanceIntro() {
+    if (introStep < INTRO_BEATS.length - 1) {
+      introStep += 1;
+      renderIntroBeat();
+      return;
+    }
+    gsap.to(introFrame, {
+      opacity: 0,
+      y: -18,
+      duration: 0.45,
+      ease: "power2.in",
+      onComplete: () => {
+        phaseIntro.hidden = true;
+        phaseAlert.hidden = false;
+        ftRoot.dataset.phase = "alert";
+        gsap.fromTo(alertFrame, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" });
+        shipShake(alertFrame, 12);
+      }
+    });
+  }
+
+  /* ============ Tema visual por época ============ */
+  function applyEraTheme(era) {
+    const meta = ERA_META[era.id];
+    if (!meta) return;
+    ftRoot.dataset.era = era.id;
+    ftRoot.style.setProperty("--era-accent", meta.accent);
+    ftRoot.style.setProperty("--era-glow-a", meta.glowA);
+    ftRoot.style.setProperty("--era-glow-b", meta.glowB);
+  }
+
+  /* ============ Contexto libre de la época ============ */
+  function renderEraContext(era) {
+    const meta = ERA_META[era.id];
+    if (!meta) return;
+    contextPeriod.textContent = meta.context.period.toUpperCase();
+    contextTitle.textContent = era.name;
+    contextFigure.classList.remove("is-broken");
+    contextImage.src = meta.context.image;
+    contextImage.alt = meta.context.caption;
+    contextCaption.textContent = meta.context.caption;
+    contextIntro.textContent = meta.context.intro;
+    contextList.innerHTML = meta.context.highlights
+      .map((h) => "<li>" + escapeHtml(h) + "</li>")
+      .join("");
+  }
+
+  function openContextModal() {
+    if (!contextModal.open) contextModal.showModal();
+  }
+
+  /* Evita diálogos apilados: si el expediente va a abrirse, los paneles
+     laterales se cierran antes para que nunca queden atrapados detrás. */
+  function closeSideModals() {
+    if (contextModal.open) contextModal.close();
+    if (journalModal.open) journalModal.close();
+  }
+
+  /* ============ Diario del Viajero ============ */
+  function addJournalEntry(label, text, color, media) {
+    journalEntries.push({
+      label: label,
+      text: text,
+      color: color || "#52e7ff",
+      image: media && media.image ? media.image : "",
+      caption: media && media.caption ? media.caption : "",
+      kind: media && media.kind ? media.kind : "REGISTRO"
+    });
+    journalCountEl.textContent = String(journalEntries.length);
+    openJournalBtn.classList.add("is-new");
+    window.setTimeout(() => openJournalBtn.classList.remove("is-new"), 4400);
+    renderJournal();
+  }
+
+  /* Diario en acordeón: solo el título queda a la vista y el resto —texto e
+     imagen— se despliega al pulsar. La última entrada se abre sola. */
+  function renderJournal() {
+    if (journalEntries.length === 0) {
+      journalList.innerHTML = '<p class="ft-journal-empty">Todavía no he escrito nada. Escanea las anomalías del radar para ir registrando lo que voy entendiendo.</p>';
+      return;
+    }
+    const openIndex = journalEntries.length - 1;
+    journalList.innerHTML = journalEntries
+      .map((entry, i) => {
+        const isOpen = i === openIndex;
+        const num = String(i + 1).padStart(2, "0");
+        const figure = entry.image
+          ? '<figure class="ft-journal-figure"><img src="' + entry.image +
+            '" alt="" loading="lazy"><figcaption>' + escapeHtml(entry.caption || "") + "</figcaption></figure>"
+          : "";
+        return (
+          '<li style="--entry-color:' + entry.color + '">' +
+          '<button class="ft-journal-toggle" type="button" data-index="' + i +
+          '" aria-expanded="' + isOpen + '" aria-controls="journal-panel-' + i + '">' +
+          '<span class="ft-journal-index">' + num + "</span>" +
+          '<span class="ft-journal-heading">' + escapeHtml(entry.label) +
+          "<small>ENTRADA " + num + " · " + escapeHtml(entry.kind || "REGISTRO") + "</small></span>" +
+          '<span class="ft-journal-arrow" aria-hidden="true">▼</span>' +
+          "</button>" +
+          '<div class="ft-journal-panel' + (isOpen ? " is-open" : "") + '" id="journal-panel-' + i +
+          '"><div><div class="ft-journal-inner">' + figure + "<p>" + escapeHtml(entry.text) +
+          "</p></div></div></div></li>"
+        );
+      })
+      .join("");
+
+    journalList.querySelectorAll(".ft-journal-toggle").forEach((btn) => {
+      btn.addEventListener("click", () => toggleJournalEntry(btn));
+    });
+    journalList.querySelectorAll(".ft-journal-figure img").forEach((img) => {
+      img.addEventListener("error", () => img.closest(".ft-journal-figure").classList.add("is-broken"));
+    });
+  }
+
+  function toggleJournalEntry(btn) {
+    const panel = document.getElementById(btn.getAttribute("aria-controls"));
+    const open = btn.getAttribute("aria-expanded") === "true";
+    btn.setAttribute("aria-expanded", String(!open));
+    panel.classList.toggle("is-open", !open);
+  }
+
+  function setAllJournalEntries(open) {
+    journalList.querySelectorAll(".ft-journal-toggle").forEach((btn) => {
+      btn.setAttribute("aria-expanded", String(open));
+      document.getElementById(btn.getAttribute("aria-controls")).classList.toggle("is-open", open);
+    });
+  }
+
+  /* Posición porcentual real de una anomalía que está orbitando. */
+  function anomalyPercentPosition(el) {
+    const disc = radarDisc.getBoundingClientRect();
+    const box = el.getBoundingClientRect();
+    if (!disc.width || !disc.height) return { x: 50, y: 50 };
+    return {
+      x: ((box.left + box.width / 2 - disc.left) / disc.width) * 100,
+      y: ((box.top + box.height / 2 - disc.top) / disc.height) * 100
+    };
+  }
+
+  /* ============ Secuencia de desbloqueo: candados rompiéndose ============ */
+  const LOCK_SVG =
+    '<svg viewBox="0 0 24 24" focusable="false">' +
+    '<path class="ft-lock-shackle" d="M7.4 11V8.6a4.6 4.6 0 0 1 9.2 0V11"/>' +
+    '<rect class="ft-lock-body" x="4.6" y="11" width="14.8" height="10.4" rx="2"/>' +
+    '</svg>';
+
+  function playUnlockSequence(era) {
+    return new Promise((resolve) => {
+      const meta = ERA_META[era.id];
+      unlockEyebrow.textContent = "ÉPOCA SUPERADA // LIBERANDO COMPONENTE";
+      unlockCode.textContent = meta.piece.code;
+      unlockName.textContent = meta.piece.name;
+      unlockRole.textContent = meta.piece.role;
+      unlockStatus.textContent = "ROMPIENDO SELLOS TEMPORALES…";
+      unlockStatus.classList.remove("is-done");
+      unlockPiece.classList.remove("is-free");
+      unlockOverlay.style.setProperty("--era-accent", meta.accent);
+
+      const angles = [-90, 30, 150];
+      unlockLocks.innerHTML = angles
+        .map((a) => '<div class="ft-lock" style="--lock-a:' + a + 'deg">' + LOCK_SVG + "</div>")
+        .join("");
+      const locks = Array.from(unlockLocks.querySelectorAll(".ft-lock"));
+
+      unlockOverlay.hidden = false;
+      gsap.fromTo(unlockCard, { opacity: 0, y: 22, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "power3.out" });
+
+      /* Un candado se sacude, se abre y estalla en esquirlas; luego el siguiente. */
+      locks.forEach((lock, i) => {
+        const t = 650 + i * 780;
+        window.setTimeout(() => {
+          lock.classList.add("is-breaking");
+          unlockStatus.textContent = `SELLO ${i + 1}/${locks.length} FORZADO…`;
+        }, t);
+        window.setTimeout(() => {
+          lock.classList.remove("is-breaking");
+          lock.classList.add("is-open");
+          shipShake(unlockCard, 5);
+        }, t + 330);
+        window.setTimeout(() => {
+          lock.classList.add("is-gone");
+          spawnLockShards(angles[i]);
+        }, t + 620);
+      });
+
+      const total = 650 + locks.length * 780 + 500;
+      window.setTimeout(() => {
+        unlockPiece.classList.add("is-free");
+        unlockStatus.textContent = "COMPONENTE LIBERADO // ACOPLANDO AL DISPOSITIVO";
+        unlockStatus.classList.add("is-done");
+        shipShake(unlockCard, 9);
+      }, total);
+      window.setTimeout(() => {
+        gsap.to(unlockCard, {
+          opacity: 0, y: -16, duration: 0.4, ease: "power2.in",
+          onComplete: () => { unlockOverlay.hidden = true; resolve(); }
+        });
+      }, total + 1500);
+    });
+  }
+
+  function spawnLockShards(angle) {
+    for (let i = 0; i < 5; i += 1) {
+      const shard = document.createElement("i");
+      shard.className = "ft-shard";
+      shard.style.setProperty("--sa", angle + (i - 2) * 13 + "deg");
+      shard.style.animationDelay = i * 0.04 + "s";
+      unlockLocks.appendChild(shard);
+      window.setTimeout(() => shard.remove(), 900);
+    }
+  }
+
+
+  /* ============ Dispositivo de salto temporal ============ */
+  function renderDeviceList() {
+    deviceList.innerHTML = ERAS.map((era) => {
+      const meta = ERA_META[era.id];
+      const owned = ownedPieces.includes(era.id);
+      return '<li data-era="' + era.id + '"' + (owned ? ' class="is-owned"' : "") +
+        ' style="--piece-color:' + meta.accent + '"><i></i><span>' +
+        (owned ? escapeHtml(meta.piece.name) : "PIEZA " + meta.piece.code + " — SIN RECUPERAR") +
+        "</span></li>";
+    }).join("");
+    deviceProgress.textContent = ownedPieces.length + "/" + ERAS.length;
+  }
+
+  function grantPiece(era) {
+    if (ownedPieces.includes(era.id)) return;
+    ownedPieces.push(era.id);
+    renderDeviceList();
+    const li = deviceList.querySelector('[data-era="' + era.id + '"]');
+    if (li) {
+      li.classList.add("just-added");
+      window.setTimeout(() => li.classList.remove("just-added"), 900);
+    }
+    const meta = ERA_META[era.id];
+    addJournalEntry(
+      "PIEZA RECUPERADA // " + meta.piece.code,
+      "He recuperado el " + meta.piece.name + ". " + meta.piece.role +
+      " El dispositivo va tomando forma otra vez: " + ownedPieces.length + " de " + ERAS.length + " piezas.",
+      meta.accent,
+      { image: meta.context.image, caption: meta.context.caption, kind: "COMPONENTE DESBLOQUEADO" }
+    );
+  }
+
+  function renderBadgePieces() {
+    badgePieces.innerHTML = ERAS.map((era) => {
+      const meta = ERA_META[era.id];
+      return "<li>" + escapeHtml(meta.piece.code) + " · " + escapeHtml(meta.piece.name) + "</li>";
+    }).join("");
+  }
 
   /* ============ Utilidades ============ */
   function shuffle(items) {
@@ -1193,27 +2487,75 @@ if (typeof window.gsap === "undefined") {
     hudStatus.textContent = "RASTREANDO SEÑALES TEMPORALES";
     explorationHint.textContent = `Pulsa las 5 señales de "${currentEra.name}" para escanearlas. Cada anomalía correctamente resuelta suma +20%.`;
     updateTimelineNodes();
+    applyEraTheme(currentEra);
+    renderEraContext(currentEra);
     spawnEraAnomalies(currentEra);
     startSweep();
+    /* Vista previa de contexto: exploración libre de la época, sin evaluación,
+       antes de enfrentarse a ninguna pregunta. */
+    window.setTimeout(openContextModal, 520);
   }
+
+  /* Cada anomalía recibe su propio anillo orbital: así nunca se solapan y
+     el conjunto gira de forma lenta y continua alrededor del centro. */
+  const ORBIT_RADII = [19, 25, 31, 37, 43];
 
   function spawnEraAnomalies(era) {
     anomalyPositions = [];
-    radarDisc.querySelectorAll(".ft-anomaly").forEach((node) => node.remove());
+    radarDisc.querySelectorAll(".ft-orbit, .ft-orbit-path").forEach((node) => node.remove());
     const order = shuffle(era.subtopics.map((subtopic, index) => ({ subtopic, index })));
+    const radii = shuffle(ORBIT_RADII);
+
     order.forEach(({ subtopic, index }, orderIndex) => {
-      const pos = pickAnomalyPosition();
+      const radius = radii[orderIndex];
+      const inset = `${50 - radius}%`;
+      const color = DOT_COLORS[index % DOT_COLORS.length];
+      const media = SUBTOPIC_MEDIA[subtopic.id];
+      /* Órbitas lentas y de duración distinta: el movimiento nunca se sincroniza. */
+      const duration = 96 + orderIndex * 17;
+      const startAngle = Math.round(Math.random() * 360);
+
+      const path = document.createElement("div");
+      path.className = "ft-orbit-path";
+      path.style.setProperty("--orbit-inset", inset);
+      radarDisc.appendChild(path);
+
+      const orbit = document.createElement("div");
+      orbit.className = "ft-orbit";
+      orbit.style.setProperty("--orbit-inset", inset);
+      orbit.style.setProperty("--orbit-dur", `${duration}s`);
+      orbit.style.setProperty("--orbit-start", `${startAngle}deg`);
+
+      const pos = document.createElement("div");
+      pos.className = "ft-orbit-pos";
+      const counter = document.createElement("div");
+      counter.className = "ft-orbit-counter";
+      counter.style.setProperty("--orbit-dur", `${duration}s`);
+      counter.style.setProperty("--orbit-start", `${startAngle}deg`);
+
       const el = document.createElement("button");
       el.type = "button";
       el.className = "ft-anomaly";
-      el.style.left = `${pos.x}%`;
-      el.style.top = `${pos.y}%`;
-      el.style.setProperty("--dot-color", DOT_COLORS[index % DOT_COLORS.length]);
-      el.textContent = String(index + 1);
+      el.style.setProperty("--dot-color", color);
       el.dataset.subtopicId = subtopic.id;
       el.setAttribute("aria-label", `Anomalía temporal: ${subtopic.title}. Pulsar para escanear.`);
+      /* Miniatura real de la anomalía en lugar de la antigua esfera CSS. */
+      const img = document.createElement("img");
+      img.className = "ft-anomaly-img";
+      img.alt = "";
+      img.loading = "lazy";
+      if (media) img.src = media.image;
+      const num = document.createElement("span");
+      num.className = "ft-anomaly-num";
+      num.textContent = String(index + 1);
+      el.append(img, num);
       el.addEventListener("click", () => openAnomalyDossier(subtopic, el));
-      radarDisc.appendChild(el);
+
+      counter.appendChild(el);
+      pos.appendChild(counter);
+      orbit.appendChild(pos);
+      radarDisc.appendChild(orbit);
+
       gsap.fromTo(
         el,
         { scale: 0, opacity: 0 },
@@ -1247,14 +2589,17 @@ if (typeof window.gsap === "undefined") {
     if (el) {
       el.dataset.scanned = "true";
       el.style.pointerEvents = "none";
-      const pos = { x: parseFloat(el.style.left), y: parseFloat(el.style.top) };
+      /* La anomalía está orbitando, así que su posición se lee en vivo del
+         layout y no de unos estilos fijos. */
+      const pos = anomalyPercentPosition(el);
       spawnRipple(pos, getComputedStyle(el).getPropertyValue("--dot-color") || "#52e7ff");
+      const orbit = el.closest(".ft-orbit");
       gsap.to(el, {
         scale: 1.8,
         opacity: 0,
         duration: 0.4,
         ease: "power2.out",
-        onComplete: () => el.remove()
+        onComplete: () => { if (orbit) orbit.remove(); else el.remove(); }
       });
     }
 
@@ -1289,14 +2634,32 @@ if (typeof window.gsap === "undefined") {
 
     dossierHeadLabel.textContent = "EXPEDIENTE TEMPORAL RECUPERADO";
     dossierTag.textContent = `ÉPOCA ${currentEraIndex + 1}/4 // ${subtopic.id.toUpperCase()}`;
-    eraOrb.style.setProperty("--era-gradient", buildGradient(anomalyEl.style.getPropertyValue("--dot-color")));
-    eraOrb.style.setProperty("--era-glow", `${anomalyEl.style.getPropertyValue("--dot-color")}88`);
     eraPeriod.textContent = currentEra.period;
     eraTitle.textContent = subtopic.title;
-    eraDescription.textContent = subtopic.description;
+
+    /* Maquetación dinámica: imagen representativa + teoría con los datos
+       evaluables resaltados + tarjeta de puntos clave. */
+    const media = SUBTOPIC_MEDIA[subtopic.id];
+    if (media) {
+      topicFigure.hidden = false;
+      topicFigure.classList.remove("is-broken");
+      topicImage.src = media.image;
+      topicImage.alt = media.caption;
+      topicCaption.textContent = media.caption;
+      eraDescription.innerHTML = highlightTheory(subtopic.description, media.keys);
+      topicKeycard.hidden = media.keys.length === 0;
+      topicKeylist.innerHTML = media.keys
+        .map((k) => "<li>" + escapeHtml(k.charAt(0).toUpperCase() + k.slice(1)) + "</li>")
+        .join("");
+    } else {
+      topicFigure.hidden = true;
+      topicKeycard.hidden = true;
+      eraDescription.textContent = subtopic.description;
+    }
 
     showInfoPanel();
     mainView.hidden = false;
+    closeSideModals();
     dossierModal.showModal();
     gsap.fromTo(
       dossierFrame,
@@ -1322,8 +2685,12 @@ if (typeof window.gsap === "undefined") {
     renderQuestion(questionQueue.pop());
   }
 
-  function renderQuestion(q) {
+  /* Renderiza una pregunta. `isRetry` indica que es el segundo (y último) intento
+     de la MISMA pregunta: en ese caso no se vuelve a conceder otro reintento. */
+  function renderQuestion(q, isRetry) {
     answerLocked = false;
+    pendingQuestion = q;
+    if (!isRetry) retryUsed = false;
     triviaQuestion.textContent = q.question;
     triviaFeedback.textContent = "";
     triviaFeedback.className = "quiz-feedback";
@@ -1371,13 +2738,23 @@ if (typeof window.gsap === "undefined") {
     triviaFeedback.textContent = `✕ REGISTRO INCORRECTO // RESPUESTA CORRECTA: ${correctText.toUpperCase()}`;
     triviaFeedback.classList.add("error");
 
-    if (sessionMode === "anomaly") {
-      anomalyFailCount += 1;
-      failCountEl.textContent = String(anomalyFailCount);
-      if (anomalyFailCount > MAX_FAILS) {
-        window.setTimeout(triggerGameOver, 900);
-        return;
-      }
+    /* Los fallos cuentan en ambos modos: la prueba final ya no es infinita. */
+    anomalyFailCount += 1;
+    failCountEl.textContent = String(anomalyFailCount);
+    if (anomalyFailCount > MAX_FAILS) {
+      window.setTimeout(triggerGameOver, 900);
+      return;
+    }
+
+    /* El reintento solo puede usarse UNA vez por pregunta. Si ya se gastó,
+       la respuesta correcta queda revelada y el desafío se reinicia por
+       completo desde la primera pregunta, sin poder saltarse ninguna. */
+    if (retryUsed) {
+      triviaRetryBtn.hidden = true;
+      triviaFeedback.textContent =
+        `✕ REINTENTO AGOTADO // RESPUESTA CORRECTA: ${correctText.toUpperCase()}`;
+      window.setTimeout(restartCurrentChallenge, 1900);
+      return;
     }
 
     triviaRetryBtn.hidden = false;
@@ -1388,6 +2765,31 @@ if (typeof window.gsap === "undefined") {
     );
   }
 
+  /* Reintento único: repite exactamente la MISMA pregunta fallada. */
+  function retryCurrentQuestion() {
+    if (retryUsed || !pendingQuestion) return;
+    retryUsed = true;
+    triviaRetryBtn.hidden = true;
+    renderQuestion(pendingQuestion, true);
+    triviaFeedback.textContent = "◈ ÚLTIMO INTENTO DISPONIBLE PARA ESTA PREGUNTA";
+    triviaFeedback.className = "quiz-feedback";
+  }
+
+  /* Al agotar el reintento el desafío vuelve a empezar desde su primera
+     pregunta, de modo que no queda ninguna pregunta sin responder. */
+  function restartCurrentChallenge() {
+    if (anomalyFailCount > MAX_FAILS) return;
+    if (sessionMode === "levelFinal") {
+      finalQueueLevel = shuffle(currentEra.finalTest);
+      finalTotalLevel = finalQueueLevel.length;
+      finalStepLevel = 0;
+      advanceLevelFinalQuestion();
+      return;
+    }
+    questionQueue = shuffle(currentSubtopic.questions);
+    renderNextAnomalyQuestion();
+  }
+
   function closeDossierThenCollect() {
     gsap.to(dossierFrame, {
       opacity: 0,
@@ -1396,6 +2798,17 @@ if (typeof window.gsap === "undefined") {
       ease: "power2.in",
       onComplete: () => {
         dossierModal.close();
+        /* La anomalía resuelta se sintetiza en el diario del Viajero. */
+        if (currentSubtopic && SUBTOPIC_MEDIA[currentSubtopic.id]) {
+          const meta = ERA_META[currentEra.id];
+          const sm = SUBTOPIC_MEDIA[currentSubtopic.id];
+          addJournalEntry(
+            currentSubtopic.title.toUpperCase(),
+            sm.journal,
+            meta ? meta.accent : "#52e7ff",
+            { image: sm.image, caption: sm.caption, kind: "ANOMALÍA ESCANEADA" }
+          );
+        }
         collectCurrentAnomaly();
         if (collectedInEra >= 5) {
           window.setTimeout(startLevelFinalTest, 900);
@@ -1416,8 +2829,6 @@ if (typeof window.gsap === "undefined") {
     finalStepLevel = 0;
 
     dossierHeadLabel.textContent = "PRUEBA FINAL DE ÉPOCA";
-    eraOrb.style.setProperty("--era-gradient", buildGradient(DOT_COLORS[currentEraIndex % DOT_COLORS.length]));
-    eraOrb.style.setProperty("--era-glow", `${DOT_COLORS[currentEraIndex % DOT_COLORS.length]}88`);
     eraPeriod.textContent = currentEra.period;
     eraTitle.textContent = currentEra.name;
     eraDescription.textContent = "Responde correctamente el cuestionario integrador para superar esta época y avanzar en la línea temporal.";
@@ -1427,6 +2838,7 @@ if (typeof window.gsap === "undefined") {
     mainView.hidden = false;
 
     if (!dossierModal.open) {
+      closeSideModals();
       dossierModal.showModal();
       gsap.fromTo(
         dossierFrame,
@@ -1465,19 +2877,26 @@ if (typeof window.gsap === "undefined") {
         const nextIndex = finishedIndex + 1;
         timelineNodes[finishedIndex].classList.add("is-done");
         timelineNodes[finishedIndex].classList.remove("is-active");
-        hudStatus.textContent =
-          nextIndex < ERAS.length
-            ? "ÉPOCA SUPERADA // AVANZANDO EN LA LÍNEA TEMPORAL"
-            : "TODAS LAS ÉPOCAS SUPERADAS // REGRESANDO AL PRESENTE";
-        explorationHint.textContent = "El cohete temporal avanza hacia el siguiente punto...";
 
-        moveShipToNode(nextIndex).then(() => {
-          if (nextIndex < ERAS.length) {
-            startEra(nextIndex);
-          } else {
-            timelineNodes[TIMELINE_NODE_COUNT - 1].classList.add("is-done");
-            showFinalCongrats();
-          }
+        /* Secuencia de victoria: los candados de la pieza se rompen en pantalla
+           y solo entonces el componente se acopla al inventario. */
+        playUnlockSequence(ERAS[finishedIndex]).then(() => {
+          grantPiece(ERAS[finishedIndex]);
+          const gained = ERA_META[ERAS[finishedIndex].id].piece;
+          hudStatus.textContent =
+            nextIndex < ERAS.length
+              ? `PIEZA ${gained.code} ACOPLADA // ${ownedPieces.length}/${ERAS.length} DEL DISPOSITIVO`
+              : "DISPOSITIVO REPARADO // REGRESANDO AL PRESENTE";
+          explorationHint.textContent = `Has recuperado el ${gained.name}. El cohete temporal avanza hacia el siguiente punto...`;
+
+          moveShipToNode(nextIndex).then(() => {
+            if (nextIndex < ERAS.length) {
+              startEra(nextIndex);
+            } else {
+              timelineNodes[TIMELINE_NODE_COUNT - 1].classList.add("is-done");
+              showFinalCongrats();
+            }
+          });
         });
       }
     });
@@ -1509,6 +2928,12 @@ if (typeof window.gsap === "undefined") {
   function showFinalCongrats() {
     ftRoot.classList.add("is-repaired");
     ftRoot.dataset.phase = "final";
+    renderBadgePieces();
+    addJournalEntry(
+      "DISPOSITIVO REPARADO // REGRESO",
+      "Las cuatro piezas están en su sitio y el dispositivo vuelve a responder. Salí de un simulacro de tres segundos y he acabado recorriendo 13.800 millones de años. Ya no me pregunto cómo volver: me pregunto cómo contarlo. Llevo conmigo el registro completo del universo, desde la singularidad hasta la primera criatura con ojos.",
+      "#ffb454"
+    );
     gsap.to(phaseRadar, {
       opacity: 0,
       duration: 0.4,
@@ -1532,24 +2957,45 @@ if (typeof window.gsap === "undefined") {
   /* ============ Inicialización ============ */
   function init() {
     renderDiagnosticLog();
-    window.setTimeout(() => shipShake(alertFrame, 10), 250);
+    renderIntroDots();
+    renderIntroBeat();
+    renderDeviceList();
+    renderJournal();
     startAmbientTremor();
+
+    /* Fase 0: intro narrativa de la simulación fallida */
+    introBtn.addEventListener("click", advanceIntro);
 
     startScanBtn.addEventListener("click", goToRadarPhase);
     continueToChallengeBtn.addEventListener("click", () => {
       challengeEyebrow.textContent = "> VERIFICACIÓN DE MEMORIA";
       failTracker.hidden = false;
-      failCountEl.textContent = "0";
+      failCountEl.textContent = String(anomalyFailCount);
       showChallengePanel();
       renderNextAnomalyQuestion();
     });
-    triviaRetryBtn.addEventListener("click", () => {
-      if (sessionMode === "anomaly") {
-        renderNextAnomalyQuestion();
-      } else {
-        renderQuestion(currentFinalQuestion);
-      }
-    });
+
+    /* Reintento único sobre la misma pregunta */
+    triviaRetryBtn.addEventListener("click", retryCurrentQuestion);
+
+    /* Contexto libre de la época y diario del viajero */
+    openContextBtn.addEventListener("click", openContextModal);
+    contextClose.addEventListener("click", () => contextModal.close());
+    contextModal.addEventListener("click", (e) => { if (e.target === contextModal) contextModal.close(); });
+    openJournalBtn.addEventListener("click", () => { if (!journalModal.open) journalModal.showModal(); });
+    finalJournalBtn.addEventListener("click", () => { if (!journalModal.open) journalModal.showModal(); });
+    journalClose.addEventListener("click", () => journalModal.close());
+    journalModal.addEventListener("click", (e) => { if (e.target === journalModal) journalModal.close(); });
+
+    document.getElementById("journal-expand-all").addEventListener("click", () => setAllJournalEntries(true));
+    document.getElementById("journal-collapse-all").addEventListener("click", () => setAllJournalEntries(false));
+
+    /* Si una imagen no carga, su ficha degrada a un fondo de color de la época */
+    topicImage.addEventListener("error", () => topicFigure.classList.add("is-broken"));
+    topicImage.addEventListener("load", () => topicFigure.classList.remove("is-broken"));
+    contextImage.addEventListener("error", () => contextFigure.classList.add("is-broken"));
+    contextImage.addEventListener("load", () => contextFigure.classList.remove("is-broken"));
+
     dossierModal.addEventListener("cancel", guardDossierClose);
     restartBtn.addEventListener("click", restartGame);
     replayBtn.addEventListener("click", restartGame);

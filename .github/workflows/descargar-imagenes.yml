@@ -59,15 +59,15 @@ jobs:
           print("URLs externas restantes :", externas)
           print("rutas locales rotas     :", len(rotas))
 
-          # La comprobación tiene que fallar tanto si algo se rompió como si
-          # sencillamente no se hizo nada: 0 referencias locales no es un éxito.
+          # Falla solo ante un destrozo real. Que queden unas pocas URLs
+          # externas no lo es: esas imágenes siguen cargando desde la web y lo
+          # ya descargado debe subirse igualmente, porque el servidor de GitHub
+          # es efímero y de lo contrario se perdería en cada intento.
           problemas = []
           if descargadas == 0:
               problemas.append("no se descargó ninguna imagen")
           if locales == 0:
               problemas.append("el HTML no apunta a ninguna imagen local")
-          if externas > 0:
-              problemas.append("quedan %d URLs externas sin localizar" % externas)
           if rotas:
               problemas.append("hay %d rutas locales rotas: %s" % (len(rotas), sorted(rotas)[:5]))
 
@@ -76,7 +76,12 @@ jobs:
               for p in problemas:
                   print("  -", p)
               raise SystemExit(1)
-          print("\nTodo correcto.")
+
+          if externas:
+              print("\nAVISO: quedan %d URLs externas por localizar." % externas)
+              print("Se sube lo conseguido; vuelve a lanzar el flujo para reintentar solo esas.")
+          else:
+              print("\nTodo correcto: no queda ninguna imagen externa.")
           FIN
 
       - name: Subir las imágenes y los HTML actualizados

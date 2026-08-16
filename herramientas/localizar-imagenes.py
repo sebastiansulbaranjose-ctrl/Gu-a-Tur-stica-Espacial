@@ -103,27 +103,41 @@ def resolver_en_cdn(nombres):
         for pagina in datos.get("query", {}).get("pages", []):
             titulo = pagina.get("title", "")[5:]          # quita "File:"
             info = (pagina.get("imageinfo") or [{}])[0]
-            enlace = info.get("thumburl") or info.get("url")
-            if titulo and enlace:
-                mapa[titulo] = enlace
+            if titulo and (info.get("thumburl") or info.get("url")):
+                mapa[titulo] = {"thumb": info.get("thumburl"),
+                                "original": info.get("url")}
         time.sleep(0.5)
     return mapa
 
 
-def url_descarga(url, cdn):
-    """URL desde la que conviene bajar el archivo."""
+def urls_descarga(url, cdn):
+    """Lista de URLs a probar, de la mejor a la de último recurso.
+
+    La miniatura del CDN es la vía preferente, pero a veces devuelve 404 porque
+    Wikimedia no la ha generado. En ese caso se prueba el archivo original y,
+    por último, Special:FilePath.
+    """
     partes = urllib.parse.urlparse(url)
     if partes.netloc == "images.unsplash.com":
-        return url                                   # ya viene con w= en la query
+        return [url]                                 # ya viene con w= en la query
+
+    candidatas = []
     nombre = nombre_commons(url)
     if nombre:
-        directa = cdn.get(nombre) or cdn.get(nombre.replace("_", " "))
-        if directa:
-            return directa                           # CDN: la vía buena
-        if "width=" not in partes.query:             # respaldo, ya redimensionado
-            return ("https://commons.wikimedia.org/wiki/Special:FilePath/%s?width=%d"
-                    % (partes.path.split("/")[-1], ANCHO_MAXIMO))
-    return url
+        entrada = cdn.get(nombre) or cdn.get(nombre.replace("_", " ")) or {}
+        if entrada.get("thumb"):
+            candidatas.append(entrada["thumb"])       # CDN redimensionado
+        if entrada.get("original"):
+            candidatas.append(entrada["original"])    # CDN a tamaño completo
+        candidatas.append("https://commons.wikimedia.org/wiki/Special:FilePath/%s?width=%d"
+                          % (partes.path.split("/")[-1], ANCHO_MAXIMO))
+    candidatas.append(url)
+    vistas, salida = set(), []
+    for c in candidatas:
+        if c not in vistas:
+            vistas.add(c)
+            salida.append(c)
+    return salida
 
 
 def extension(url, nombre):
@@ -188,10 +202,19 @@ def descargar(mapa):
         if os.path.exists(destino) and os.path.getsize(destino) > 0:
             saltadas += 1
             continue
+        ultimo = None
+        for candidata in urls_descarga(url, cdn):
+            try:
+                datos = abrir(candidata)
+                with open(destino, "wb") as f:
+                    f.write(datos)
+                ultimo = None
+                break
+            except Exception as e:
+                ultimo = e
         try:
-            datos = abrir(url_descarga(url, cdn))
-            with open(destino, "wb") as f:
-                f.write(datos)
+            if ultimo is not None:
+                raise ultimo
             ok += 1
             print("  [%3d/%d] %s" % (i, total, nombre))
             time.sleep(PAUSA)         # cortesía con los servidores de Wikimedia

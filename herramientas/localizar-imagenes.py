@@ -14,10 +14,12 @@ Se ejecuta desde la raíz del proyecto. Es idempotente: si una imagen ya está
 descargada no la vuelve a pedir, y si el HTML ya apunta a ./img no lo toca.
 """
 import io
+import json
 import os
 import re
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -26,27 +28,102 @@ DIR_IMG = os.path.join(RAIZ, "img")
 ARCHIVOS = ["index.html", "fallatemporal.html"]
 HOSTS = ("commons.wikimedia.org", "upload.wikimedia.org", "images.unsplash.com")
 PATRON = re.compile(r'https://(?:' + "|".join(h.replace(".", r"\.") for h in HOSTS) + r')[^"\s\\]+')
-AGENTE = "OrbitaGuiaTuristicaEspacial/1.0 (proyecto escolar Codigo TBox; contacto via GitHub)"
+
+# Wikimedia rechaza con HTTP 429 ("robot policy") cualquier agente que no
+# identifique al proyecto y ofrezca un contacto real.
+REPO = "https://github.com/sebastiansulbaranjose-ctrl/Gu-a-Tur-stica-Espacial"
+AGENTE = "OrbitaGuiaTuristicaEspacial/1.0 (%s)" % REPO
+API_COMMONS = "https://commons.wikimedia.org/w/api.php"
+PAUSA = 0.6          # entre descargas
+REINTENTOS = 5       # ante un 429, con espera creciente
 
 
 ANCHO_MAXIMO = 1200   # el mismo tamaño que ya pide el resto del sitio
 
 
-def url_descarga(url):
-    """URL desde la que conviene bajar el archivo.
+def abrir(url, timeout=60):
+    """Petición con identificación correcta y reintentos ante el límite de Wikimedia.
 
-    19 de las imágenes apuntan al original de Wikimedia sin limitar el tamaño, y
-    algunas pesan decenas de MB. Se redirigen al servicio Special:FilePath, que
-    entrega una copia redimensionada del mismo archivo.
+    Wikimedia responde 429 tanto si el agente no la identifica como si se pide
+    demasiado deprisa. En el segundo caso conviene esperar y reintentar en vez
+    de darse por vencido, que es lo que hacía la primera versión.
     """
+    espera = 4
+    for intento in range(1, REINTENTOS + 1):
+        try:
+            pedido = urllib.request.Request(url, headers={
+                "User-Agent": AGENTE,
+                "Accept": "*/*",
+            })
+            return urllib.request.urlopen(pedido, timeout=timeout).read()
+        except urllib.error.HTTPError as e:
+            if e.code != 429 or intento == REINTENTOS:
+                raise
+            pausa = int(e.headers.get("Retry-After") or 0) or espera
+            print("      429; esperando %ds y reintentando (%d/%d)" % (pausa, intento, REINTENTOS - 1))
+            time.sleep(pausa)
+            espera = min(espera * 2, 60)
+    raise RuntimeError("agotados los reintentos")
+
+
+def nombre_commons(url):
+    """Nombre del archivo en Commons, o None si la URL no es de Wikimedia."""
+    partes = urllib.parse.urlparse(url)
+    if partes.netloc not in ("commons.wikimedia.org", "upload.wikimedia.org"):
+        return None
+    return urllib.parse.unquote(partes.path.split("/")[-1])
+
+
+def resolver_en_cdn(nombres):
+    """{nombre en Commons: enlace directo al CDN, ya redimensionado}.
+
+    Special:FilePath pasa por los servidores de aplicación de Wikimedia, que
+    limitan el tráfico con dureza. La API permite pedir 50 archivos de una vez y
+    devuelve el enlace de la miniatura en upload.wikimedia.org, que es el CDN y
+    aguanta muchísimo mejor la descarga.
+    """
+    mapa = {}
+    nombres = list(nombres)
+    for i in range(0, len(nombres), 50):
+        lote = nombres[i:i + 50]
+        consulta = urllib.parse.urlencode({
+            "action": "query",
+            "format": "json",
+            "formatversion": "2",
+            "prop": "imageinfo",
+            "iiprop": "url",
+            "iiurlwidth": str(ANCHO_MAXIMO),
+            "titles": "|".join("File:" + n for n in lote),
+        })
+        try:
+            datos = json.loads(abrir(API_COMMONS + "?" + consulta, timeout=45).decode("utf-8"))
+        except Exception as e:
+            print("  aviso: la API no respondió para un lote (%s); se usará Special:FilePath" % str(e)[:60])
+            continue
+        for pagina in datos.get("query", {}).get("pages", []):
+            titulo = pagina.get("title", "")[5:]          # quita "File:"
+            info = (pagina.get("imageinfo") or [{}])[0]
+            enlace = info.get("thumburl") or info.get("url")
+            if titulo and enlace:
+                mapa[titulo] = enlace
+        time.sleep(0.5)
+    return mapa
+
+
+def url_descarga(url, cdn):
+    """URL desde la que conviene bajar el archivo."""
     partes = urllib.parse.urlparse(url)
     if partes.netloc == "images.unsplash.com":
         return url                                   # ya viene con w= en la query
-    if "width=" in partes.query:
-        return url                                   # ya limitada
-    nombre = partes.path.split("/")[-1]
-    return ("https://commons.wikimedia.org/wiki/Special:FilePath/%s?width=%d"
-            % (nombre, ANCHO_MAXIMO))
+    nombre = nombre_commons(url)
+    if nombre:
+        directa = cdn.get(nombre) or cdn.get(nombre.replace("_", " "))
+        if directa:
+            return directa                           # CDN: la vía buena
+        if "width=" not in partes.query:             # respaldo, ya redimensionado
+            return ("https://commons.wikimedia.org/wiki/Special:FilePath/%s?width=%d"
+                    % (partes.path.split("/")[-1], ANCHO_MAXIMO))
+    return url
 
 
 def extension(url, nombre):
@@ -93,6 +170,18 @@ def inventario():
 
 def descargar(mapa):
     os.makedirs(DIR_IMG, exist_ok=True)
+
+    pendientes = {u: n for u, n in mapa.items()
+                  if not (os.path.exists(os.path.join(DIR_IMG, n))
+                          and os.path.getsize(os.path.join(DIR_IMG, n)) > 0)}
+    nombres = {nombre_commons(u) for u in pendientes}
+    nombres.discard(None)
+    cdn = {}
+    if nombres:
+        print("Resolviendo %d archivos en el CDN de Wikimedia..." % len(nombres))
+        cdn = resolver_en_cdn(nombres)
+        print("  resueltos: %d de %d\n" % (len(cdn), len(nombres)))
+
     total, ok, saltadas, fallos = len(mapa), 0, 0, []
     for i, (url, nombre) in enumerate(mapa.items(), 1):
         destino = os.path.join(DIR_IMG, nombre)
@@ -100,12 +189,12 @@ def descargar(mapa):
             saltadas += 1
             continue
         try:
-            pedido = urllib.request.Request(url_descarga(url), headers={"User-Agent": AGENTE})
-            with urllib.request.urlopen(pedido, timeout=60) as r, open(destino, "wb") as f:
-                f.write(r.read())
+            datos = abrir(url_descarga(url, cdn))
+            with open(destino, "wb") as f:
+                f.write(datos)
             ok += 1
             print("  [%3d/%d] %s" % (i, total, nombre))
-            time.sleep(0.25)          # cortesía con los servidores de Wikimedia
+            time.sleep(PAUSA)         # cortesía con los servidores de Wikimedia
         except Exception as e:
             fallos.append((url, nombre, str(e)[:90]))
             if os.path.exists(destino):

@@ -183,6 +183,12 @@ def urls_descarga(url, cdn):
         entrada = cdn.get(nombre) or cdn.get(nombre.replace("_", " ")) or {}
         if entrada.get("thumb"):
             candidatas.append(entrada["thumb"])       # CDN redimensionado
+        if es_tiff(nombre):
+            # Muchas fotos de ESO y la NASA solo están en Commons como TIFF, que
+            # los navegadores no muestran. La miniatura del CDN sí llega en JPEG,
+            # así que para estos archivos es la única fuente válida: bajar el
+            # original o pasar por Special:FilePath daría un TIFF inservible.
+            return candidatas
         if entrada.get("original"):
             candidatas.append(entrada["original"])    # CDN a tamaño completo
         candidatas.append("https://commons.wikimedia.org/wiki/Special:FilePath/%s?width=%d"
@@ -196,7 +202,16 @@ def urls_descarga(url, cdn):
     return salida
 
 
+def es_tiff(nombre):
+    return nombre.lower().endswith((".tif", ".tiff"))
+
+
 def extension(url, nombre):
+    if es_tiff(nombre):
+        # De un TIFF de Commons solo se guarda su miniatura JPEG, así que el
+        # archivo local debe llamarse .jpg. Con la extensión original, el
+        # servidor lo anunciaría como image/tiff y el navegador no lo pintaría.
+        return ".jpg"
     for ext in (".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"):
         if nombre.lower().endswith(ext):
             return ext
@@ -213,7 +228,11 @@ def nombre_local(url, usados):
         crudo = partes.path.split("/")[-1]
         crudo = urllib.parse.unquote(crudo)
         ext = extension(url, crudo)
-        base = crudo[: -len(ext)] if crudo.lower().endswith(ext) else crudo
+        if es_tiff(crudo):
+            # se guarda como .jpg, así que sobra el .tiff del nombre de Commons
+            base = crudo.rsplit(".", 1)[0]
+        else:
+            base = crudo[: -len(ext)] if crudo.lower().endswith(ext) else crudo
     base = re.sub(r"[^A-Za-z0-9._-]+", "-", base).strip("-.")[:90] or "imagen"
     nombre = base + ext
     n = 2
@@ -336,6 +355,32 @@ def leer_inventario():
     return mapa
 
 
+def descargadas(mapa):
+    """El subconjunto de {url: nombre} que de verdad está guardado en img/."""
+    return {u: n for u, n in mapa.items()
+            if os.path.exists(os.path.join(DIR_IMG, n))}
+
+
+def anotar_inventario(mapa):
+    """Añade al inventario los pares nombre↔URL que aún no estén.
+
+    El inventario no se puede regenerar a partir del HTML, porque en cuanto una
+    imagen se localiza el HTML deja de mencionar su URL de origen. Por eso se va
+    completando aquí, según se descargan: si se dejara a mano, tarde o temprano
+    quedaría una imagen sin saber de dónde vino, y ni --rehacer ni los créditos
+    de autoría podrían reconstruirlo.
+    """
+    conocidos = leer_inventario() if os.path.exists(INVENTARIO) else {}
+    nuevos = [(n, u) for u, n in mapa.items() if conocidos.get(n) != u]
+    if not nuevos:
+        return 0
+    with io.open(INVENTARIO, "a", encoding="utf-8") as f:
+        for nombre, url in nuevos:
+            f.write("%-58s  %s\n" % (nombre, url))
+    print("Inventario: %d entradas nuevas anotadas." % len(nuevos))
+    return len(nuevos)
+
+
 def rehacer(patrones):
     """Vuelve a descargar las imágenes ya guardadas que encajen con los patrones.
 
@@ -406,9 +451,11 @@ def main():
         return
     if "--solo-descargar" in args:
         descargar(mapa)
+        anotar_inventario(descargadas(mapa))
         return
 
     descargar(mapa)
+    anotar_inventario(descargadas(mapa))
     print("\nReescribiendo el HTML:")
     reescribir(mapa)
     print("\nListo. Comprueba el sitio abriendo index.html y desconectando la red.")

@@ -79,10 +79,25 @@ sitio con una imagen rota.
 python3 herramientas/localizar-imagenes.py --buscar Laniakea supercluster
 ```
 
-Muestra hasta diez archivos con sus dimensiones y su tipo. El tipo importa:
-muchas imágenes de ESO y la NASA están en Commons solo como TIFF de decenas de
-megas, y para la web hace falta la versión JPG o PNG. En GitHub Actions es la
-casilla **buscar**, que solo consulta: no descarga ni sube nada.
+Muestra hasta diez archivos con sus dimensiones y su tipo. En GitHub Actions es
+la casilla **buscar**, que solo consulta: no descarga ni sube nada.
+
+## Archivos TIFF
+
+Muchas imágenes de ESO y la NASA están en Commons **solo como TIFF** de decenas
+de megas, y los navegadores no muestran TIFF. No hace falta descartarlas: el CDN
+de Wikimedia genera una miniatura JPEG de cualquier TIFF, y el script pide esa.
+En ese caso guarda el archivo con extensión `.jpg`, porque si conservara el
+`.tiff` del nombre original el servidor lo anunciaría como `image/tiff` y la
+imagen no se vería.
+
+## El inventario se mantiene solo
+
+`inventario-imagenes.txt` guarda de dónde vino cada archivo. **No se puede
+regenerar a partir del HTML**: en cuanto una imagen se localiza, el HTML dice
+`img/foto.jpg` y la URL de origen desaparece del sitio. Por eso el script va
+anotando cada descarga nueva según la hace. Ese archivo es lo que hace posible
+`--rehacer` y lo que servirá de base para los créditos de autoría.
 
 ## Comprobar el resultado
 

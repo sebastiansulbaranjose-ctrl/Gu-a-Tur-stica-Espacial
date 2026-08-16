@@ -108,11 +108,9 @@ Neptune_Voyager2_color_calibrated.png                       https://commons.wiki
 Oort_cloud_lrg-es.png                                       https://commons.wikimedia.org/wiki/Special:FilePath/Oort_cloud_lrg-es.png?width=900
 Orion_Nebula_-_Hubble_2006_mosaic_edit.jpg                  https://commons.wikimedia.org/wiki/Special:FilePath/Orion_Nebula_-_Hubble_2006_mosaic_edit.jpg?width=900
 Magellanic_Clouds_-_Irregular_Dwarf_Galaxies.jpg            https://commons.wikimedia.org/wiki/Special:FilePath/Magellanic_Clouds_%E2%80%95_Irregular_Dwarf_Galaxies.jpg?width=900
-Artist-s_impression_of_the_Milky_Way.jpg                    https://commons.wikimedia.org/wiki/Special:FilePath/Artist%27s_impression_of_the_Milky_Way.jpg?width=900
 Andromeda_Galaxy_M31_-_Heic1502a_Full_resolution.jpg        https://commons.wikimedia.org/wiki/Special:FilePath/Andromeda_Galaxy_M31_-_Heic1502a_Full_resolution.jpg?width=900
 IC_1101.jpg                                                 https://commons.wikimedia.org/wiki/Special:FilePath/IC_1101.jpg?width=900
 Local_Group_and_nearest_galaxies.jpg                        https://commons.wikimedia.org/wiki/Special:FilePath/Local_Group_and_nearest_galaxies.jpg?width=900
-Laniakea_supercluster.jpg                                   https://commons.wikimedia.org/wiki/Special:FilePath/Laniakea_supercluster.jpg?width=900
 Observable_Universe_logarithmic_illustration_-circular_layout_english_annotations.png  https://commons.wikimedia.org/wiki/Special:FilePath/Observable_Universe_logarithmic_illustration_(circular_layout_english_annotations).png?width=900
 Observable_Universe_logarithmic_illustration_-circular_layout_english_annotations-2.png  https://commons.wikimedia.org/wiki/Special:FilePath/Observable_Universe_logarithmic_illustration_(circular_layout_english_annotations).png?width=1200
 photo-1462331940025-496dfbfc7564-2.jpg                      https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=85
@@ -122,7 +120,6 @@ Boovoid-2.png                                               https://commons.wiki
 Image_of_Betelgeuse-s_surface_taken_in_January_2020_-eso2109d-2.jpg  https://commons.wikimedia.org/wiki/Special:FilePath/Image_of_Betelgeuse%E2%80%99s_surface_taken_in_January_2020_(eso2109d).jpg?width=1100
 Webb-s_First_Deep_Field_-adjusted.jpg                       https://commons.wikimedia.org/wiki/Special:FilePath/Webb%27s_First_Deep_Field_(adjusted).jpg?width=1200
 Black_hole_-_Messier_87-2.jpg                               https://commons.wikimedia.org/wiki/Special:FilePath/Black_hole_-_Messier_87.jpg?width=1100
-Artist-s_impression_of_the_Milky_Way-2.jpg                  https://commons.wikimedia.org/wiki/Special:FilePath/Artist%27s_impression_of_the_Milky_Way.jpg?width=1200
 HL_Tau_protoplanetary_disk.jpg                              https://commons.wikimedia.org/wiki/Special:FilePath/HL_Tau_protoplanetary_disk.jpg?width=1100
 The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA-s_Solar_Dynamics_Observatory_-_2010081-2.jpg  https://commons.wikimedia.org/wiki/Special:FilePath/The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.jpg?width=1200
 OSIRIS_Mars_true_color-2.jpg                                https://commons.wikimedia.org/wiki/Special:FilePath/OSIRIS_Mars_true_color.jpg?width=1100

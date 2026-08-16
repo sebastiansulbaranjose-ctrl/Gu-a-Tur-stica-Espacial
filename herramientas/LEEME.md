@@ -19,8 +19,14 @@ Eso hace dos cosas, en este orden:
 1. Descarga las 138 imágenes a `img/`.
 2. Reescribe `index.html` y `fallatemporal.html` para que apunten a `img/…`.
 
-Tarda unos 3-4 minutos (hay una pausa de 0,25 s entre descargas por cortesía con
+Tarda unos 3-4 minutos (hay una pausa de 0,6 s entre descargas por cortesía con
 los servidores de Wikimedia).
+
+### Sin Python en la computadora
+
+No hace falta instalar nada: el mismo trabajo lo hacen los servidores de GitHub.
+En la pestaña **Actions** del repositorio, flujo *«Descargar imágenes al
+proyecto»* → **Run workflow**. Descarga, reescribe el HTML y sube el resultado.
 
 ## Otras formas de ejecutarlo
 
@@ -36,6 +42,34 @@ El script no se detiene: sigue con las demás y al terminar escribe
 `img-fallidas.txt` con las que no consiguió. **Vuelve a ejecutarlo** y reintentará
 solo esas, porque salta las que ya están en `img/`. Las URLs que sigan fallando se
 dejan intactas en el HTML, de modo que el sitio nunca queda con enlaces rotos.
+
+Si el fallo es que un archivo **ya no existe en Commons con ese nombre** (lo
+renombraron, o el nombre estaba mal desde el principio), el script lo dice y
+busca nombres parecidos:
+
+```
+  «Laniakea_supercluster.jpg» no existe en Commons con ese nombre.
+      candidatos en Commons para «Laniakea supercluster»:
+        File:…                                          3840x2160
+```
+
+No elige por su cuenta: hay que mirar los candidatos, decidir cuál corresponde y
+cambiar la URL en el HTML. Una imagen científica equivocada es peor que ninguna.
+
+## Volver a bajar una imagen ya descargada
+
+Como el script salta lo que ya está en `img/`, para pedir una de nuevo hay que
+borrarla antes:
+
+```bash
+rm img/photo-1462331940025-496dfbfc7564.jpg
+python3 herramientas/localizar-imagenes.py
+```
+
+Desde GitHub Actions se hace con la casilla **rehacer** del formulario, escribiendo
+los patrones a borrar (por ejemplo `photo-*.jpg`). Se borra y se vuelve a
+descargar dentro de la misma ejecución, así el sitio no queda ni un momento con
+imágenes rotas.
 
 ## Comprobar el resultado
 

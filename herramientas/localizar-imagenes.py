@@ -13,6 +13,7 @@ Uso:
 Se ejecuta desde la raíz del proyecto. Es idempotente: si una imagen ya está
 descargada no la vuelve a pedir, y si el HTML ya apunta a ./img no lo toca.
 """
+import html
 import io
 import json
 import os
@@ -110,6 +111,42 @@ def resolver_en_cdn(nombres):
     return mapa
 
 
+def sugerir_en_commons(nombre, cuantas=5):
+    """Busca en Commons nombres parecidos a uno que no existe.
+
+    Si la API no reconoce un archivo es que ya no está con ese nombre (lo
+    renombraron o nunca existió). El script no elige por su cuenta: imprime
+    los candidatos con su tamaño para que una persona decida cuál encaja.
+    """
+    termino = re.sub(r"\.[a-z]{3,4}$", "", nombre).replace("_", " ")
+    consulta = urllib.parse.urlencode({
+        "action": "query",
+        "format": "json",
+        "formatversion": "2",
+        "generator": "search",
+        "gsrsearch": termino,
+        "gsrnamespace": "6",          # espacio de nombres «File:»
+        "gsrlimit": str(cuantas),
+        "prop": "imageinfo",
+        "iiprop": "url|size",
+        "iiurlwidth": str(ANCHO_MAXIMO),
+    })
+    try:
+        datos = json.loads(abrir(API_COMMONS + "?" + consulta, timeout=45).decode("utf-8"))
+    except Exception as e:
+        print("      (no se pudo buscar alternativas: %s)" % str(e)[:60])
+        return
+    paginas = datos.get("query", {}).get("pages", [])
+    if not paginas:
+        print("      sin candidatos en Commons para «%s»" % termino)
+        return
+    print("      candidatos en Commons para «%s»:" % termino)
+    for pagina in paginas:
+        info = (pagina.get("imageinfo") or [{}])[0]
+        print("        %-70s %sx%s" % (pagina.get("title", "?"),
+                                       info.get("width", "?"), info.get("height", "?")))
+
+
 def urls_descarga(url, cdn):
     """Lista de URLs a probar, de la mejor a la de último recurso.
 
@@ -119,7 +156,10 @@ def urls_descarga(url, cdn):
     """
     partes = urllib.parse.urlparse(url)
     if partes.netloc == "images.unsplash.com":
-        return [url]                                 # ya viene con w= en la query
+        # En el HTML los separadores van escapados como &amp;, que es lo correcto
+        # en un atributo. Si se piden así, Unsplash no reconoce w= ni q= y
+        # devuelve la imagen original: una de ellas pesaba 9 MB.
+        return [html.unescape(url)]
 
     candidatas = []
     nombre = nombre_commons(url)
@@ -194,7 +234,13 @@ def descargar(mapa):
     if nombres:
         print("Resolviendo %d archivos en el CDN de Wikimedia..." % len(nombres))
         cdn = resolver_en_cdn(nombres)
-        print("  resueltos: %d de %d\n" % (len(cdn), len(nombres)))
+        print("  resueltos: %d de %d" % (len(cdn), len(nombres)))
+        sin_resolver = [n for n in sorted(nombres)
+                        if n not in cdn and n.replace("_", " ") not in cdn]
+        for n in sin_resolver:
+            print("\n  «%s» no existe en Commons con ese nombre." % n)
+            sugerir_en_commons(n)
+        print()
 
     total, ok, saltadas, fallos = len(mapa), 0, 0, []
     for i, (url, nombre) in enumerate(mapa.items(), 1):

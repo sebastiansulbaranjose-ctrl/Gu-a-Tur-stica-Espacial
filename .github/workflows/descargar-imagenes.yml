@@ -12,6 +12,10 @@ on:
         description: 'Escribe SI para confirmar que quieres descargar y subir las imágenes'
         required: true
         default: 'SI'
+      rehacer:
+        description: 'Patrones de img/ que se borran antes de empezar, para volver a bajarlos (ej: photo-*.jpg). Vacío = no borra nada'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -30,6 +34,25 @@ jobs:
 
       - name: Mostrar el inventario
         run: python herramientas/localizar-imagenes.py --listar | tail -3
+
+      # El script salta lo que ya está descargado, así que para volver a pedir
+      # una imagen (por ejemplo si se bajó al tamaño equivocado) hay que
+      # borrarla primero. Se hace aquí dentro para que el sitio no se quede ni
+      # un momento con imágenes rotas: en la misma ejecución se borra y se
+      # vuelve a descargar.
+      - name: Borrar las imágenes que se quieren volver a bajar
+        if: inputs.rehacer != ''
+        # El valor va por una variable de entorno y no interpolado en el
+        # script: así lo que se escriba en el formulario no puede convertirse
+        # en órdenes del intérprete.
+        env:
+          REHACER: ${{ inputs.rehacer }}
+        run: |
+          cd img
+          for patron in $REHACER; do
+            echo "Borrando: $patron"
+            rm -fv $patron
+          done
 
       - name: Descargar las imágenes y reescribir el HTML
         run: python herramientas/localizar-imagenes.py

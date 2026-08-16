@@ -29,6 +29,26 @@ PATRON = re.compile(r'https://(?:' + "|".join(h.replace(".", r"\.") for h in HOS
 AGENTE = "OrbitaGuiaTuristicaEspacial/1.0 (proyecto escolar Codigo TBox; contacto via GitHub)"
 
 
+ANCHO_MAXIMO = 1200   # el mismo tamaño que ya pide el resto del sitio
+
+
+def url_descarga(url):
+    """URL desde la que conviene bajar el archivo.
+
+    19 de las imágenes apuntan al original de Wikimedia sin limitar el tamaño, y
+    algunas pesan decenas de MB. Se redirigen al servicio Special:FilePath, que
+    entrega una copia redimensionada del mismo archivo.
+    """
+    partes = urllib.parse.urlparse(url)
+    if partes.netloc == "images.unsplash.com":
+        return url                                   # ya viene con w= en la query
+    if "width=" in partes.query:
+        return url                                   # ya limitada
+    nombre = partes.path.split("/")[-1]
+    return ("https://commons.wikimedia.org/wiki/Special:FilePath/%s?width=%d"
+            % (nombre, ANCHO_MAXIMO))
+
+
 def extension(url, nombre):
     for ext in (".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"):
         if nombre.lower().endswith(ext):
@@ -80,7 +100,7 @@ def descargar(mapa):
             saltadas += 1
             continue
         try:
-            pedido = urllib.request.Request(url, headers={"User-Agent": AGENTE})
+            pedido = urllib.request.Request(url_descarga(url), headers={"User-Agent": AGENTE})
             with urllib.request.urlopen(pedido, timeout=60) as r, open(destino, "wb") as f:
                 f.write(r.read())
             ok += 1

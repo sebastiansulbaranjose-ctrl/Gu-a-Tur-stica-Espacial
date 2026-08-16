@@ -1,0 +1,104 @@
+name: Descargar imágenes al proyecto
+
+# Se lanza a mano desde la pestaña Actions de GitHub.
+# Los servidores de GitHub descargan las 138 imágenes de Wikimedia y Unsplash,
+# reescriben los HTML para que apunten a ./img y suben el resultado a la rama.
+# Así no hace falta instalar nada en la computadora de nadie.
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmar:
+        description: 'Escribe SI para confirmar que quieres descargar y subir las imágenes'
+        required: true
+        default: 'SI'
+
+permissions:
+  contents: write
+
+jobs:
+  descargar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Mostrar el inventario
+        run: python herramientas/localizar-imagenes.py --listar | tail -3
+
+      - name: Descargar las imágenes y reescribir el HTML
+        run: python herramientas/localizar-imagenes.py
+
+      - name: Comprobar el resultado
+        run: |
+          echo "--- peso total de img/ ---"
+          du -sh img || true
+          python - <<'FIN'
+          import io, os, re
+
+          EXTERNAS = re.compile(r'https://(?:commons\.wikimedia|upload\.wikimedia|images\.unsplash)[^"]*')
+          LOCALES = re.compile(r'"(img/[A-Za-z0-9._-]+)"')
+
+          descargadas = len(os.listdir("img")) if os.path.isdir("img") else 0
+          externas, locales, rotas = 0, 0, set()
+          for archivo in ("index.html", "fallatemporal.html"):
+              texto = io.open(archivo, encoding="utf-8").read()
+              externas += len(EXTERNAS.findall(texto))
+              for ruta in LOCALES.findall(texto):
+                  locales += 1
+                  if not os.path.exists(ruta):
+                      rotas.add(ruta)
+
+          print("imágenes en img/        :", descargadas)
+          print("referencias locales     :", locales)
+          print("URLs externas restantes :", externas)
+          print("rutas locales rotas     :", len(rotas))
+
+          # La comprobación tiene que fallar tanto si algo se rompió como si
+          # sencillamente no se hizo nada: 0 referencias locales no es un éxito.
+          problemas = []
+          if descargadas == 0:
+              problemas.append("no se descargó ninguna imagen")
+          if locales == 0:
+              problemas.append("el HTML no apunta a ninguna imagen local")
+          if externas > 0:
+              problemas.append("quedan %d URLs externas sin localizar" % externas)
+          if rotas:
+              problemas.append("hay %d rutas locales rotas: %s" % (len(rotas), sorted(rotas)[:5]))
+
+          if problemas:
+              print("\nFALLA LA COMPROBACIÓN:")
+              for p in problemas:
+                  print("  -", p)
+              raise SystemExit(1)
+          print("\nTodo correcto.")
+          FIN
+
+      - name: Subir las imágenes y los HTML actualizados
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add img index.html fallatemporal.html
+          if git diff --cached --quiet; then
+            echo "No hay cambios que subir."
+            exit 0
+          fi
+          git commit -m "Descarga las imágenes al proyecto y apunta el HTML a ./img
+
+          Ejecutado por el flujo de trabajo descargar-imagenes.yml. Las 138 imágenes
+          de Wikimedia Commons y Unsplash quedan dentro del repositorio, como exige
+          el reglamento de la competencia, y el sitio pasa a funcionar sin conexión."
+          git push
+
+      - name: Guardar el registro de fallos, si los hubo
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: img-fallidas
+          path: img-fallidas.txt
+          if-no-files-found: ignore

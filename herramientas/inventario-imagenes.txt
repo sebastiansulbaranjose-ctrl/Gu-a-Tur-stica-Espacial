@@ -135,3 +135,6 @@ photo-1446776811953-b23d57bd21aa-2.jpg                      https://images.unspl
 The_Earth_seen_from_Apollo_17-2.jpg                         https://commons.wikimedia.org/wiki/Special:FilePath/The_Earth_seen_from_Apollo_17.jpg?width=1200
 International_Space_Station-2.jpg                           https://commons.wikimedia.org/wiki/Special:FilePath/International_Space_Station.jpg?width=1100
 Gravitational_lensing_by_a_black_hole-2.jpg                 https://commons.wikimedia.org/wiki/Special:FilePath/Gravitational_lensing_by_a_black_hole.jpg?width=1100
+Artist-s_impression_of_the_Milky_Way_-eso1339g.jpg          https://commons.wikimedia.org/wiki/Special:FilePath/Artist%27s_impression_of_the_Milky_Way_(eso1339g).tiff?width=900
+Artist-s_impression_of_the_Milky_Way_-eso1339g-2.jpg        https://commons.wikimedia.org/wiki/Special:FilePath/Artist%27s_impression_of_the_Milky_Way_(eso1339g).tiff?width=1200
+07-Laniakea_-LofE07240.png                                  https://commons.wikimedia.org/wiki/Special:FilePath/07-Laniakea_(LofE07240).png?width=900

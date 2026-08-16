@@ -12,8 +12,12 @@ on:
         description: 'Escribe SI para confirmar que quieres descargar y subir las imágenes'
         required: true
         default: 'SI'
+      buscar:
+        description: 'Buscar un nombre de archivo en Commons y solo mostrar el resultado, sin descargar ni subir nada (ej: Laniakea supercluster)'
+        required: false
+        default: ''
       rehacer:
-        description: 'Patrones de img/ que se borran antes de empezar, para volver a bajarlos (ej: photo-*.jpg). Vacío = no borra nada'
+        description: 'Volver a descargar imágenes ya guardadas, por nombre o patrón (ej: photo-*.jpg). Vacío = no rehace ninguna'
         required: false
         default: ''
 
@@ -32,32 +36,45 @@ jobs:
         with:
           python-version: '3.12'
 
+      # Modo consulta: solo pregunta a Commons cómo se llama de verdad un
+      # archivo y termina. No descarga ni sube nada, así que los pasos
+      # siguientes se saltan.
+      - name: Buscar un nombre en Commons
+        if: inputs.buscar != ''
+        env:
+          BUSCAR: ${{ inputs.buscar }}
+        run: python herramientas/localizar-imagenes.py --buscar "$BUSCAR"
+
       - name: Mostrar el inventario
+        if: inputs.buscar == ''
         run: python herramientas/localizar-imagenes.py --listar | tail -3
 
-      # El script salta lo que ya está descargado, así que para volver a pedir
-      # una imagen (por ejemplo si se bajó al tamaño equivocado) hay que
-      # borrarla primero. Se hace aquí dentro para que el sitio no se quede ni
-      # un momento con imágenes rotas: en la misma ejecución se borra y se
-      # vuelve a descargar.
-      - name: Borrar las imágenes que se quieren volver a bajar
-        if: inputs.rehacer != ''
+      # Vuelve a pedir imágenes que ya están guardadas, por ejemplo si se
+      # bajaron al tamaño equivocado. No basta con borrarlas: el HTML ya dice
+      # «img/...», así que las URLs de origen solo siguen existiendo en
+      # inventario-imagenes.txt, y de ahí las saca el modo --rehacer. El
+      # archivo antiguo se conserva si la nueva descarga falla.
+      - name: Volver a descargar las imágenes indicadas
+        if: inputs.rehacer != '' && inputs.buscar == ''
         # El valor va por una variable de entorno y no interpolado en el
         # script: así lo que se escriba en el formulario no puede convertirse
         # en órdenes del intérprete.
         env:
           REHACER: ${{ inputs.rehacer }}
         run: |
-          cd img
-          for patron in $REHACER; do
-            echo "Borrando: $patron"
-            rm -fv $patron
-          done
+          # set -f apaga la expansión de comodines del intérprete: los patrones
+          # deben llegar tal cual al script, que es quien los compara con los
+          # nombres del inventario. Sin esto, «photo-*.jpg» se expandiría contra
+          # la raíz del repositorio, donde no hay ninguna imagen.
+          set -f
+          python herramientas/localizar-imagenes.py --rehacer $REHACER
 
       - name: Descargar las imágenes y reescribir el HTML
+        if: inputs.buscar == ''
         run: python herramientas/localizar-imagenes.py
 
       - name: Comprobar el resultado
+        if: inputs.buscar == ''
         run: |
           echo "--- peso total de img/ ---"
           du -sh img || true
@@ -108,6 +125,7 @@ jobs:
           FIN
 
       - name: Subir las imágenes y los HTML actualizados
+        if: inputs.buscar == ''
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

@@ -58,18 +58,31 @@ cambiar la URL en el HTML. Una imagen científica equivocada es peor que ninguna
 
 ## Volver a bajar una imagen ya descargada
 
-Como el script salta lo que ya está en `img/`, para pedir una de nuevo hay que
-borrarla antes:
-
 ```bash
-rm img/photo-1462331940025-496dfbfc7564.jpg
-python3 herramientas/localizar-imagenes.py
+python3 herramientas/localizar-imagenes.py --rehacer 'photo-*.jpg'
 ```
 
-Desde GitHub Actions se hace con la casilla **rehacer** del formulario, escribiendo
-los patrones a borrar (por ejemplo `photo-*.jpg`). Se borra y se vuelve a
-descargar dentro de la misma ejecución, así el sitio no queda ni un momento con
-imágenes rotas.
+Desde GitHub Actions, la casilla **rehacer** del formulario hace lo mismo.
+
+Ojo: **no sirve borrar el archivo y volver a ejecutar el script normal.** Una vez
+reescrito el HTML, este dice `img/foto.jpg` y en ninguna parte del sitio queda la
+URL de origen; el script normal solo sabe descargar lo que encuentra en el HTML,
+así que la imagen borrada no volvería. De dónde vino cada archivo se guarda en
+`inventario-imagenes.txt`, y de ahí lo saca `--rehacer`.
+
+Si la nueva descarga falla, se conserva la copia anterior en vez de dejar el
+sitio con una imagen rota.
+
+## Buscar el nombre real de un archivo en Commons
+
+```bash
+python3 herramientas/localizar-imagenes.py --buscar Laniakea supercluster
+```
+
+Muestra hasta diez archivos con sus dimensiones y su tipo. El tipo importa:
+muchas imágenes de ESO y la NASA están en Commons solo como TIFF de decenas de
+megas, y para la web hace falta la versión JPG o PNG. En GitHub Actions es la
+casilla **buscar**, que solo consulta: no descarga ni sube nada.
 
 ## Comprobar el resultado
 

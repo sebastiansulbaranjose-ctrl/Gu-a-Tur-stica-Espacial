@@ -9,10 +9,13 @@ Uso:
     python3 herramientas/localizar-imagenes.py --listar   # solo muestra el inventario
     python3 herramientas/localizar-imagenes.py --solo-descargar
     python3 herramientas/localizar-imagenes.py --solo-reescribir
+    python3 herramientas/localizar-imagenes.py --rehacer 'photo-*.jpg'
+    python3 herramientas/localizar-imagenes.py --buscar Laniakea supercluster
 
 Se ejecuta desde la raíz del proyecto. Es idempotente: si una imagen ya está
 descargada no la vuelve a pedir, y si el HTML ya apunta a ./img no lo toca.
 """
+import fnmatch
 import html
 import io
 import json
@@ -26,6 +29,7 @@ import urllib.request
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIR_IMG = os.path.join(RAIZ, "img")
+INVENTARIO = os.path.join(RAIZ, "herramientas", "inventario-imagenes.txt")
 ARCHIVOS = ["index.html", "fallatemporal.html"]
 HOSTS = ("commons.wikimedia.org", "upload.wikimedia.org", "images.unsplash.com")
 PATRON = re.compile(r'https://(?:' + "|".join(h.replace(".", r"\.") for h in HOSTS) + r')[^"\s\\]+')
@@ -111,14 +115,14 @@ def resolver_en_cdn(nombres):
     return mapa
 
 
-def sugerir_en_commons(nombre, cuantas=5):
-    """Busca en Commons nombres parecidos a uno que no existe.
+def buscar_en_commons(termino, cuantas=10):
+    """Imprime los archivos de Commons que responden a unos términos de búsqueda.
 
-    Si la API no reconoce un archivo es que ya no está con ese nombre (lo
-    renombraron o nunca existió). El script no elige por su cuenta: imprime
-    los candidatos con su tamaño para que una persona decida cuál encaja.
+    Sirve para dar con el nombre real de una imagen cuando el que había en el
+    HTML no existe. Muestra el tipo de archivo porque muchas fotos de ESO o la
+    NASA están en Commons como TIFF de decenas de megas: para la web hace falta
+    la versión JPG o PNG.
     """
-    termino = re.sub(r"\.[a-z]{3,4}$", "", nombre).replace("_", " ")
     consulta = urllib.parse.urlencode({
         "action": "query",
         "format": "json",
@@ -128,13 +132,12 @@ def sugerir_en_commons(nombre, cuantas=5):
         "gsrnamespace": "6",          # espacio de nombres «File:»
         "gsrlimit": str(cuantas),
         "prop": "imageinfo",
-        "iiprop": "url|size",
-        "iiurlwidth": str(ANCHO_MAXIMO),
+        "iiprop": "url|size|mime",
     })
     try:
         datos = json.loads(abrir(API_COMMONS + "?" + consulta, timeout=45).decode("utf-8"))
     except Exception as e:
-        print("      (no se pudo buscar alternativas: %s)" % str(e)[:60])
+        print("      (no se pudo buscar: %s)" % str(e)[:60])
         return
     paginas = datos.get("query", {}).get("pages", [])
     if not paginas:
@@ -143,8 +146,21 @@ def sugerir_en_commons(nombre, cuantas=5):
     print("      candidatos en Commons para «%s»:" % termino)
     for pagina in paginas:
         info = (pagina.get("imageinfo") or [{}])[0]
-        print("        %-70s %sx%s" % (pagina.get("title", "?"),
-                                       info.get("width", "?"), info.get("height", "?")))
+        print("        %-72s %6sx%-6s %s" % (pagina.get("title", "?"),
+                                             info.get("width", "?"),
+                                             info.get("height", "?"),
+                                             info.get("mime", "?")))
+
+
+def sugerir_en_commons(nombre, cuantas=10):
+    """Busca en Commons nombres parecidos a uno que no existe.
+
+    Si la API no reconoce un archivo es que ya no está con ese nombre (lo
+    renombraron o nunca existió). El script no elige por su cuenta: imprime
+    los candidatos para que una persona decida cuál encaja.
+    """
+    termino = re.sub(r"\.[a-z]{3,4}$", "", nombre).replace("_", " ")
+    buscar_en_commons(termino, cuantas)
 
 
 def urls_descarga(url, cdn):
@@ -302,8 +318,82 @@ def reescribir(mapa, exigir_archivo=True):
     return cambios_totales
 
 
+def leer_inventario():
+    """{nombre local: URL de origen} a partir de inventario-imagenes.txt.
+
+    Hace falta porque, una vez reescrito el HTML, las URLs originales ya no
+    aparecen en ninguna parte del sitio: el HTML dice «img/foto.jpg» y nada
+    más. Sin este archivo no habría forma de volver a pedir una imagen ya
+    descargada.
+    """
+    if not os.path.exists(INVENTARIO):
+        sys.exit("ERROR: falta %s, que guarda de dónde vino cada imagen." % INVENTARIO)
+    mapa = {}
+    for linea in io.open(INVENTARIO, encoding="utf-8"):
+        partes = linea.split()
+        if len(partes) == 2 and partes[1].startswith(("https://", "http://")):
+            mapa[partes[0]] = partes[1]
+    return mapa
+
+
+def rehacer(patrones):
+    """Vuelve a descargar las imágenes ya guardadas que encajen con los patrones.
+
+    El HTML no se toca: ya apunta a ./img y los nombres no cambian. Solo se
+    sustituye el contenido del archivo, y únicamente si la nueva descarga sale
+    bien, para no dejar rota una imagen que hasta ahora funcionaba.
+    """
+    todo = leer_inventario()
+    elegidas = {n: u for n, u in todo.items()
+                if any(fnmatch.fnmatch(n, p) for p in patrones)}
+    if not elegidas:
+        sys.exit("ERROR: ningún nombre del inventario encaja con %s" % " ".join(patrones))
+
+    print("Se van a volver a descargar %d imágenes:" % len(elegidas))
+    nombres = {nombre_commons(u) for u in elegidas.values()}
+    nombres.discard(None)
+    cdn = resolver_en_cdn(nombres) if nombres else {}
+
+    ok, fallos = 0, []
+    for nombre, url in sorted(elegidas.items()):
+        destino = os.path.join(DIR_IMG, nombre)
+        antes = os.path.getsize(destino) if os.path.exists(destino) else 0
+        datos, error = None, None
+        for candidata in urls_descarga(url, cdn):
+            try:
+                datos = abrir(candidata)
+                break
+            except Exception as e:
+                error = e
+        if datos is None:
+            fallos.append(nombre)
+            print("  FALLO %-56s se deja la copia que ya había (%s)" % (nombre, str(error)[:40]))
+            continue
+        with open(destino, "wb") as f:
+            f.write(datos)
+        ok += 1
+        print("  %-56s %7d B -> %7d B" % (nombre, antes, len(datos)))
+        time.sleep(PAUSA)
+
+    print("\nRehechas %d · fallidas %d" % (ok, len(fallos)))
+    return fallos
+
+
 def main():
     args = sys.argv[1:]
+    if "--buscar" in args:
+        termino = " ".join(args[args.index("--buscar") + 1:])
+        if not termino:
+            sys.exit("Uso: --buscar términos de búsqueda")
+        buscar_en_commons(termino)
+        return
+    if "--rehacer" in args:
+        patrones = args[args.index("--rehacer") + 1:]
+        if not patrones:
+            sys.exit("Uso: --rehacer 'photo-*.jpg' [otro-patrón ...]")
+        rehacer(patrones)
+        return
+
     mapa = inventario()
     print("Imágenes externas distintas: %d\n" % len(mapa))
 

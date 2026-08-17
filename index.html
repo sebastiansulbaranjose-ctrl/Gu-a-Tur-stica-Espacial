@@ -53,13 +53,50 @@
       .game-footbar span:last-child{display:none}
     }
 
+    /* ---- HERO: parallax de estrellas, titular mecanografiado y cifras ---- */
+
+    /* Tres capas de estrellas dentro del propio hero. No se toca .star-field,
+       que es el fondo global de toda la página: así el parallax queda
+       encerrado aquí y ninguna otra sección se mueve. */
+    .hero-parallax{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+    .hero-stars{position:absolute;inset:-9%;background-repeat:repeat;transform:translate3d(0,0,0)}
+    .hero-stars.is-live{will-change:transform}
+    .hero-stars.depth-far{opacity:.5;background-image:radial-gradient(circle at 18% 24%,#cfe9ff 0 1px,transparent 1.5px),radial-gradient(circle at 72% 12%,#fff 0 1px,transparent 1.4px),radial-gradient(circle at 44% 68%,#bcd9ff 0 1px,transparent 1.4px);background-size:150px 150px,190px 190px,165px 165px}
+    .hero-stars.depth-mid{opacity:.72;background-image:radial-gradient(circle at 62% 32%,#e6f7ff 0 1.2px,transparent 1.9px),radial-gradient(circle at 26% 76%,#a5e8ff 0 1.2px,transparent 1.9px),radial-gradient(circle at 88% 58%,#fff 0 1.1px,transparent 1.8px);background-size:260px 260px,300px 300px,235px 235px}
+    .hero-stars.depth-near{opacity:.9;background-image:radial-gradient(circle at 34% 18%,#fff 0 1.7px,transparent 2.6px),radial-gradient(circle at 79% 71%,#c8b4ff 0 1.6px,transparent 2.5px),radial-gradient(circle at 12% 52%,#52e7ff 0 1.5px,transparent 2.4px);background-size:430px 430px,520px 520px,470px 470px}
+    /* el contenido del hero por delante de las estrellas */
+    .hero-copy,.hero-radar,.scroll-cue{position:relative;z-index:1}
+
+    /* Titular letra a letra. Todos los caracteres existen desde el primer
+       pintado y solo cambia su visibilidad, así el bloque nunca cambia de
+       tamaño y no hay saltos de maquetación. */
+    .hero h1 .tw-line{color:var(--ink);text-shadow:none}
+    .hero h1 .tw-line.accent{color:var(--purple);text-shadow:0 0 25px rgba(174,115,255,.3)}
+    /* h1 span pinta de morado cualquier span: los caracteres heredan de su línea */
+    .hero h1 .tw-ch{color:inherit;text-shadow:inherit;position:relative;visibility:hidden}
+    .hero h1 .tw-ch.is-on{visibility:visible}
+    /* el cursor va en un pseudoelemento absoluto: no ocupa sitio ni desplaza el texto */
+    .hero h1 .tw-ch.is-cursor::after{content:"";position:absolute;left:100%;top:.1em;width:.055em;min-width:2px;height:.78em;background:var(--cyan);box-shadow:0 0 12px rgba(82,231,255,.65);animation:tw-blink 1.05s steps(1) infinite}
+    @keyframes tw-blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+
+    .hero-stats{display:flex;flex-wrap:wrap;align-items:baseline;gap:7px 0;margin:26px 0 0;color:var(--muted);font-size:.58rem;letter-spacing:.3px}
+    .hero-stats strong{color:var(--cyan);font-family:var(--display);font-weight:700;font-size:.7rem;letter-spacing:.4px;margin-right:4px;text-shadow:0 0 12px rgba(82,231,255,.4)}
+    .hero-stats span{display:inline-flex;align-items:baseline}
+    /* el separador cuelga del elemento anterior, no del siguiente: si la línea
+       se parte, el renglón nuevo empieza por la cifra y no por un «·» suelto */
+    .hero-stats span:not(:last-child)::after{content:"·";color:var(--line);margin:0 9px}
+
+    @media (prefers-reduced-motion:reduce){
+      .hero h1 .tw-ch{visibility:visible}
+      .hero h1 .tw-ch.is-cursor::after{display:none}
+    }
   </style>
 </head>
 <body>
   <div class="star-field" aria-hidden="true"></div><div class="nebula nebula-one" aria-hidden="true"></div><div class="nebula nebula-two" aria-hidden="true"></div>
   <header class="site-header"><a class="brand" href="#inicio" aria-label="ORBITA, ir al inicio"><span class="brand-mark">◌</span><span>ORB<span>IT</span>A</span></a><nav aria-label="Navegación principal"><a href="#cronica">CRÓNICA</a><a href="#mapa">MAPA ESTELAR</a><a href="#biometria">BIOMETRÍA</a><a href="#radar-satelital">SATÉLITES</a><a href="#escalas-universo">ESCALAS</a><a href="#anomalias">ANOMALÍAS</a><a href="#entrenamiento">SIMULADOR</a></nav><div class="signal"><i></i> SEÑAL ESTABLE</div></header>
   <main id="inicio">
-    <section class="hero" aria-labelledby="hero-title"><div class="hero-copy"><p class="eyebrow">GUÍA TURÍSTICA ESPACIAL // EDICIÓN 01</p><h1 id="hero-title">EL UNIVERSO<br><span>ES TU DESTINO.</span></h1><p class="hero-description">Activa el navegador de a bordo. Recorre 13.800 millones de años de historia, inspecciona nuevos mundos y demuestra lo que sabes.</p><a class="primary-button" href="#cronica">INICIAR RECORRIDO <span>→</span></a></div><div class="hero-radar" aria-hidden="true"><div class="radar-label top">SECTOR // SOL-01</div><div class="radar-grid"></div><div class="radar-orbit orbit-one"></div><div class="radar-orbit orbit-two"></div><div class="radar-orbit orbit-three"></div><div class="radar-sweep"></div><div class="radar-core"></div><span class="radar-dot dot-one"></span><span class="radar-dot dot-two"></span><span class="radar-dot dot-three"></span><div class="radar-label bottom">OBJETOS RASTREADOS: 10</div></div><div class="scroll-cue"><span></span> DESLIZA PARA NAVEGAR</div></section>
+    <section class="hero" aria-labelledby="hero-title"><div class="hero-parallax" aria-hidden="true"><div class="hero-stars depth-far"></div><div class="hero-stars depth-mid"></div><div class="hero-stars depth-near"></div></div><div class="hero-copy"><p class="eyebrow">GUÍA TURÍSTICA ESPACIAL // EDICIÓN 01</p><h1 id="hero-title" aria-label="EL UNIVERSO ES TU DESTINO."><span class="tw-line">EL UNIVERSO</span><br><span class="tw-line accent">ES TU DESTINO.</span></h1><p class="hero-description">Activa el navegador de a bordo. Recorre 13.800 millones de años de historia, inspecciona nuevos mundos y demuestra lo que sabes.</p><a class="primary-button" href="#cronica">INICIAR RECORRIDO <span>→</span></a><p class="hero-stats"><span><strong id="stat-mundos">21</strong> mundos documentados</span><span><strong id="stat-satelites">15</strong> satélites rastreados</span><span><strong id="stat-amenazas">12</strong> amenazas catalogadas</span></p></div><div class="hero-radar" aria-hidden="true"><div class="radar-label top">SECTOR // SOL-01</div><div class="radar-grid"></div><div class="radar-orbit orbit-one"></div><div class="radar-orbit orbit-two"></div><div class="radar-orbit orbit-three"></div><div class="radar-sweep"></div><div class="radar-core"></div><span class="radar-dot dot-one"></span><span class="radar-dot dot-two"></span><span class="radar-dot dot-three"></span><div class="radar-label bottom">OBJETOS RASTREADOS: 10</div></div><div class="scroll-cue"><span></span> DESLIZA PARA NAVEGAR</div></section>
 
     <section class="chronicle-section" id="cronica" aria-labelledby="chronicle-title">
       <div class="section-heading chronicle-heading"><div><p class="eyebrow">ARCHIVO // CRONOLOGÍA CÓSMICA</p><h2 id="chronicle-title">La historia antes<br>del próximo salto.</h2></div><p>Abre el archivo para explorar las señales que dejaron las grandes eras del universo.</p></div>
@@ -810,6 +847,108 @@
         if(event.key==="ArrowLeft")scaleEls.prevBtn.click();else scaleEls.nextBtn.click();
       });
       renderScale(false);
+    })();
+
+    /* ---------- HERO ---------- */
+    (function(){
+      const menosMovimiento=window.matchMedia("(prefers-reduced-motion:reduce)");
+
+      /* Cifras tomadas de los propios datos. La etiqueta del radar dice
+         "OBJETOS RASTREADOS: 10" desde que el mapa tenía 10 planetas: los
+         números escritos a mano se quedan viejos, así que estos se calculan. */
+      const cifras=[["stat-mundos",planets],["stat-satelites",satellites],["stat-amenazas",anomalies]];
+      cifras.forEach(([id,datos])=>{
+        const nodo=document.getElementById(id);
+        if(nodo&&Array.isArray(datos))nodo.textContent=datos.length;
+      });
+
+      /* --- titular letra a letra --- */
+      (function(){
+        const lineas=document.querySelectorAll(".hero h1 .tw-line");
+        if(!lineas.length)return;
+        const letras=[];
+        lineas.forEach(linea=>{
+          const texto=linea.textContent;
+          linea.textContent="";
+          for(const caracter of texto){
+            const span=document.createElement("span");
+            span.className="tw-ch";
+            span.textContent=caracter;
+            linea.appendChild(span);
+            letras.push(span);
+          }
+        });
+        if(menosMovimiento.matches){
+          letras.forEach(l=>l.classList.add("is-on"));
+          return;
+        }
+        let i=0,previa=null;
+        (function escribir(){
+          if(previa)previa.classList.remove("is-cursor");
+          if(i>=letras.length){
+            /* el cursor se queda parpadeando al final del titular */
+            if(previa)previa.classList.add("is-cursor");
+            return;
+          }
+          const letra=letras[i++];
+          letra.classList.add("is-on","is-cursor");
+          previa=letra;
+          /* una pausa algo mayor tras cada espacio hace más creíble el tecleo */
+          setTimeout(escribir,letra.textContent===" "?96:42);
+        })();
+      })();
+
+      /* --- parallax de estrellas --- */
+      (function(){
+        const hero=document.querySelector(".hero");
+        const capas=document.querySelectorAll(".hero-parallax .hero-stars");
+        if(!hero||!capas.length)return;
+        /* sin ratón no hay nada que seguir, y con movimiento reducido tampoco */
+        const conRaton=window.matchMedia("(hover:hover) and (pointer:fine)");
+        if(!conRaton.matches||menosMovimiento.matches)return;
+
+        const PROFUNDIDAD=[6,14,26];        /* píxeles de recorrido por capa */
+        let destinoX=0,destinoY=0,x=0,y=0,animando=false,visible=true;
+
+        function bucle(){
+          /* interpolación: la capa persigue al ratón en vez de saltar */
+          x+=(destinoX-x)*.075;
+          y+=(destinoY-y)*.075;
+          capas.forEach((capa,i)=>{
+            const p=PROFUNDIDAD[i]||PROFUNDIDAD[PROFUNDIDAD.length-1];
+            capa.style.transform="translate3d("+(x*p).toFixed(2)+"px,"+(y*p).toFixed(2)+"px,0)";
+          });
+          /* se detiene solo cuando ya casi no queda movimiento */
+          if(visible&&(Math.abs(destinoX-x)>.0015||Math.abs(destinoY-y)>.0015)){
+            requestAnimationFrame(bucle);
+          }else{
+            animando=false;
+            capas.forEach(capa=>capa.classList.remove("is-live"));
+          }
+        }
+        function arrancar(){
+          if(animando||!visible)return;
+          animando=true;
+          capas.forEach(capa=>capa.classList.add("is-live"));
+          requestAnimationFrame(bucle);
+        }
+        window.addEventListener("mousemove",evento=>{
+          const caja=hero.getBoundingClientRect();
+          if(caja.bottom<0||caja.top>window.innerHeight)return;
+          /* -0,5 a 0,5 respecto al centro del hero */
+          destinoX=(evento.clientX-caja.left)/caja.width-.5;
+          destinoY=(evento.clientY-caja.top)/caja.height-.5;
+          arrancar();
+        },{passive:true});
+
+        /* fuera de pantalla no se anima nada */
+        if("IntersectionObserver" in window){
+          new IntersectionObserver(entradas=>{
+            visible=entradas[0].isIntersecting;
+            if(visible)arrancar();
+          },{threshold:0}).observe(hero);
+        }
+      })();
     })();
   </script>
 </body>

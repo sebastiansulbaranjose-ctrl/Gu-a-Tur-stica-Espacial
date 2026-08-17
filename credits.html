@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050817">
+  <meta name="description" content="Créditos y atribuciones de las imágenes utilizadas en ORBITA, Guía Turística Espacial.">
+  <title>CRÉDITOS // ORBITA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#f2f7ff;--muted:#93a3c8;--bg:#040614;--line:rgba(128,177,255,.2);--cyan:#52e7ff;--purple:#ae73ff;--green:#75f7ab;--red:#ff6389;--mono:"Space Mono",monospace;--display:"Orbitron",sans-serif}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;color:var(--ink);background:var(--bg);font-family:var(--mono);overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    .star-field{position:fixed;inset:0;pointer-events:none;z-index:-3;background-image:radial-gradient(circle at 11% 18%,#d6f5ff 0 1px,transparent 1.7px),radial-gradient(circle at 84% 11%,#fff 0 1px,transparent 1.4px),radial-gradient(circle at 38% 59%,#a5e8ff 0 1px,transparent 1.6px),radial-gradient(circle at 63% 79%,#fff 0 1px,transparent 1.5px),radial-gradient(circle at 91% 55%,#c8b4ff 0 1px,transparent 1.6px),radial-gradient(circle at 22% 88%,#fff 0 1px,transparent 1.5px);background-size:240px 240px,180px 180px,270px 270px,210px 210px,260px 260px,310px 310px;opacity:.7}
+    .site-header{height:80px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,5vw,86px);border-bottom:1px solid var(--line);background:rgba(4,6,20,.68);backdrop-filter:blur(18px);position:sticky;top:0;z-index:5}
+    .brand{display:inline-flex;align-items:center;gap:7px;font-family:var(--display);font-weight:800;letter-spacing:3px;font-size:1rem}
+    .brand span span{color:var(--cyan)}
+    .brand-mark{color:var(--cyan);font-size:2rem;line-height:1;text-shadow:0 0 18px var(--cyan)}
+    .back-link{font-size:.66rem;letter-spacing:1.5px;color:#b8c6e5;border:1px solid var(--line);padding:10px 16px;transition:color .2s ease,border-color .2s ease}
+    .back-link:hover{color:var(--cyan);border-color:var(--cyan)}
+    main{padding:70px clamp(24px,8vw,140px) 100px;max-width:1400px;margin:0 auto}
+    .eyebrow{color:var(--cyan);font-size:.8rem;font-weight:700;letter-spacing:2.4px;text-shadow:0 0 14px rgba(82,231,255,.55);margin:0 0 16px}
+    h1{font-family:var(--display);font-size:clamp(2rem,4vw,3.4rem);line-height:1.1;letter-spacing:-1.5px;margin:0 0 22px}
+    h1 span{color:var(--purple);text-shadow:0 0 25px rgba(174,115,255,.3)}
+    .intro{color:var(--muted);max-width:780px;line-height:1.85;font-size:.9rem;margin:0 0 20px}
+    .stat-bar{display:flex;flex-wrap:wrap;gap:14px;margin:36px 0 56px}
+    .stat-chip{border:1px solid var(--line);padding:10px 18px;font-size:.62rem;letter-spacing:1px;color:var(--muted);display:flex;align-items:center;gap:8px}
+    .stat-chip strong{color:var(--ink);font-family:var(--display);font-size:.9rem}
+    .stat-chip.pd{border-color:rgba(117,247,171,.35)}
+    .stat-chip.pd strong{color:var(--green)}
+    .stat-chip.ccby{border-color:rgba(82,231,255,.35)}
+    .stat-chip.ccby strong{color:var(--cyan)}
+    .stat-chip.ccsa{border-color:rgba(174,115,255,.35)}
+    .stat-chip.ccsa strong{color:var(--purple)}
+    section.license-group{margin-bottom:64px}
+    .group-heading{display:flex;align-items:baseline;gap:16px;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:26px}
+    .group-heading h2{font-family:var(--display);font-size:1.3rem;margin:0;letter-spacing:.5px}
+    .group-heading .group-count{color:var(--muted);font-size:.66rem;letter-spacing:1px}
+    .group-note{color:var(--muted);font-size:.76rem;line-height:1.7;margin:-10px 0 26px;max-width:760px}
+    .credit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+    .credit-card{border:1px solid var(--line);background:rgba(255,255,255,.02);padding:18px 20px;transition:border-color .2s ease,background .2s ease}
+    .credit-card:hover{border-color:rgba(82,231,255,.4);background:rgba(255,255,255,.04)}
+    .credit-card h3{font-family:var(--display);font-size:.82rem;font-weight:600;line-height:1.4;margin:0 0 14px;color:var(--ink)}
+    .credit-card dl{margin:0;display:flex;flex-direction:column;gap:8px}
+    .credit-card dt{font-size:.56rem;letter-spacing:1.2px;color:#7488ad;margin:0}
+    .credit-card dd{font-size:.72rem;color:var(--muted);margin:2px 0 0;line-height:1.5}
+    .credit-card .src-link{color:var(--cyan);overflow-wrap:anywhere;border-bottom:1px solid rgba(82,231,255,.28);transition:border-color .2s ease}
+    .credit-card .src-link:hover,.credit-card .src-link:focus-visible{border-color:var(--cyan)}
+    .unsplash-note{border:1px solid var(--line);padding:22px 24px;background:rgba(255,255,255,.02);font-size:.78rem;color:var(--muted);line-height:1.8;margin-top:16px}
+    .unsplash-note strong{color:var(--ink)}
+    footer{border-top:1px solid var(--line);min-height:110px;display:flex;align-items:center;justify-content:space-between;padding:25px clamp(24px,5vw,86px);color:#8494b9;font-size:.56rem;letter-spacing:1px;flex-wrap:wrap;gap:12px}
+    footer .brand{color:var(--ink)}
+    footer a:hover{color:var(--cyan)}
+  </style>
+</head>
+<body>
+  <div class="star-field" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="index.html#inicio" aria-label="ORBITA, ir al inicio"><span class="brand-mark">◌</span><span>ORB<span>IT</span>A</span></a>
+    <a class="back-link" href="index.html#inicio">← VOLVER A LA GUÍA</a>
+  </header>
+
+  <main>
+    <p class="eyebrow">TRANSPARENCIA // DERECHOS DE AUTOR</p>
+    <h1>Créditos de<br><span>imágenes.</span></h1>
+    <p class="intro">Todas las imágenes astronómicas y científicas usadas en ORBITA provienen de agencias espaciales, observatorios y colaboradores de Wikimedia Commons y Unsplash. Cada una se lista aquí con su autor, licencia y fuente original, en cumplimiento del respeto a los derechos de autor.</p>
+
+    <div class="stat-bar">
+      <span class="stat-chip pd"><strong>75</strong> DOMINIO PÚBLICO</span>
+      <span class="stat-chip ccby"><strong>20</strong> CC BY</span>
+      <span class="stat-chip ccsa"><strong>18</strong> CC BY-SA / OTRAS</span>
+      <span class="stat-chip"><strong>4</strong> UNSPLASH</span>
+    </div>
+
+    <section class="license-group">
+      <div class="group-heading">
+        <h2>Dominio público</h2>
+        <span class="group-count">75 IMÁGENES — SIN ATRIBUCIÓN OBLIGATORIA</span>
+      </div>
+      <p class="group-note">Material producido por NASA y sus centros (JPL, Goddard, misiones Voyager, Cassini, New Horizons, Dawn, entre otras) es de dominio público bajo la política de la agencia. Se acredita igualmente por buena práctica y transparencia.</p>
+      <div class="credit-grid">
+        <article class="credit-card"><h3>The Earth seen from Apollo 17 (fondo transparente)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA</dd></div></dl></article>
+<article class="credit-card"><h3>Communications satellite with TEMPO spacecraft model</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA (science.nasa.gov)</dd></div></dl></article>
+<article class="credit-card"><h3>Mercury in true color</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JHUAPL/ASU/Carnegie Institution of Washington</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL — misión MESSENGER</dd></div></dl></article>
+<article class="credit-card"><h3>Mercury in color (Prockter07)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JHUAPL/Carnegie Institution; ed. Papa Lima Whiskey</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL — misión MESSENGER</dd></div></dl></article>
+<article class="credit-card"><h3>Venus, color real</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA; procesamiento de Ricardo Nunes</dd></div><div><dt>LICENCIA</dt><dd>Dominio público (NASA) + atribución de procesamiento</dd></div><div><dt>FUENTE</dt><dd>NASA — sonda Mariner 10 (1974)</dd></div></dl></article>
+<article class="credit-card"><h3>Venus, globo</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL — misión Magellan</dd></div></dl></article>
+<article class="credit-card"><h3>La Tierra vista desde el Apolo 17</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA / tripulación del Apolo 17</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA (AS17-148-22727)</dd></div></dl></article>
+<article class="credit-card"><h3>Blue Marble — Hemisferio Occidental</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA / Reto Stöckli, datos NASA y NOAA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA Goddard Space Flight Center</dd></div></dl></article>
+<article class="credit-card"><h3>Tope de la atmósfera terrestre</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA Earth Observatory / Expedición 13, EEI</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA (ISS013-E-54329)</dd></div></dl></article>
+<article class="credit-card"><h3>Luna llena</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA / Bill Ingalls</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA HQ</dd></div></dl></article>
+<article class="credit-card"><h3>Marte — Valles Marineris</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/USGS</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/USGS</dd></div></dl></article>
+<article class="credit-card"><h3>Marte — Olympus Mons</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA; modificado por Seddon</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA (NSSDC)</dd></div></dl></article>
+<article class="credit-card"><h3>Fobos (luna de Marte)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL/Malin Space Science Systems</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA — Mars Global Surveyor</dd></div></dl></article>
+<article class="credit-card"><h3>Deimos (luna de Marte)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL/University of Arizona</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA — HiRISE, Mars Reconnaissance Orbiter</dd></div></dl></article>
+<article class="credit-card"><h3>Júpiter y su Gran Mancha Roja menguante</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA, ESA, A. Simon (Goddard Space Flight Center)</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>ESA/Hubble</dd></div></dl></article>
+<article class="credit-card"><h3>La icónica Gran Mancha Roja de Júpiter</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL-Caltech/SwRI/MSSS/G. Eichstädt/S. Doran</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL — sonda Juno</dd></div></dl></article>
+<article class="credit-card"><h3>Ío, color real de alta resolución</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL/University of Arizona</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL — sonda Galileo</dd></div></dl></article>
+<article class="credit-card"><h3>Europa, mosaico de color realista</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL-Caltech/SETI Institute</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL</dd></div></dl></article>
+<article class="credit-card"><h3>Ganímedes, luna de Júpiter</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL/DLR</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL — sonda Galileo</dd></div></dl></article>
+<article class="credit-card"><h3>Calisto</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL/DLR</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL — sonda Galileo</dd></div></dl></article>
+<article class="credit-card"><h3>Saturno durante el equinoccio</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL/Space Science Institute</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL — sonda Cassini</dd></div></dl></article>
+<article class="credit-card"><h3>Anillos de Saturno vistos desde arriba (Cassini)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL-Caltech/SSI/Cornell</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL — sonda Cassini</dd></div></dl></article>
+<article class="credit-card"><h3>Titán, color real</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL-Caltech/Space Science Institute</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL — sonda Cassini</dd></div></dl></article>
+<article class="credit-card"><h3>Géiseres de Encélado</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL/SSI</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL — sonda Cassini</dd></div></dl></article>
+<article class="credit-card"><h3>Mimas</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA — sonda Cassini</dd></div></dl></article>
+<article class="credit-card"><h3>Urano</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL-Caltech</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL — sonda Voyager 2</dd></div></dl></article>
+<article class="credit-card"><h3>Urano (NIRCam, James Webb)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA, ESA, CSA, STScI</dd></div><div><dt>LICENCIA</dt><dd>Dominio público (crédito obligatorio)</dd></div><div><dt>FUENTE</dt><dd>Telescopio Espacial James Webb</dd></div></dl></article>
+<article class="credit-card"><h3>Miranda, luna de Urano</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA — sonda Voyager 2</dd></div></dl></article>
+<article class="credit-card"><h3>Neptuno</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL — sonda Voyager 2</dd></div></dl></article>
+<article class="credit-card"><h3>Neptuno — Gran Mancha Oscura</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL — sonda Voyager 2</dd></div></dl></article>
+<article class="credit-card"><h3>Tritón, mosaico (Voyager 2)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL/USGS</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL — sonda Voyager 2</dd></div></dl></article>
+<article class="credit-card"><h3>Plutón, color verdadero (alta resolución)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JHUAPL/SwRI/Alex Parker</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA — misión New Horizons</dd></div></dl></article>
+<article class="credit-card"><h3>Plutón, mosaico global LORRI</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JHUAPL/SwRI</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA — misión New Horizons</dd></div></dl></article>
+<article class="credit-card"><h3>Plutón, color verdadero (edición JPEG)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JHUAPL/SwRI</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA — misión New Horizons</dd></div></dl></article>
+<article class="credit-card"><h3>Caronte, color verdadero (alta resolución)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JHUAPL/SwRI/Alex Parker</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA — misión New Horizons</dd></div></dl></article>
+<article class="credit-card"><h3>Ceres, en color</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL-Caltech/MPS/DLR/IDA/Daniel Macháček</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL-Caltech — misión Dawn</dd></div></dl></article>
+<article class="credit-card"><h3>Ceres, mosaico RC3 (imagen 19)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL-Caltech/UCLA/MPS/DLR/IDA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL-Caltech — misión Dawn</dd></div></dl></article>
+<article class="credit-card"><h3>Ilustración de un estallido de rayos gamma (GRB080319B)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/Swift/M.P. Hrybyk-Keith y J. Jones</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA Goddard Space Flight Center</dd></div></dl></article>
+<article class="credit-card"><h3>Cuásar con chorro y líneas magnéticas</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/CXC/M. Weiss</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA — Chandra X-ray Observatory</dd></div></dl></article>
+<article class="credit-card"><h3>Magnetar SGR 1806-20</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA</dd></div></dl></article>
+<article class="credit-card"><h3>Lente gravitacional de un agujero negro</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA, ESA, STScI, Joseph Olmsted</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/ESA — Hubble</dd></div></dl></article>
+<article class="credit-card"><h3>Ilustración de agujero negro Swift J1644+57</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA Goddard Space Flight Center</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA</dd></div></dl></article>
+<article class="credit-card"><h3>Agujero negro (NASA)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/D. Berry</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA Goddard Space Flight Center</dd></div></dl></article>
+<article class="credit-card"><h3>Ilustración de supernova SN 2006gy</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/CXC/M. Weiss</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA — Chandra X-ray Observatory</dd></div></dl></article>
+<article class="credit-card"><h3>Supernova de Kepler</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/ESA/JHU/R. Sankrit &amp; W. Blair</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/ESA — Chandra, Hubble, Spitzer</dd></div></dl></article>
+<article class="credit-card"><h3>Supernova (animación)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA (HEASARC)</dd></div></dl></article>
+<article class="credit-card"><h3>Modelo de púlsar</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA — misión GLAST</dd></div></dl></article>
+<article class="credit-card"><h3>Nebulosa del Cangrejo (compuesta Chandra/Hubble/Spitzer)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/CXC/SAO/F. Seward; NASA/ESA/ASU/J. Hester &amp; A. Loll; NASA/JPL-Caltech/R. Gehrz</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/ESA — Chandra, Hubble, Spitzer</dd></div></dl></article>
+<article class="credit-card"><h3>Espectrograma de la onda gravitacional GW170817</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>LSC/Alex Nitz</dd></div><div><dt>LICENCIA</dt><dd>CC0 1.0 (dominio público)</dd></div><div><dt>FUENTE</dt><dd>LIGO</dd></div></dl></article>
+<article class="credit-card"><h3>Polarización cruzada de una onda gravitacional (animación)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>MOBle, Wikipedia en inglés</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>—</dd></div></dl></article>
+<article class="credit-card"><h3>Cúmulo Bala (Bullet Cluster)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/Chandra X-ray Observatory</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA</dd></div></dl></article>
+<article class="credit-card"><h3>Mapa 3D de materia oscura (COSMOS)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/ESA/Richard Massey (Caltech)</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/ESA — Hubble (relevamiento COSMOS)</dd></div></dl></article>
+<article class="credit-card"><h3>El Sol observado por el SDO — llamarada de clase X</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA Goddard Space Flight Center</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA — Solar Dynamics Observatory</dd></div></dl></article>
+<article class="credit-card"><h3>El Sol observado por el SDO — llamarada significativa</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA Goddard Space Flight Center</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA — Solar Dynamics Observatory</dd></div></dl></article>
+<article class="credit-card"><h3>El Sol observado por el SDO — mancha solar más grande del ciclo</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA Goddard Space Flight Center</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/SDO</dd></div></dl></article>
+<article class="credit-card"><h3>Estación Espacial Internacional</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA (STS-110)</dd></div></dl></article>
+<article class="credit-card"><h3>Telescopio Hubble (2009)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA — tripulación STS-125</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA — Johnson Space Center</dd></div></dl></article>
+<article class="credit-card"><h3>Satélite Landsat 9 (modelo)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/Goddard Space Flight Center/Conceptual Image Lab</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA</dd></div></dl></article>
+<article class="credit-card"><h3>Satélite GPS (ilustración NASA)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA</dd></div></dl></article>
+<article class="credit-card"><h3>Satélite Galileo (modelo)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA</dd></div></dl></article>
+<article class="credit-card"><h3>Satélite Molniya-1</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA</dd></div></dl></article>
+<article class="credit-card"><h3>Satélite GOES 3 (ilustración)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA</dd></div></dl></article>
+<article class="credit-card"><h3>Satélite Inmarsat-3</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA</dd></div></dl></article>
+<article class="credit-card"><h3>Telescopio Espacial James Webb (modelo)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA</dd></div></dl></article>
+<article class="credit-card"><h3>Orbitador de Reconocimiento Lunar (modelo)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA</dd></div></dl></article>
+<article class="credit-card"><h3>Estación Espacial Internacional (modelo)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA</dd></div></dl></article>
+<article class="credit-card"><h3>Telescopio Espacial Hubble (modelo)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA</dd></div></dl></article>
+<article class="credit-card"><h3>El Sol, Ensamble de Imágenes Atmosféricas del SDO</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/SDO (AIA)</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA — Solar Dynamics Observatory</dd></div></dl></article>
+<article class="credit-card"><h3>Sirius A y B (foto Hubble)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA, ESA, H. Bond (STScI), M. Barstow (Univ. Leicester)</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/ESA — Hubble</dd></div></dl></article>
+<article class="credit-card"><h3>Pólux (estrella)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Murgor Multoface</dd></div><div><dt>LICENCIA</dt><dd>CC0 1.0 (dominio público)</dd></div><div><dt>FUENTE</dt><dd>Obra propia</dd></div></dl></article>
+<article class="credit-card"><h3>Neptuno, Voyager 2 (color calibrado)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA / Voyager 2 / PDS / OPUS / Ardenau4</dd></div><div><dt>LICENCIA</dt><dd>CC0 1.0 (dominio público)</dd></div><div><dt>FUENTE</dt><dd>NASA — Voyager 2</dd></div></dl></article>
+<article class="credit-card"><h3>Nebulosa de Orión, mosaico Hubble</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA, ESA, M. Robberto y equipo Orion Treasury</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/ESA — Hubble</dd></div></dl></article>
+<article class="credit-card"><h3>IC 1101 (galaxia)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>SDSS</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>Sloan Digital Sky Survey</dd></div></dl></article>
+<article class="credit-card"><h3>Anisotropía de la radiación de fondo cósmico (WMAP)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Equipo WMAP</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/WMAP — Goddard Space Flight Center</dd></div></dl></article>
+<article class="credit-card"><h3>Primer Campo Profundo del telescopio Webb</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA, ESA, CSA, STScI</dd></div><div><dt>LICENCIA</dt><dd>Dominio público</dd></div><div><dt>FUENTE</dt><dd>NASA/ESA/CSA/STScI — James Webb</dd></div></dl></article>
+      </div>
+    </section>
+
+    <section class="license-group">
+      <div class="group-heading">
+        <h2>Creative Commons — Atribución (CC BY)</h2>
+        <span class="group-count">20 IMÁGENES — ATRIBUCIÓN OBLIGATORIA</span>
+      </div>
+      <p class="group-note">Principalmente observatorios internacionales (ESO, ESA/Hubble, ALMA, NOIRLab) y colaboradores individuales. Estas licencias exigen mantener el crédito visible al autor y la fuente.</p>
+      <div class="credit-grid">
+        <article class="credit-card"><h3>Urano — Voyager 2 (1986)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Andrea Luck (©NASA/JPL/Voyager-ISS)</dd></div><div><dt>LICENCIA</dt><dd>CC BY 2.0</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL, datos Voyager-ISS</dd></div></dl></article>
+<article class="credit-card"><h3>Ceres — Cráter Haulani (RC3)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL-Caltech/UCLA/MPS/DLR/IDA/Justin Cowart</dd></div><div><dt>LICENCIA</dt><dd>CC BY 2.0</dd></div><div><dt>FUENTE</dt><dd>NASA/JPL-Caltech — misión Dawn</dd></div></dl></article>
+<article class="credit-card"><h3>Agujero negro — Messier 87</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Colaboración Event Horizon Telescope (EHT)</dd></div><div><dt>LICENCIA</dt><dd>CC BY 4.0</dd></div><div><dt>FUENTE</dt><dd>ESO</dd></div></dl></article>
+<article class="credit-card"><h3>Agujero negro M87, recorte máxima resolución</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Colaboración EHT / ESO</dd></div><div><dt>LICENCIA</dt><dd>CC BY 4.0</dd></div><div><dt>FUENTE</dt><dd>ESO</dd></div></dl></article>
+<article class="credit-card"><h3>Agujero negro M87 (Gemini)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>International Gemini Observatory/AURA/Lynette Cook</dd></div><div><dt>LICENCIA</dt><dd>CC BY 4.0</dd></div><div><dt>FUENTE</dt><dd>NOIRLab</dd></div></dl></article>
+<article class="credit-card"><h3>El doble estallido (The Double Firing Burst)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>ESO</dd></div><div><dt>LICENCIA</dt><dd>CC BY 4.0</dd></div><div><dt>FUENTE</dt><dd>ESO</dd></div></dl></article>
+<article class="credit-card"><h3>Impresión artística de un estallido de rayos gamma</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>ESO/A. Roquette</dd></div><div><dt>LICENCIA</dt><dd>CC BY 4.0</dd></div><div><dt>FUENTE</dt><dd>ESO</dd></div></dl></article>
+<article class="credit-card"><h3>Cuásar brillante 3C 273</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>ESA/Hubble &amp; NASA</dd></div><div><dt>LICENCIA</dt><dd>CC BY 2.0</dd></div><div><dt>FUENTE</dt><dd>ESA/Hubble</dd></div></dl></article>
+<article class="credit-card"><h3>Movimiento superlumínico de un chorro relativista</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Elizabeth Wheatley (STScI); ESA/Hubble</dd></div><div><dt>LICENCIA</dt><dd>CC BY 4.0</dd></div><div><dt>FUENTE</dt><dd>ESA/Hubble</dd></div></dl></article>
+<article class="credit-card"><h3>Impresión artística del magnetar en Westerlund 1</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>ESO/L. Calçada</dd></div><div><dt>LICENCIA</dt><dd>CC BY 4.0</dd></div><div><dt>FUENTE</dt><dd>ESO</dd></div></dl></article>
+<article class="credit-card"><h3>Púlsar en la Nebulosa del Cangrejo</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>ESO</dd></div><div><dt>LICENCIA</dt><dd>CC BY 4.0</dd></div><div><dt>FUENTE</dt><dd>ESO (eso9532a)</dd></div></dl></article>
+<article class="credit-card"><h3>Impresión artística de estrellas de neutrones fusionándose</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>University of Warwick/Mark Garlick</dd></div><div><dt>LICENCIA</dt><dd>CC BY 4.0</dd></div><div><dt>FUENTE</dt><dd>ESO</dd></div></dl></article>
+<article class="credit-card"><h3>Estructura a gran escala de la distribución de luz en el universo</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Andrew Pontzen y Fabio Governato</dd></div><div><dt>LICENCIA</dt><dd>CC BY 2.0</dd></div><div><dt>FUENTE</dt><dd>UCL Mathematical and Physical Sciences</dd></div></dl></article>
+<article class="credit-card"><h3>Satélite Starlink (render)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Wikideas1</dd></div><div><dt>LICENCIA</dt><dd>CC BY 4.0</dd></div><div><dt>FUENTE</dt><dd>Obra propia (datos NASA)</dd></div></dl></article>
+<article class="credit-card"><h3>Superficie de Betelgeuse (enero 2020)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>ESO/M. Montargès et al.</dd></div><div><dt>LICENCIA</dt><dd>CC BY 4.0</dd></div><div><dt>FUENTE</dt><dd>ESO</dd></div></dl></article>
+<article class="credit-card"><h3>Nubes de Magallanes, galaxias enanas irregulares</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>ESO/S. Brunier</dd></div><div><dt>LICENCIA</dt><dd>CC BY 4.0</dd></div><div><dt>FUENTE</dt><dd>ESO</dd></div></dl></article>
+<article class="credit-card"><h3>Galaxia de Andrómeda (M31), resolución completa</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA, ESA, J. Dalcanton, B.F. Williams, L.C. Johnson, equipo PHAT, R. Gendler</dd></div><div><dt>LICENCIA</dt><dd>CC BY 4.0</dd></div><div><dt>FUENTE</dt><dd>NASA/ESA — Hubble</dd></div></dl></article>
+<article class="credit-card"><h3>Disco protoplanetario de HL Tau</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>ALMA (ESO/NAOJ/NRAO)</dd></div><div><dt>LICENCIA</dt><dd>CC BY 4.0</dd></div><div><dt>FUENTE</dt><dd>ESO/ALMA Observatory</dd></div></dl></article>
+<article class="credit-card"><h3>Estromatolito (Formación Strelley Pool)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>James St. John</dd></div><div><dt>LICENCIA</dt><dd>CC BY 2.0</dd></div><div><dt>FUENTE</dt><dd>Cranbrook Institute of Science</dd></div></dl></article>
+<article class="credit-card"><h3>Impresión artística de la Vía Láctea</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA/JPL-Caltech/ESO/R. Hurt</dd></div><div><dt>LICENCIA</dt><dd>CC BY 4.0</dd></div><div><dt>FUENTE</dt><dd>ESO (eso1339g)</dd></div></dl></article>
+      </div>
+    </section>
+
+    <section class="license-group">
+      <div class="group-heading">
+        <h2>Creative Commons — CompartirIgual (CC BY-SA) y otras</h2>
+        <span class="group-count">18 IMÁGENES — ATRIBUCIÓN OBLIGATORIA</span>
+      </div>
+      <p class="group-note">Obras de autores individuales publicadas en Wikimedia Commons bajo licencias que exigen atribución y, en caso de redistribución modificada, mantener la misma licencia.</p>
+      <div class="credit-grid">
+        <article class="credit-card"><h3>Marte, color real (OSIRIS)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>ESA &amp; equipo OSIRIS (MPS/UPD/LAM/IAA/RSSD/INTA/UPM/DASP/IDA)</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 3.0 IGO</dd></div><div><dt>FUENTE</dt><dd>ESA — sonda Rosetta</dd></div></dl></article>
+<article class="credit-card"><h3>Campo magnético de un magnetar</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Fedosin</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 4.0</dd></div><div><dt>FUENTE</dt><dd>Obra propia</dd></div></dl></article>
+<article class="credit-card"><h3>Vacío de Bootes (Boovoid)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>El C / R. Powell, Atlas of the Universe</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 2.5</dd></div><div><dt>FUENTE</dt><dd>atlasoftheuniverse.com</dd></div></dl></article>
+<article class="credit-card"><h3>Vacío de Bootes (animación)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>atlasoftheuniverse.com</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 2.5</dd></div><div><dt>FUENTE</dt><dd>atlasoftheuniverse.com</dd></div></dl></article>
+<article class="credit-card"><h3>Recreación artística de un agujero blanco</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Baperookamo</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 4.0</dd></div><div><dt>FUENTE</dt><dd>Obra propia</dd></div></dl></article>
+<article class="credit-card"><h3>Diagrama de un agujero de gusano de Lorentz</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>AllenMcC. (original); vector de KES47</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 3.0</dd></div><div><dt>FUENTE</dt><dd>Obra propia</dd></div></dl></article>
+<article class="credit-card"><h3>Diagrama de Kruskal del espacio-tiempo de Schwarzschild</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Dr Greg</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 3.0</dd></div><div><dt>FUENTE</dt><dd>Obra propia</dd></div></dl></article>
+<article class="credit-card"><h3>Satélites Starlink en órbita</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Jud McCranie</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 4.0</dd></div><div><dt>FUENTE</dt><dd>Obra propia</dd></div></dl></article>
+<article class="credit-card"><h3>Estación espacial china Tiangong</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Shujianyang</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 4.0</dd></div><div><dt>FUENTE</dt><dd>Obra propia</dd></div></dl></article>
+<article class="credit-card"><h3>Satélite GLONASS-K (modelo, Cebit 2011)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>MKonair</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 2.0</dd></div><div><dt>FUENTE</dt><dd>Flickr</dd></div></dl></article>
+<article class="credit-card"><h3>Satélite Meteosat Third Generation</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>ESA</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 3.0 IGO</dd></div><div><dt>FUENTE</dt><dd>ESA</dd></div></dl></article>
+<article class="credit-card"><h3>UY Scuti comparada con el Sol</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Philip Park</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 3.0</dd></div><div><dt>FUENTE</dt><dd>Obra propia</dd></div></dl></article>
+<article class="credit-card"><h3>Nube de Oort (diagrama)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>NASA.gov y Nemesis 12</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 3.0</dd></div><div><dt>FUENTE</dt><dd>NASA</dd></div></dl></article>
+<article class="credit-card"><h3>Grupo Local y galaxias cercanas</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Antonio Ciccolella</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 4.0</dd></div><div><dt>FUENTE</dt><dd>Obra propia</dd></div></dl></article>
+<article class="credit-card"><h3>Universo observable, ilustración logarítmica circular</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Pablo Carlos Budassi</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 4.0</dd></div><div><dt>FUENTE</dt><dd>Obra propia</dd></div></dl></article>
+<article class="credit-card"><h3>Formación de hierro bandeado</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Siim Sepp</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 3.0 / GFDL 1.2+</dd></div><div><dt>FUENTE</dt><dd>Museum of Geology, University of Tartu</dd></div></dl></article>
+<article class="credit-card"><h3>Anomalocaris canadensis (ilustración)</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Junnn11</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 4.0</dd></div><div><dt>FUENTE</dt><dd>Obra propia</dd></div></dl></article>
+<article class="credit-card"><h3>Laniakea, supercúmulo de galaxias</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Andrew Z. Colvin</dd></div><div><dt>LICENCIA</dt><dd>CC BY-SA 4.0</dd></div><div><dt>FUENTE</dt><dd>Obra propia</dd></div></dl></article>
+      </div>
+    </section>
+
+    <section class="license-group">
+      <div class="group-heading">
+        <h2>Fotografías — Unsplash</h2>
+        <span class="group-count">4 IMÁGENES — LICENCIA UNSPLASH</span>
+      </div>
+      <p class="group-note">Fotografías de ambientación de la Crónica Cósmica. La <strong>Licencia Unsplash</strong> permite el uso comercial y no comercial de forma gratuita y no exige atribución legal; se cita cada una igualmente, con su dirección de origen exacta, para que cualquiera pueda verificarla.</p>
+      <div class="credit-grid">
+        <article class="credit-card"><h3>Expansión primordial — SEÑAL 01</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Fotógrafo no identificado (ver nota)</dd></div><div><dt>LICENCIA</dt><dd>Licencia Unsplash</dd></div><div><dt>FUENTE</dt><dd><a class="src-link" href="https://images.unsplash.com/photo-1462331940025-496dfbfc7564" rel="noopener">images.unsplash.com/photo-1462331940025-496dfbfc7564</a></dd></div><div><dt>USO EN EL SITIO</dt><dd>Crónica Cósmica y simulador Falla Temporal</dd></div></dl></article>
+<article class="credit-card"><h3>Luz primigenia — SEÑAL 02</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Fotógrafo no identificado (ver nota)</dd></div><div><dt>LICENCIA</dt><dd>Licencia Unsplash</dd></div><div><dt>FUENTE</dt><dd><a class="src-link" href="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a" rel="noopener">images.unsplash.com/photo-1419242902214-272b3f66ee7a</a></dd></div><div><dt>USO EN EL SITIO</dt><dd>Crónica Cósmica</dd></div></dl></article>
+<article class="credit-card"><h3>Vía Láctea — SEÑAL 03</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Fotógrafo no identificado (ver nota)</dd></div><div><dt>LICENCIA</dt><dd>Licencia Unsplash</dd></div><div><dt>FUENTE</dt><dd><a class="src-link" href="https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3" rel="noopener">images.unsplash.com/photo-1444703686981-a3abbc4d4fe3</a></dd></div><div><dt>USO EN EL SITIO</dt><dd>Crónica Cósmica</dd></div></dl></article>
+<article class="credit-card"><h3>Nacimiento del sistema solar — SEÑAL 04</h3><dl><div><dt>AUTOR / CRÉDITO</dt><dd>Fotógrafo no identificado (ver nota)</dd></div><div><dt>LICENCIA</dt><dd>Licencia Unsplash</dd></div><div><dt>FUENTE</dt><dd><a class="src-link" href="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa" rel="noopener">images.unsplash.com/photo-1446776811953-b23d57bd21aa</a></dd></div><div><dt>USO EN EL SITIO</dt><dd>Crónica Cósmica y simulador Falla Temporal</dd></div></dl></article>
+      </div>
+      <div class="unsplash-note">
+        <strong>Sobre el autor de cada fotografía.</strong> La dirección con la que Unsplash entrega una imagen (<code>photo-1462331940025-…</code>) identifica el archivo, no la página pública de la foto, y no existe forma de deducir una a partir de la otra sin consultar la API de Unsplash. Por eso no se pudo recuperar el nombre del fotógrafo. La Licencia Unsplash no exige atribución, de modo que la obra se usa dentro de sus términos; aun así, si se logra identificar a los autores, sus nombres se añadirán aquí.
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand" href="index.html#inicio"><span class="brand-mark">◌</span><span>ORBITA</span></a>
+    <p>EXPLORA. APRENDE. DESPEGA.</p>
+    <p>© 2026 GUÍA TURÍSTICA ESPACIAL — 117 IMÁGENES CATALOGADAS</p>
+  </footer>
+</body>
+</html>

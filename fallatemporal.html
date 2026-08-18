@@ -2926,6 +2926,10 @@ if (typeof window.gsap === "undefined") {
 
   /* ============ Fase Final: Restauración Temporal Completa ============ */
   function showFinalCongrats() {
+    /* La medalla queda guardada para el resto del sitio: index.html la lee al
+       cargar, y si esta partida se juega dentro del iframe de la portada, el
+       evento storage la avisa en el momento, sin recargar nada. */
+    try { localStorage.setItem("orbita-medalla", "1"); } catch (e) {}
     ftRoot.classList.add("is-repaired");
     ftRoot.dataset.phase = "final";
     renderBadgePieces();

@@ -86,6 +86,34 @@
        se parte, el renglón nuevo empieza por la cifra y no por un «·» suelto */
     .hero-stats span:not(:last-child)::after{content:"·";color:var(--line);margin:0 9px}
 
+    /* ---- Contenido que se desbloquea con la medalla de «Falla Temporal» ---- */
+    /* Los iconos van incrustados como SVG: ni una petición más ni un archivo suelto. */
+    :root{--candado:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2352e7ff' stroke-width='1.7' stroke-linecap='round'%3E%3Crect x='4.8' y='10.6' width='14.4' height='9.6' rx='1.7'/%3E%3Cpath d='M8.4 10.6V7.6a3.6 3.6 0 0 1 7.2 0v3'/%3E%3C/svg%3E");--medalla:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffb454' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.2 2.8h7.6l-2.7 6.4'/%3E%3Cpath d='M8.2 2.8l2.7 6.4'/%3E%3Ccircle cx='12' cy='15.5' r='5.5'/%3E%3C/svg%3E")}
+
+    /* aviso en la cabecera de la sección */
+    .aviso-medalla{display:inline-flex;align-items:center;gap:10px;margin:16px 0 0;padding:9px 15px;border:1px solid rgba(255,180,84,.32);background:rgba(255,180,84,.06);color:#ffc98a;font-size:.56rem;letter-spacing:1.2px;line-height:1.6}
+    .aviso-medalla::before{content:"";width:17px;height:17px;flex:none;background:var(--medalla) center/contain no-repeat}
+
+    /* anomalías de nivel 5: se difuminan los hijos, nunca la tarjeta, para que
+       el candado del pseudoelemento quede nítido por encima */
+    .anomaly-card.bloqueada{cursor:not-allowed}
+    .anomaly-card.bloqueada>*{filter:blur(7px) saturate(.3);opacity:.5}
+    .anomaly-card.bloqueada::after{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2352e7ff' stroke-width='1.7' stroke-linecap='round'%3E%3Crect x='4.8' y='10.6' width='14.4' height='9.6' rx='1.7'/%3E%3Cpath d='M8.4 10.6V7.6a3.6 3.6 0 0 1 7.2 0v3'/%3E%3C/svg%3E") center 42%/44px no-repeat,rgba(4,6,20,.5)}
+
+    /* satélites de la órbita exterior */
+    .satellite-node.bloqueada{cursor:not-allowed}
+    .satellite-node.bloqueada>img{filter:grayscale(1) brightness(.55);opacity:.4}
+    .satellite-node.bloqueada::after{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2352e7ff' stroke-width='1.7' stroke-linecap='round'%3E%3Crect x='4.8' y='10.6' width='14.4' height='9.6' rx='1.7'/%3E%3Cpath d='M8.4 10.6V7.6a3.6 3.6 0 0 1 7.2 0v3'/%3E%3C/svg%3E") center/17px no-repeat}
+
+    /* comparador de escalas: se difumina la escena y la ficha, nunca la
+       navegación, para que siempre se pueda volver atrás */
+    .escala-bloqueada .scale-visual>*:not(.candado-escala),
+    .escala-bloqueada .scale-magnitude>*,
+    .escala-bloqueada .scale-data>*{filter:blur(9px) saturate(.35);opacity:.42;user-select:none}
+    .candado-escala{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;color:#ffc98a;font-size:.58rem;letter-spacing:1.3px;line-height:1.8;max-width:none}
+    .candado-escala[hidden]{display:none}
+    .candado-escala::before{content:"";width:38px;height:38px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2352e7ff' stroke-width='1.7' stroke-linecap='round'%3E%3Crect x='4.8' y='10.6' width='14.4' height='9.6' rx='1.7'/%3E%3Cpath d='M8.4 10.6V7.6a3.6 3.6 0 0 1 7.2 0v3'/%3E%3C/svg%3E") center/contain no-repeat}
+
     /* ---- HERO: planeta 3D dentro del radar ---- */
     /* El lienzo es el primer hijo del radar, así que la retícula, las órbitas,
        el barrido y los puntos se pintan por encima sin necesidad de z-index. */
@@ -135,7 +163,7 @@
   <div class="star-field" aria-hidden="true"></div><div class="nebula nebula-one" aria-hidden="true"></div><div class="nebula nebula-two" aria-hidden="true"></div>
   <header class="site-header"><a class="brand" href="#inicio" aria-label="ORBITA, ir al inicio"><span class="brand-mark">◌</span><span>ORB<span>IT</span>A</span></a><nav aria-label="Navegación principal"><a href="#cronica">CRÓNICA</a><a href="#mapa">MAPA ESTELAR</a><a href="#biometria">BIOMETRÍA</a><a href="#radar-satelital">SATÉLITES</a><a href="#escalas-universo">ESCALAS</a><a href="#anomalias">ANOMALÍAS</a><a href="#entrenamiento">SIMULADOR</a></nav><div class="signal"><i></i> SEÑAL ESTABLE</div></header>
   <main id="inicio">
-    <section class="hero" aria-labelledby="hero-title"><div class="hero-boot" id="hero-boot" role="status" aria-live="polite" hidden><p class="boot-line" data-paso="1"><i>&gt;</i> INICIANDO SISTEMAS<b></b></p><p class="boot-line" data-paso="2"><i>&gt;</i> CALIBRANDO SENSORES DE PROFUNDIDAD<b></b></p><p class="boot-line" data-paso="3"><i>&gt;</i> CONEXIÓN ESTABLECIDA</p><div class="boot-bar" aria-hidden="true"><span></span></div><p class="boot-skip" aria-hidden="true">PULSA EN CUALQUIER SITIO PARA OMITIR</p></div><div class="hero-parallax" aria-hidden="true"><div class="hero-stars depth-far"></div><div class="hero-stars depth-mid"></div><div class="hero-stars depth-near"></div></div><div class="hero-copy"><p class="eyebrow">GUÍA TURÍSTICA ESPACIAL // EDICIÓN 01</p><h1 id="hero-title" aria-label="EL UNIVERSO ES TU DESTINO."><span class="tw-line">EL UNIVERSO</span><br><span class="tw-line accent">ES TU DESTINO.</span></h1><p class="hero-description">Activa el navegador de a bordo. Recorre 13.800 millones de años de historia, inspecciona nuevos mundos y demuestra lo que sabes.</p><a class="primary-button" href="#cronica">INICIAR RECORRIDO <span>→</span></a><p class="hero-stats"><span><strong id="stat-mundos">21</strong> mundos documentados</span><span><strong id="stat-satelites">15</strong> satélites rastreados</span><span><strong id="stat-amenazas">12</strong> amenazas catalogadas</span></p></div><div class="hero-radar" aria-hidden="true"><div class="radar-planet" id="radar-planet"><canvas id="planeta-lienzo"></canvas></div><div class="radar-label top">SECTOR // SOL-01</div><div class="radar-grid"></div><div class="radar-orbit orbit-one"></div><div class="radar-orbit orbit-two"></div><div class="radar-orbit orbit-three"></div><div class="radar-sweep"></div><div class="radar-core"></div><span class="radar-dot dot-one"></span><span class="radar-dot dot-two"></span><span class="radar-dot dot-three"></span><div class="radar-label bottom">OBJETOS RASTREADOS: <span id="radar-count">10</span></div></div><div class="scroll-cue"><span></span> DESLIZA PARA NAVEGAR</div></section>
+    <section class="hero" aria-labelledby="hero-title"><div class="hero-boot" id="hero-boot" role="status" aria-live="polite" hidden><p class="boot-line" data-paso="1"><i>&gt;</i> INICIANDO SISTEMAS<b></b></p><p class="boot-line" data-paso="2"><i>&gt;</i> CALIBRANDO SENSORES DE PROFUNDIDAD<b></b></p><p class="boot-line" data-paso="3"><i>&gt;</i> CONEXIÓN ESTABLECIDA</p><div class="boot-bar" aria-hidden="true"><span></span></div><p class="boot-skip" aria-hidden="true">PULSA EN CUALQUIER SITIO PARA OMITIR</p></div><div class="hero-parallax" aria-hidden="true"><div class="hero-stars depth-far"></div><div class="hero-stars depth-mid"></div><div class="hero-stars depth-near"></div></div><div class="hero-copy"><p class="eyebrow">GUÍA TURÍSTICA ESPACIAL // EDICIÓN 01</p><h1 id="hero-title" aria-label="EL UNIVERSO ES TU DESTINO."><span class="tw-line">EL UNIVERSO</span><br><span class="tw-line accent">ES TU DESTINO.</span></h1><p class="hero-description">Activa el navegador de a bordo. Recorre 13.800 millones de años de historia, inspecciona nuevos mundos y demuestra lo que sabes.</p><a class="primary-button" href="#cronica">INICIAR RECORRIDO <span>→</span></a><p class="hero-stats"><span><strong id="stat-mundos">21</strong> mundos documentados</span><span><strong id="stat-satelites">15</strong> satélites rastreados</span><span><strong id="stat-amenazas">12</strong> amenazas catalogadas</span></p></div><div class="hero-radar" aria-hidden="true"><div class="radar-planet" id="radar-planet"><canvas id="planeta-lienzo"></canvas></div><div class="radar-label top">SECTOR // SOL-01</div><div class="radar-grid"></div><div class="radar-orbit orbit-one"></div><div class="radar-orbit orbit-two"></div><div class="radar-orbit orbit-three"></div><div class="radar-sweep"></div><div class="radar-core"></div><span class="radar-dot dot-one"></span><span class="radar-dot dot-two"></span><span class="radar-dot dot-three"></span><div class="radar-label bottom">OBJETOS RASTREADOS: <span id="radar-count">48</span></div></div><div class="scroll-cue"><span></span> DESLIZA PARA NAVEGAR</div></section>
 
     <section class="chronicle-section" id="cronica" aria-labelledby="chronicle-title">
       <div class="section-heading chronicle-heading"><div><p class="eyebrow">ARCHIVO // CRONOLOGÍA CÓSMICA</p><h2 id="chronicle-title">La historia antes<br>del próximo salto.</h2></div><p>Abre el archivo para explorar las señales que dejaron las grandes eras del universo.</p></div>
@@ -888,6 +916,104 @@
       renderScale(false);
     })();
 
+    /* ---------- CONTENIDO QUE SE DESBLOQUEA CON LA MEDALLA ---------- */
+    /* La medalla se consigue completando «Falla Temporal». El juego va dentro de
+       un iframe del mismo origen, así que ambos comparten localStorage y el
+       evento storage avisa a esta página en cuanto se gana, sin recargar. */
+    (function(){
+      const CLAVE="orbita-medalla";
+      const COLA=" · COMPLETA «FALLA TEMPORAL» PARA DESBLOQUEAR";
+
+      function conMedalla(){
+        try{return localStorage.getItem(CLAVE)==="1"}
+        catch(e){return true}   /* sin acceso al almacenamiento no se bloquea nada:
+                                   peor que enseñar de más es dejar contenido que
+                                   nadie podría desbloquear nunca */
+      }
+      let cerrado=!conMedalla();
+
+      const nivel5=anomalies.filter(a=>a.level===5).length;
+      const enHeo=satellites.filter(s=>s.orbit==="heo").length;
+
+      function marcar(nodos){
+        nodos.forEach(n=>{
+          n.classList.toggle("bloqueada",cerrado);
+          n.disabled=cerrado;
+          if(cerrado){
+            n.setAttribute("aria-disabled","true");
+            n.title="Completa «Falla Temporal» para desbloquear";
+          }else{
+            n.removeAttribute("aria-disabled");
+            n.removeAttribute("title");
+          }
+        });
+      }
+
+      function aviso(idSeccion,texto){
+        const seccion=document.querySelector(idSeccion);
+        const cabecera=seccion&&seccion.querySelector(".section-heading");
+        if(!cabecera)return;
+        let p=cabecera.querySelector(".aviso-medalla");
+        if(!cerrado){if(p)p.remove();return}
+        if(!p){p=document.createElement("p");p.className="aviso-medalla";cabecera.appendChild(p)}
+        p.textContent=texto+COLA;
+      }
+
+      /* En el comparador de escalas no se pulsa nada: se navega. Se vigila la
+         clase de la esfera en vez de tocar renderScale, así su lógica queda
+         intacta y da igual si se llegó con los botones o con las flechas. */
+      const consola=document.querySelector(".scale-console");
+      const escena=document.querySelector(".scale-visual");
+      let capa=null;
+      if(escena){
+        capa=document.createElement("div");
+        capa.className="candado-escala";
+        capa.hidden=true;
+        capa.textContent="MAGNITUD CÓSMICA CLASIFICADA"+COLA;
+        escena.appendChild(capa);
+      }
+      function revisarEscala(){
+        const esfera=document.getElementById("scale-sphere");
+        if(!consola||!esfera||!capa)return;
+        const tapado=cerrado&&esfera.classList.contains("tier-cosmico");
+        consola.classList.toggle("escala-bloqueada",tapado);
+        capa.hidden=!tapado;
+      }
+
+      function aplicar(){
+        marcar(document.querySelectorAll('#anomaly-grid .anomaly-card[data-level="5"]'));
+        marcar(document.querySelectorAll(".sat-orbit-anchor.orbit-heo .satellite-node"));
+        revisarEscala();
+        aviso("#anomalias",nivel5+" EXPEDIENTES DE NIVEL 5 BLOQUEADOS");
+        aviso("#escalas-universo","LAS MAGNITUDES CÓSMICAS ESTÁN BLOQUEADAS");
+        aviso("#radar-satelital",enHeo+" SATÉLITES DE ÓRBITA HEO BLOQUEADOS");
+      }
+
+      aplicar();
+
+      /* los filtros de amenazas vuelven a pintar la cuadrícula: hay que
+         reaplicar el bloqueo cada vez que cambia */
+      const rejilla=document.getElementById("anomaly-grid");
+      if(rejilla&&"MutationObserver" in window){
+        new MutationObserver(()=>{
+          marcar(document.querySelectorAll('#anomaly-grid .anomaly-card[data-level="5"]'));
+        }).observe(rejilla,{childList:true});
+      }
+      const esfera=document.getElementById("scale-sphere");
+      if(esfera&&"MutationObserver" in window){
+        new MutationObserver(revisarEscala).observe(esfera,{attributes:true,attributeFilter:["class"]});
+      }
+
+      /* el juego escribe la medalla desde el iframe; aquí llega como storage */
+      window.addEventListener("storage",evento=>{
+        if(evento.key===CLAVE&&conMedalla()&&cerrado){cerrado=false;aplicar()}
+      });
+      /* y por si se ganó en otra pestaña mientras esta estaba en segundo plano */
+      document.addEventListener("visibilitychange",()=>{
+        if(!document.hidden&&cerrado&&conMedalla()){cerrado=false;aplicar()}
+      });
+    })();
+
     /* ---------- HERO ---------- */
     (function(){
       const menosMovimiento=window.matchMedia("(prefers-reduced-motion:reduce)");
@@ -945,7 +1071,9 @@
       function animarRadar(){
         const nodo=document.getElementById("radar-count");
         if(!nodo)return;
-        const meta=parseInt(nodo.textContent,10)||0;
+        /* el total sale de los propios catálogos: mundos + satélites + amenazas.
+           El número escrito en el HTML es solo el valor de reserva si no hay JS. */
+        const meta=planets.length+satellites.length+anomalies.length;
         if(menosMovimiento.matches){nodo.textContent=meta;return;}
         const DURACION=900,inicio=performance.now();
         nodo.textContent="0";

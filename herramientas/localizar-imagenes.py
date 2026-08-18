@@ -132,7 +132,8 @@ def buscar_en_commons(termino, cuantas=10):
         "gsrnamespace": "6",          # espacio de nombres «File:»
         "gsrlimit": str(cuantas),
         "prop": "imageinfo",
-        "iiprop": "url|size|mime",
+        "iiprop": "url|size|mime|extmetadata",
+        "iiextmetadatafilter": "LicenseShortName|Artist|Credit",
     })
     try:
         datos = json.loads(abrir(API_COMMONS + "?" + consulta, timeout=45).decode("utf-8"))
@@ -150,6 +151,15 @@ def buscar_en_commons(termino, cuantas=10):
                                              info.get("width", "?"),
                                              info.get("height", "?"),
                                              info.get("mime", "?")))
+        # Autor y licencia: sin esto no se pueden redactar los créditos, y el
+        # reglamento exige respetar los derechos de autor de cada imagen.
+        extra = info.get("extmetadata") or {}
+        def campo(clave):
+            valor = (extra.get(clave) or {}).get("value", "")
+            return re.sub(r"<[^>]*>", "", valor).strip()
+        licencia, autor = campo("LicenseShortName"), campo("Artist") or campo("Credit")
+        if licencia or autor:
+            print("            licencia: %-18s autor: %s" % (licencia or "?", (autor or "?")[:70]))
 
 
 def sugerir_en_commons(nombre, cuantas=10):

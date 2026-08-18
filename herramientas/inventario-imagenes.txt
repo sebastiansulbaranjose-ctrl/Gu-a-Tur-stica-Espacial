@@ -138,3 +138,4 @@ Gravitational_lensing_by_a_black_hole-2.jpg                 https://commons.wiki
 Artist-s_impression_of_the_Milky_Way_-eso1339g.jpg          https://commons.wikimedia.org/wiki/Special:FilePath/Artist%27s_impression_of_the_Milky_Way_(eso1339g).tiff?width=900
 Artist-s_impression_of_the_Milky_Way_-eso1339g-2.jpg        https://commons.wikimedia.org/wiki/Special:FilePath/Artist%27s_impression_of_the_Milky_Way_(eso1339g).tiff?width=1200
 07-Laniakea_-LofE07240.png                                  https://commons.wikimedia.org/wiki/Special:FilePath/07-Laniakea_(LofE07240).png?width=900
+U.S._Department_of_Energy_-_Science_-_114_036_002_-14281232250.jpg  https://commons.wikimedia.org/wiki/Special:FilePath/U.S._Department_of_Energy_-_Science_-_114_036_002_(14281232250).jpg?width=1200

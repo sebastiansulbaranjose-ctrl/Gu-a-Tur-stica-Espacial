@@ -697,9 +697,7 @@
   .ft-sim-core.is-critical{
     background:radial-gradient(circle at 36% 30%,#fff,var(--red) 48%,#3a0612 100%);
     box-shadow:0 0 46px rgba(255,99,137,.85);
-    animation:ft-sim-crit .32s steps(2) infinite;
   }
-  @keyframes ft-sim-crit{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
   .ft-intro-dots{display:flex;gap:8px;justify-content:center;margin:14px 0 20px;}
   .ft-intro-dots i{
     width:26px;height:3px;border-radius:2px;background:rgba(130,158,225,.3);
@@ -966,8 +964,47 @@
                repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.22) 3px 4px);
     transition:background .5s ease;
   }
-  .ft-sim-core.is-critical{animation:ft-sim-crit .32s steps(2) infinite;}
+  /* El núcleo ya no se agranda y encoge: late la luz del marco, sin mover
+     nada de sitio, y la imagen sufre un tirón irregular como de señal mala. */
+  .ft-sim-core.is-critical{animation:ft-pulso-nucleo 1.15s ease-in-out infinite;}
+  .ft-sim-core.is-critical img{animation:ft-tiron 2.6s steps(1,end) infinite;}
+  @keyframes ft-pulso-nucleo{
+    0%,100%{border-color:rgba(255,99,137,.4);box-shadow:0 0 10px rgba(255,99,137,.15),inset 0 0 22px rgba(255,99,137,.12);}
+    50%    {border-color:rgba(255,99,137,.95);box-shadow:0 0 36px rgba(255,99,137,.6),inset 0 0 48px rgba(255,99,137,.32);}
+  }
+  /* pasos irregulares: los tirones caen en momentos sueltos, no a compás */
+  @keyframes ft-tiron{
+    0%,7%   {transform:translate3d(0,0,0);}
+    8%      {transform:translate3d(-2.4%,0,0);}
+    9.5%    {transform:translate3d(2%,0,0);}
+    11%,41% {transform:translate3d(0,0,0);}
+    42%     {transform:translate3d(1.6%,0,0);}
+    43.5%   {transform:translate3d(-1.2%,0,0);}
+    45%,72% {transform:translate3d(0,0,0);}
+    73%     {transform:translate3d(-1%,0,0);}
+    74.5%,100%{transform:translate3d(0,0,0);}
+  }
   .ft-sim-core.is-critical img{filter:saturate(1.5) contrast(1.2) hue-rotate(-35deg);}
+  /* línea de escaneo que baja por la imagen; el ::after ya estaba ocupado por
+     la retícula, así que va en el ::before */
+  .ft-sim-core::before{
+    content:"";position:absolute;left:0;right:0;top:0;height:14%;z-index:2;pointer-events:none;
+    background:linear-gradient(180deg,transparent,rgba(82,231,255,.55),transparent);
+    box-shadow:0 0 18px rgba(82,231,255,.45);
+    animation:ft-escaneo 3.4s linear infinite;
+  }
+  .ft-sim-core.is-critical::before{
+    background:linear-gradient(180deg,transparent,rgba(255,99,137,.7),transparent);
+    box-shadow:0 0 22px rgba(255,99,137,.55);
+    animation-duration:1.1s;
+  }
+  /* recorre 114% del alto del marco: entra por arriba y sale por abajo */
+  @keyframes ft-escaneo{
+    0%  {transform:translateY(-100%);opacity:0;}
+    10% {opacity:1;}
+    90% {opacity:1;}
+    100%{transform:translateY(714%);opacity:0;}
+  }
   .ft-sim-core.is-critical::after{
     background:linear-gradient(160deg,rgba(255,99,137,.4),transparent 55%),
                repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.28) 3px 4px);
@@ -1262,7 +1299,7 @@
   <section class="ft-phase ft-phase-intro" id="phase-intro">
     <div class="ft-alert-frame is-sim" id="intro-frame">
       <div class="ft-alert-topbar">
-        <span><i class="ft-pulse-dot is-calm"></i> SIM_CRONOS.EXE // MÓDULO DE ENTRENAMIENTO</span>
+        <span><i class="ft-pulse-dot is-calm"></i> SIM_ORBE.EXE // ENTRENAMIENTO RUTINARIO</span>
         <span id="intro-step-tag">SECUENCIA 1 / 4</span>
       </div>
       <div class="ft-alert-body">
@@ -1945,23 +1982,23 @@ if (typeof window.gsap === "undefined") {
   /* ============ Guion de la intro: simulación → falla crítica ============ */
   const INTRO_BEATS = [
     {
-      eyebrow: "ACADEMIA ÓRBITA // SIMULACIÓN CONTROLADA",
-      title: 'CADETE <span>VIAJERO</span>',
-      text: "Estás en la cabina de entrenamiento. Hoy toca la práctica número 47: un salto temporal simulado de apenas tres segundos, sin salir del hangar. El instructor repite lo de siempre — el dispositivo nunca ha fallado.",
+      eyebrow: "ACADEMIA ÓRBITA // ENTRENAMIENTO RUTINARIO",
+      title: 'BIENVENIDO, <span>CADETE</span>',
+      text: "Soy ORBE, el sistema de a bordo de esta cabina. Voy a acompañarte en la práctica número 47: la misma que ya has hecho cuarenta y seis veces. Tú no tienes que saberte el procedimiento, para eso estoy yo. Enciende la consola cuando quieras y te guío paso a paso.",
       btn: "INICIAR SIMULACIÓN",
       tag: "SECUENCIA 1 / 4"
     },
     {
       eyebrow: "SIMULACIÓN EN CURSO // PARÁMETROS NOMINALES",
-      title: 'SALTO <span>DE PRUEBA</span>',
-      text: "El núcleo de cronosincronía se enciende. Todo va bien: las coordenadas están fijadas al hangar, el margen de error es de milisegundos. Colocas la mano sobre el activador y confirmas la secuencia.",
+      title: 'TODO EN <span>ORDEN</span>',
+      text: "Núcleo encendido. Estoy fijando las coordenadas a esta misma sala con un margen de milisegundos, así que no vas a moverte de aquí; el instructor lleva años repitiendo que el dispositivo nunca ha fallado. Coloca la mano sobre el activador y confírmame la secuencia. Yo te vigilo las constantes.",
       btn: "CONFIRMAR SECUENCIA",
       tag: "SECUENCIA 2 / 4"
     },
     {
       eyebrow: "ADVERTENCIA // LECTURA ANÓMALA",
       title: 'ALGO <span>NO ENCAJA</span>',
-      text: "Un pico de energía sacude la cabina. El indicador de anclaje temporal parpadea y se apaga. La simulación deja de responder a los controles y el dispositivo empieza a cargar energía por su cuenta, sin que nadie se lo haya ordenado.",
+      text: "Cadete, detecto un pico de energía que yo no he ordenado. El indicador de anclaje me parpadea y se apaga, y acabo de perder los mandos: no responden. El dispositivo está cargando por su cuenta, sin que nadie se lo haya pedido. Abórtalo. Abórtalo ahora.",
       btn: "ABORTAR SIMULACIÓN",
       tag: "SECUENCIA 3 / 4",
       critical: true
@@ -1969,7 +2006,7 @@ if (typeof window.gsap === "undefined") {
     {
       eyebrow: "FALLA CRÍTICA // ANCLAJE PERDIDO",
       title: 'SALTO <span>INVOLUNTARIO</span>',
-      text: "Demasiado tarde. El dispositivo se activa solo, se fractura en pleno salto y te arranca del hangar. No hay coordenadas, no hay retorno programado: estás cayendo a través del tiempo y del espacio, y las piezas del aparato se han dispersado por las eras del universo.",
+      text: "No llego a tiempo. El dispositivo se activa solo, se fractura en pleno salto y te arranca del hangar: sin coordenadas, sin retorno programado. Estás cayendo a través del tiempo y del espacio, y sus piezas se han dispersado por las eras del universo. Voy contigo, cadete. Es lo único que puedo hacer por ti.",
       btn: "SOPORTAR EL IMPACTO",
       tag: "SECUENCIA 4 / 4",
       critical: true

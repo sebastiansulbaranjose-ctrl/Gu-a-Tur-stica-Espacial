@@ -86,9 +86,36 @@
        se parte, el renglón nuevo empieza por la cifra y no por un «·» suelto */
     .hero-stats span:not(:last-child)::after{content:"·";color:var(--line);margin:0 9px}
 
+    /* ---- HERO: secuencia de arranque ---- */
+    /* El panel nace con [hidden]: si el JavaScript falla o tarda, el hero se ve
+       de inmediato y nadie se queda mirando una pantalla en negro. */
+    .hero-boot{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;justify-content:center;gap:11px;padding:0 clamp(24px,10vw,160px);background:rgba(4,6,20,.94);cursor:pointer}
+    .hero-boot[hidden]{display:none}
+    .boot-line{margin:0;font-size:.68rem;letter-spacing:1.6px;color:var(--muted);opacity:0;transform:translateY(4px);transition:opacity .18s ease,transform .18s ease}
+    .boot-line.is-on{opacity:1;transform:none}
+    .boot-line i{font-style:normal;color:var(--cyan);margin-right:9px}
+    /* los puntos suspensivos se animan aparte para que la línea no cambie de ancho */
+    .boot-line b{font-weight:inherit;display:inline-block;width:1.4em;text-align:left}
+    /* Firefox no anima la propiedad content: en su lugar se revela un "..." fijo
+       ensanchando su caja por pasos, que sí es portable. */
+    .boot-line.is-on b::after{content:"...";display:inline-block;width:0;overflow:hidden;vertical-align:bottom;animation:boot-puntos 1.2s steps(4,end) infinite}
+    @keyframes boot-puntos{to{width:1.4em}}
+    .boot-line[data-paso="3"].is-on{color:var(--cyan);text-shadow:0 0 14px rgba(82,231,255,.45)}
+    .boot-bar{margin-top:7px;width:min(280px,44vw);height:1px;background:var(--line);overflow:hidden}
+    /* la transición va en la regla base, no en la de destino: si solo existe en
+       el estado final, el navegador no tiene un valor de partida del que animar */
+    .boot-bar span{display:block;height:100%;width:0;background:var(--cyan);box-shadow:0 0 10px rgba(82,231,255,.7);transition:width var(--boot-dur,1500ms) linear}
+    .boot-bar.is-on span{width:100%}
+    .boot-skip{margin:16px 0 0;font-size:.52rem;letter-spacing:1.4px;color:#5d6c8c}
+    /* el hero se revela al terminar; sin la clase queda visible por defecto */
+    .hero.is-booting .hero-copy,.hero.is-booting .hero-radar,.hero.is-booting .scroll-cue{opacity:0}
+    .hero-copy,.hero-radar,.scroll-cue{transition:opacity .45s ease}
+
     @media (prefers-reduced-motion:reduce){
       .hero h1 .tw-ch{visibility:visible}
       .hero h1 .tw-ch.is-cursor::after{display:none}
+      .boot-line.is-on b::after{animation:none;content:"..."}
+      .hero-copy,.hero-radar,.scroll-cue{transition:none}
     }
   </style>
 </head>
@@ -96,7 +123,7 @@
   <div class="star-field" aria-hidden="true"></div><div class="nebula nebula-one" aria-hidden="true"></div><div class="nebula nebula-two" aria-hidden="true"></div>
   <header class="site-header"><a class="brand" href="#inicio" aria-label="ORBITA, ir al inicio"><span class="brand-mark">◌</span><span>ORB<span>IT</span>A</span></a><nav aria-label="Navegación principal"><a href="#cronica">CRÓNICA</a><a href="#mapa">MAPA ESTELAR</a><a href="#biometria">BIOMETRÍA</a><a href="#radar-satelital">SATÉLITES</a><a href="#escalas-universo">ESCALAS</a><a href="#anomalias">ANOMALÍAS</a><a href="#entrenamiento">SIMULADOR</a></nav><div class="signal"><i></i> SEÑAL ESTABLE</div></header>
   <main id="inicio">
-    <section class="hero" aria-labelledby="hero-title"><div class="hero-parallax" aria-hidden="true"><div class="hero-stars depth-far"></div><div class="hero-stars depth-mid"></div><div class="hero-stars depth-near"></div></div><div class="hero-copy"><p class="eyebrow">GUÍA TURÍSTICA ESPACIAL // EDICIÓN 01</p><h1 id="hero-title" aria-label="EL UNIVERSO ES TU DESTINO."><span class="tw-line">EL UNIVERSO</span><br><span class="tw-line accent">ES TU DESTINO.</span></h1><p class="hero-description">Activa el navegador de a bordo. Recorre 13.800 millones de años de historia, inspecciona nuevos mundos y demuestra lo que sabes.</p><a class="primary-button" href="#cronica">INICIAR RECORRIDO <span>→</span></a><p class="hero-stats"><span><strong id="stat-mundos">21</strong> mundos documentados</span><span><strong id="stat-satelites">15</strong> satélites rastreados</span><span><strong id="stat-amenazas">12</strong> amenazas catalogadas</span></p></div><div class="hero-radar" aria-hidden="true"><div class="radar-label top">SECTOR // SOL-01</div><div class="radar-grid"></div><div class="radar-orbit orbit-one"></div><div class="radar-orbit orbit-two"></div><div class="radar-orbit orbit-three"></div><div class="radar-sweep"></div><div class="radar-core"></div><span class="radar-dot dot-one"></span><span class="radar-dot dot-two"></span><span class="radar-dot dot-three"></span><div class="radar-label bottom">OBJETOS RASTREADOS: 10</div></div><div class="scroll-cue"><span></span> DESLIZA PARA NAVEGAR</div></section>
+    <section class="hero" aria-labelledby="hero-title"><div class="hero-boot" id="hero-boot" role="status" aria-live="polite" hidden><p class="boot-line" data-paso="1"><i>&gt;</i> INICIANDO SISTEMAS<b></b></p><p class="boot-line" data-paso="2"><i>&gt;</i> CALIBRANDO SENSORES DE PROFUNDIDAD<b></b></p><p class="boot-line" data-paso="3"><i>&gt;</i> CONEXIÓN ESTABLECIDA</p><div class="boot-bar" aria-hidden="true"><span></span></div><p class="boot-skip" aria-hidden="true">PULSA EN CUALQUIER SITIO PARA OMITIR</p></div><div class="hero-parallax" aria-hidden="true"><div class="hero-stars depth-far"></div><div class="hero-stars depth-mid"></div><div class="hero-stars depth-near"></div></div><div class="hero-copy"><p class="eyebrow">GUÍA TURÍSTICA ESPACIAL // EDICIÓN 01</p><h1 id="hero-title" aria-label="EL UNIVERSO ES TU DESTINO."><span class="tw-line">EL UNIVERSO</span><br><span class="tw-line accent">ES TU DESTINO.</span></h1><p class="hero-description">Activa el navegador de a bordo. Recorre 13.800 millones de años de historia, inspecciona nuevos mundos y demuestra lo que sabes.</p><a class="primary-button" href="#cronica">INICIAR RECORRIDO <span>→</span></a><p class="hero-stats"><span><strong id="stat-mundos">21</strong> mundos documentados</span><span><strong id="stat-satelites">15</strong> satélites rastreados</span><span><strong id="stat-amenazas">12</strong> amenazas catalogadas</span></p></div><div class="hero-radar" aria-hidden="true"><div class="radar-label top">SECTOR // SOL-01</div><div class="radar-grid"></div><div class="radar-orbit orbit-one"></div><div class="radar-orbit orbit-two"></div><div class="radar-orbit orbit-three"></div><div class="radar-sweep"></div><div class="radar-core"></div><span class="radar-dot dot-one"></span><span class="radar-dot dot-two"></span><span class="radar-dot dot-three"></span><div class="radar-label bottom">OBJETOS RASTREADOS: <span id="radar-count">10</span></div></div><div class="scroll-cue"><span></span> DESLIZA PARA NAVEGAR</div></section>
 
     <section class="chronicle-section" id="cronica" aria-labelledby="chronicle-title">
       <div class="section-heading chronicle-heading"><div><p class="eyebrow">ARCHIVO // CRONOLOGÍA CÓSMICA</p><h2 id="chronicle-title">La historia antes<br>del próximo salto.</h2></div><p>Abre el archivo para explorar las señales que dejaron las grandes eras del universo.</p></div>
@@ -863,9 +890,11 @@
       });
 
       /* --- titular letra a letra --- */
-      (function(){
+      /* devuelve una función que arranca el tecleo, para poder lanzarlo
+         cuando termine la secuencia de arranque y no antes */
+      const escribirTitular=(function(){
         const lineas=document.querySelectorAll(".hero h1 .tw-line");
-        if(!lineas.length)return;
+        if(!lineas.length)return function(){};
         const letras=[];
         lineas.forEach(linea=>{
           const texto=linea.textContent;
@@ -878,24 +907,99 @@
             letras.push(span);
           }
         });
-        if(menosMovimiento.matches){
-          letras.forEach(l=>l.classList.add("is-on"));
-          return;
-        }
-        let i=0,previa=null;
-        (function escribir(){
-          if(previa)previa.classList.remove("is-cursor");
-          if(i>=letras.length){
-            /* el cursor se queda parpadeando al final del titular */
-            if(previa)previa.classList.add("is-cursor");
+        return function(){
+          if(menosMovimiento.matches){
+            letras.forEach(l=>l.classList.add("is-on"));
             return;
           }
-          const letra=letras[i++];
-          letra.classList.add("is-on","is-cursor");
-          previa=letra;
-          /* una pausa algo mayor tras cada espacio hace más creíble el tecleo */
-          setTimeout(escribir,letra.textContent===" "?96:42);
-        })();
+          let i=0,previa=null;
+          (function escribir(){
+            if(previa)previa.classList.remove("is-cursor");
+            if(i>=letras.length){
+              /* el cursor se queda parpadeando al final del titular */
+              if(previa)previa.classList.add("is-cursor");
+              return;
+            }
+            const letra=letras[i++];
+            letra.classList.add("is-on","is-cursor");
+            previa=letra;
+            /* una pausa algo mayor tras cada espacio hace más creíble el tecleo */
+            setTimeout(escribir,letra.textContent===" "?96:42);
+          })();
+        };
+      })();
+
+      /* --- contador del radar: 0 -> 10 --- */
+      function animarRadar(){
+        const nodo=document.getElementById("radar-count");
+        if(!nodo)return;
+        const meta=parseInt(nodo.textContent,10)||0;
+        if(menosMovimiento.matches){nodo.textContent=meta;return;}
+        const DURACION=900,inicio=performance.now();
+        nodo.textContent="0";
+        (function paso(ahora){
+          const avance=Math.min((ahora-inicio)/DURACION,1);
+          /* desacelera al final: sube rápido y se asienta en la cifra */
+          const suave=1-Math.pow(1-avance,3);
+          nodo.textContent=Math.round(meta*suave);
+          if(avance<1)requestAnimationFrame(paso);else nodo.textContent=meta;
+        })(inicio);
+      }
+
+      /* --- secuencia de arranque --- */
+      (function(){
+        const hero=document.querySelector(".hero");
+        const panel=document.getElementById("hero-boot");
+        if(!hero||!panel){escribirTitular();animarRadar();return;}
+
+        const lineas=panel.querySelectorAll(".boot-line");
+        const barra=panel.querySelector(".boot-bar");
+        const DURACION=1500;
+
+        function entrar(){
+          panel.hidden=true;
+          hero.classList.remove("is-booting");
+          escribirTitular();
+          animarRadar();
+        }
+
+        /* Se ve una sola vez por pestaña. La molestia real no es verla, es
+           volver a verla: al navegar dentro del sitio o recargar, la carga es
+           inmediata y la secuencia se omite. También se omite con
+           prefers-reduced-motion, y siempre se puede cortar con un clic. */
+        let yaVista=false;
+        try{yaVista=sessionStorage.getItem("orbita-arranque")==="1"}catch(e){}
+        if(yaVista||menosMovimiento.matches){entrar();return;}
+        try{sessionStorage.setItem("orbita-arranque","1")}catch(e){}
+
+        hero.classList.add("is-booting");
+        panel.hidden=false;
+        panel.style.setProperty("--boot-dur",DURACION+"ms");
+        /* se fuerza el cálculo del ancho 0 antes de pedir el 100%, o el
+           navegador agrupa ambos valores y la barra aparece llena de golpe */
+        void barra.offsetWidth;
+        barra.classList.add("is-on");
+
+        const relojes=[];
+        lineas.forEach((linea,i)=>{
+          relojes.push(setTimeout(()=>linea.classList.add("is-on"),i*430));
+        });
+
+        let terminado=false;
+        function terminar(){
+          if(terminado)return;
+          terminado=true;
+          relojes.forEach(clearTimeout);
+          document.removeEventListener("keydown",porTecla);
+          panel.removeEventListener("click",terminar);
+          entrar();
+        }
+        function porTecla(evento){
+          if(evento.key==="Escape"||evento.key==="Enter"||evento.key===" ")terminar();
+        }
+        panel.addEventListener("click",terminar);
+        document.addEventListener("keydown",porTecla);
+        relojes.push(setTimeout(terminar,DURACION));
       })();
 
       /* --- parallax de estrellas --- */

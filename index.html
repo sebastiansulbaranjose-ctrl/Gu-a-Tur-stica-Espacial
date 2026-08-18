@@ -86,6 +86,18 @@
        se parte, el renglón nuevo empieza por la cifra y no por un «·» suelto */
     .hero-stats span:not(:last-child)::after{content:"·";color:var(--line);margin:0 9px}
 
+    /* ---- HERO: planeta 3D dentro del radar ---- */
+    /* El lienzo es el primer hijo del radar, así que la retícula, las órbitas,
+       el barrido y los puntos se pintan por encima sin necesidad de z-index. */
+    .radar-planet{position:absolute;inset:0;opacity:0;transition:opacity .9s ease;pointer-events:none}
+    .radar-planet.is-on{opacity:1}
+    .radar-planet canvas{display:block;width:100%;height:100%}
+    /* el punto blanco del centro estorba justo donde va el planeta; solo se
+       retira si el planeta llegó a dibujarse, nunca si Three.js no cargó */
+    .hero-radar.con-planeta .radar-core{display:none}
+    /* en pantallas pequeñas ni se muestra ni se descarga la librería */
+    @media (max-width:700px){.radar-planet{display:none}}
+
     /* ---- HERO: secuencia de arranque ---- */
     /* El panel nace con [hidden]: si el JavaScript falla o tarda, el hero se ve
        de inmediato y nadie se queda mirando una pantalla en negro. */
@@ -123,7 +135,7 @@
   <div class="star-field" aria-hidden="true"></div><div class="nebula nebula-one" aria-hidden="true"></div><div class="nebula nebula-two" aria-hidden="true"></div>
   <header class="site-header"><a class="brand" href="#inicio" aria-label="ORBITA, ir al inicio"><span class="brand-mark">◌</span><span>ORB<span>IT</span>A</span></a><nav aria-label="Navegación principal"><a href="#cronica">CRÓNICA</a><a href="#mapa">MAPA ESTELAR</a><a href="#biometria">BIOMETRÍA</a><a href="#radar-satelital">SATÉLITES</a><a href="#escalas-universo">ESCALAS</a><a href="#anomalias">ANOMALÍAS</a><a href="#entrenamiento">SIMULADOR</a></nav><div class="signal"><i></i> SEÑAL ESTABLE</div></header>
   <main id="inicio">
-    <section class="hero" aria-labelledby="hero-title"><div class="hero-boot" id="hero-boot" role="status" aria-live="polite" hidden><p class="boot-line" data-paso="1"><i>&gt;</i> INICIANDO SISTEMAS<b></b></p><p class="boot-line" data-paso="2"><i>&gt;</i> CALIBRANDO SENSORES DE PROFUNDIDAD<b></b></p><p class="boot-line" data-paso="3"><i>&gt;</i> CONEXIÓN ESTABLECIDA</p><div class="boot-bar" aria-hidden="true"><span></span></div><p class="boot-skip" aria-hidden="true">PULSA EN CUALQUIER SITIO PARA OMITIR</p></div><div class="hero-parallax" aria-hidden="true"><div class="hero-stars depth-far"></div><div class="hero-stars depth-mid"></div><div class="hero-stars depth-near"></div></div><div class="hero-copy"><p class="eyebrow">GUÍA TURÍSTICA ESPACIAL // EDICIÓN 01</p><h1 id="hero-title" aria-label="EL UNIVERSO ES TU DESTINO."><span class="tw-line">EL UNIVERSO</span><br><span class="tw-line accent">ES TU DESTINO.</span></h1><p class="hero-description">Activa el navegador de a bordo. Recorre 13.800 millones de años de historia, inspecciona nuevos mundos y demuestra lo que sabes.</p><a class="primary-button" href="#cronica">INICIAR RECORRIDO <span>→</span></a><p class="hero-stats"><span><strong id="stat-mundos">21</strong> mundos documentados</span><span><strong id="stat-satelites">15</strong> satélites rastreados</span><span><strong id="stat-amenazas">12</strong> amenazas catalogadas</span></p></div><div class="hero-radar" aria-hidden="true"><div class="radar-label top">SECTOR // SOL-01</div><div class="radar-grid"></div><div class="radar-orbit orbit-one"></div><div class="radar-orbit orbit-two"></div><div class="radar-orbit orbit-three"></div><div class="radar-sweep"></div><div class="radar-core"></div><span class="radar-dot dot-one"></span><span class="radar-dot dot-two"></span><span class="radar-dot dot-three"></span><div class="radar-label bottom">OBJETOS RASTREADOS: <span id="radar-count">10</span></div></div><div class="scroll-cue"><span></span> DESLIZA PARA NAVEGAR</div></section>
+    <section class="hero" aria-labelledby="hero-title"><div class="hero-boot" id="hero-boot" role="status" aria-live="polite" hidden><p class="boot-line" data-paso="1"><i>&gt;</i> INICIANDO SISTEMAS<b></b></p><p class="boot-line" data-paso="2"><i>&gt;</i> CALIBRANDO SENSORES DE PROFUNDIDAD<b></b></p><p class="boot-line" data-paso="3"><i>&gt;</i> CONEXIÓN ESTABLECIDA</p><div class="boot-bar" aria-hidden="true"><span></span></div><p class="boot-skip" aria-hidden="true">PULSA EN CUALQUIER SITIO PARA OMITIR</p></div><div class="hero-parallax" aria-hidden="true"><div class="hero-stars depth-far"></div><div class="hero-stars depth-mid"></div><div class="hero-stars depth-near"></div></div><div class="hero-copy"><p class="eyebrow">GUÍA TURÍSTICA ESPACIAL // EDICIÓN 01</p><h1 id="hero-title" aria-label="EL UNIVERSO ES TU DESTINO."><span class="tw-line">EL UNIVERSO</span><br><span class="tw-line accent">ES TU DESTINO.</span></h1><p class="hero-description">Activa el navegador de a bordo. Recorre 13.800 millones de años de historia, inspecciona nuevos mundos y demuestra lo que sabes.</p><a class="primary-button" href="#cronica">INICIAR RECORRIDO <span>→</span></a><p class="hero-stats"><span><strong id="stat-mundos">21</strong> mundos documentados</span><span><strong id="stat-satelites">15</strong> satélites rastreados</span><span><strong id="stat-amenazas">12</strong> amenazas catalogadas</span></p></div><div class="hero-radar" aria-hidden="true"><div class="radar-planet" id="radar-planet"><canvas id="planeta-lienzo"></canvas></div><div class="radar-label top">SECTOR // SOL-01</div><div class="radar-grid"></div><div class="radar-orbit orbit-one"></div><div class="radar-orbit orbit-two"></div><div class="radar-orbit orbit-three"></div><div class="radar-sweep"></div><div class="radar-core"></div><span class="radar-dot dot-one"></span><span class="radar-dot dot-two"></span><span class="radar-dot dot-three"></span><div class="radar-label bottom">OBJETOS RASTREADOS: <span id="radar-count">10</span></div></div><div class="scroll-cue"><span></span> DESLIZA PARA NAVEGAR</div></section>
 
     <section class="chronicle-section" id="cronica" aria-labelledby="chronicle-title">
       <div class="section-heading chronicle-heading"><div><p class="eyebrow">ARCHIVO // CRONOLOGÍA CÓSMICA</p><h2 id="chronicle-title">La historia antes<br>del próximo salto.</h2></div><p>Abre el archivo para explorar las señales que dejaron las grandes eras del universo.</p></div>
@@ -1000,6 +1012,160 @@
         panel.addEventListener("click",terminar);
         document.addEventListener("keydown",porTecla);
         relojes.push(setTimeout(terminar,DURACION));
+      })();
+
+      /* --- planeta 3D dentro del radar --- */
+      (function(){
+        const marco=document.getElementById("radar-planet");
+        const lienzo=document.getElementById("planeta-lienzo");
+        const radar=document.querySelector(".hero-radar");
+        if(!marco||!lienzo||!radar)return;
+        /* en móvil ni se muestra ni se descarga la librería (163 KB) */
+        if(!window.matchMedia("(min-width:701px)").matches)return;
+
+        /* Textura generada aquí mismo: evita descargar una imagen más y deja
+           el planeta en la paleta del sitio. La semilla es fija para que se
+           vea igual en cada visita. */
+        function crearTextura(THREE){
+          const ANCHO=1024,ALTO=512;
+          const c=document.createElement("canvas");c.width=ANCHO;c.height=ALTO;
+          const g=c.getContext("2d");
+          let semilla=20260817;
+          const azar=()=>(semilla=(semilla*1664525+1013904223)>>>0)/4294967296;
+
+          const oceano=g.createLinearGradient(0,0,0,ALTO);
+          oceano.addColorStop(0,"#091230");oceano.addColorStop(.5,"#132c62");oceano.addColorStop(1,"#091230");
+          g.fillStyle=oceano;g.fillRect(0,0,ANCHO,ALTO);
+
+          const desenfoque="filter" in g;
+          if(desenfoque)g.filter="blur(3px)";
+          /* continentes: polígonos irregulares repartidos por la franja templada */
+          for(let i=0;i<46;i++){
+            const x=azar()*ANCHO,y=ALTO*(.16+azar()*.68),r=16+azar()*72;
+            g.fillStyle="rgba(44,146,136,"+(.34+azar()*.42).toFixed(3)+")";
+            g.beginPath();
+            for(let k=0;k<10;k++){
+              const a=k/10*Math.PI*2,rr=r*(.5+azar()*.85);
+              const px=x+Math.cos(a)*rr,py=y+Math.sin(a)*rr*.6;
+              k?g.lineTo(px,py):g.moveTo(px,py);
+            }
+            g.closePath();g.fill();
+          }
+          /* relieve más claro por encima */
+          for(let i=0;i<30;i++){
+            const x=azar()*ANCHO,y=ALTO*(.2+azar()*.6),r=8+azar()*26;
+            g.fillStyle="rgba(96,206,190,"+(.16+azar()*.24).toFixed(3)+")";
+            g.beginPath();g.ellipse(x,y,r,r*.62,azar()*3.14,0,6.29);g.fill();
+          }
+          /* casquetes polares */
+          [0,ALTO].forEach(borde=>{
+            const p=g.createLinearGradient(0,borde,0,borde?ALTO-70:70);
+            p.addColorStop(0,"rgba(226,244,255,.82)");p.addColorStop(1,"rgba(226,244,255,0)");
+            g.fillStyle=p;g.fillRect(0,borde?ALTO-70:0,ANCHO,70);
+          });
+          /* bandas de nubes */
+          if(desenfoque)g.filter="blur(7px)";
+          for(let i=0;i<16;i++){
+            const y=azar()*ALTO,h=6+azar()*20;
+            g.fillStyle="rgba(232,244,255,"+(.05+azar()*.09).toFixed(3)+")";
+            g.fillRect(0,y,ANCHO,h);
+          }
+          if(desenfoque)g.filter="none";
+
+          const tex=new THREE.CanvasTexture(c);
+          if(THREE.SRGBColorSpace)tex.colorSpace=THREE.SRGBColorSpace;
+          return tex;
+        }
+
+        async function montar(){
+          let THREE;
+          try{THREE=await import("./lib/three.module.min.js")}
+          catch(e){return}                     /* sin librería, el radar queda como estaba */
+
+          let render;
+          try{
+            render=new THREE.WebGLRenderer({canvas:lienzo,alpha:true,antialias:true,powerPreference:"low-power"});
+          }catch(e){return}                    /* sin WebGL, tampoco pasa nada */
+
+          render.setClearAlpha(0);
+          render.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+
+          const escena=new THREE.Scene();
+          const camara=new THREE.PerspectiveCamera(30,1,.1,100);
+          camara.position.z=8.5;
+
+          const planeta=new THREE.Mesh(
+            new THREE.SphereGeometry(1,64,48),
+            new THREE.MeshStandardMaterial({map:crearTextura(THREE),roughness:.92,metalness:.02})
+          );
+          planeta.rotation.z=-.34;            /* inclinación del eje */
+          escena.add(planeta);
+
+          /* halo atmosférico: esfera algo mayor vista por dentro, con el borde
+             encendido en función del ángulo de visión */
+          const halo=new THREE.Mesh(
+            new THREE.SphereGeometry(1.055,48,32),
+            new THREE.ShaderMaterial({
+              uniforms:{tono:{value:new THREE.Color(0x52e7ff)}},
+              vertexShader:"varying vec3 vN;varying vec3 vP;void main(){vN=normalize(normalMatrix*normal);vec4 p=modelViewMatrix*vec4(position,1.0);vP=p.xyz;gl_Position=projectionMatrix*p;}",
+              fragmentShader:"uniform vec3 tono;varying vec3 vN;varying vec3 vP;void main(){float b=pow(1.0-abs(dot(normalize(vN),normalize(-vP))),2.6);gl_FragColor=vec4(tono,b*0.85);}",
+              side:THREE.BackSide,blending:THREE.AdditiveBlending,transparent:true,depthWrite:false
+            })
+          );
+          escena.add(halo);
+
+          const sol=new THREE.DirectionalLight(0xdfeaff,2.4);
+          sol.position.set(-3,1.7,2.6);
+          escena.add(sol);
+          /* relleno frío para que la cara nocturna no quede en negro puro */
+          escena.add(new THREE.AmbientLight(0x2b4078,.6));
+
+          function medir(){
+            const caja=marco.getBoundingClientRect();
+            const lado=Math.max(1,Math.round(Math.min(caja.width,caja.height)));
+            render.setSize(lado,lado,false);
+            lienzo.style.width=lienzo.style.height="100%";
+            camara.aspect=1;camara.updateProjectionMatrix();
+          }
+          medir();
+          if("ResizeObserver" in window)new ResizeObserver(medir).observe(marco);
+          else window.addEventListener("resize",medir,{passive:true});
+
+          const quieto=menosMovimiento.matches;
+          let visible=true,vivo=false,antes=performance.now();
+
+          function pintar(ahora){
+            if(!visible||document.hidden){vivo=false;return}
+            const dt=Math.min((ahora-antes)/1000,.05);antes=ahora;
+            planeta.rotation.y+=dt*.055;        /* una vuelta cada ~114 s */
+            render.render(escena,camara);
+            requestAnimationFrame(pintar);
+          }
+          function arrancar(){
+            if(vivo||quieto)return;
+            vivo=true;antes=performance.now();requestAnimationFrame(pintar);
+          }
+
+          render.render(escena,camara);
+          radar.classList.add("con-planeta");
+          marco.classList.add("is-on");
+          if(quieto)return;                    /* con menos movimiento se deja quieto */
+
+          if("IntersectionObserver" in window){
+            new IntersectionObserver(e=>{visible=e[0].isIntersecting;if(visible)arrancar()},{threshold:0}).observe(radar);
+          }
+          document.addEventListener("visibilitychange",()=>{if(!document.hidden)arrancar()});
+          arrancar();
+        }
+
+        /* se carga cuando la página ya está lista y el navegador está ocioso:
+           así no compite con nada del primer pintado */
+        function programar(){
+          if(window.requestIdleCallback)requestIdleCallback(montar,{timeout:2500});
+          else setTimeout(montar,900);
+        }
+        if(document.readyState==="complete")programar();
+        else window.addEventListener("load",programar,{once:true});
       })();
 
       /* --- parallax de estrellas --- */

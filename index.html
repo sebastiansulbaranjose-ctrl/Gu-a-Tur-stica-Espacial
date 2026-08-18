@@ -86,7 +86,7 @@
        se parte, el renglón nuevo empieza por la cifra y no por un «·» suelto */
     .hero-stats span:not(:last-child)::after{content:"·";color:var(--line);margin:0 9px}
 
-    /* ---- Contenido que se desbloquea con la medalla de «Falla Temporal» ---- */
+    /* ---- Contenido que se desbloquea con la medalla de «Práctica 47» ---- */
     /* Los iconos van incrustados como SVG: ni una petición más ni un archivo suelto. */
     :root{--candado:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2352e7ff' stroke-width='1.7' stroke-linecap='round'%3E%3Crect x='4.8' y='10.6' width='14.4' height='9.6' rx='1.7'/%3E%3Cpath d='M8.4 10.6V7.6a3.6 3.6 0 0 1 7.2 0v3'/%3E%3C/svg%3E");--medalla:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffb454' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.2 2.8h7.6l-2.7 6.4'/%3E%3Cpath d='M8.2 2.8l2.7 6.4'/%3E%3Ccircle cx='12' cy='15.5' r='5.5'/%3E%3C/svg%3E")}
 
@@ -198,11 +198,11 @@
 
       <div class="game-frame">
         <div class="game-topbar">
-          <span><i class="blinking-dot"></i> FALLA_TEMPORAL.SYS // SIMULACIÓN EMBEBIDA</span>
-          <a class="game-expand" href="fallatemporal.html" target="_blank" rel="noopener">ABRIR A PANTALLA COMPLETA ↗</a>
+          <span><i class="blinking-dot"></i> PRACTICA_47.SYS // SIMULACIÓN EMBEBIDA</span>
+          <a class="game-expand" href="practica47.html" target="_blank" rel="noopener">ABRIR A PANTALLA COMPLETA ↗</a>
         </div>
         <div class="game-viewport">
-          <iframe id="game-frame" src="fallatemporal.html" title="Falla Temporal: simulador narrativo de la historia del universo" loading="lazy" allow="fullscreen"></iframe>
+          <iframe id="game-frame" src="practica47.html" title="Práctica 47: simulador narrativo de la historia del universo" loading="lazy" allow="fullscreen"></iframe>
         </div>
         <div class="game-footbar">
           <span>4 ERAS · 20 ANOMALÍAS · 4 COMPONENTES POR RECUPERAR</span>
@@ -917,12 +917,12 @@
     })();
 
     /* ---------- CONTENIDO QUE SE DESBLOQUEA CON LA MEDALLA ---------- */
-    /* La medalla se consigue completando «Falla Temporal». El juego va dentro de
+    /* La medalla se consigue completando «Práctica 47». El juego va dentro de
        un iframe del mismo origen, así que ambos comparten localStorage y el
        evento storage avisa a esta página en cuanto se gana, sin recargar. */
     (function(){
       const CLAVE="orbita-medalla";
-      const COLA=" · COMPLETA «FALLA TEMPORAL» PARA DESBLOQUEAR";
+      const COLA=" · COMPLETA «PRÁCTICA 47» PARA DESBLOQUEAR";
 
       function conMedalla(){
         try{return localStorage.getItem(CLAVE)==="1"}
@@ -941,7 +941,7 @@
           n.disabled=cerrado;
           if(cerrado){
             n.setAttribute("aria-disabled","true");
-            n.title="Completa «Falla Temporal» para desbloquear";
+            n.title="Completa «Práctica 47» para desbloquear";
           }else{
             n.removeAttribute("aria-disabled");
             n.removeAttribute("title");

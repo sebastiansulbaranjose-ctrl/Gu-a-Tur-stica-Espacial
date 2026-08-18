@@ -17,7 +17,7 @@ python3 herramientas/localizar-imagenes.py
 Eso hace dos cosas, en este orden:
 
 1. Descarga las 138 imágenes a `img/`.
-2. Reescribe `index.html` y `fallatemporal.html` para que apunten a `img/…`.
+2. Reescribe `index.html` y `practica47.html` para que apunten a `img/…`.
 
 Tarda unos 3-4 minutos (hay una pausa de 0,6 s entre descargas por cortesía con
 los servidores de Wikimedia).
@@ -103,7 +103,7 @@ anotando cada descarga nueva según la hace. Ese archivo es lo que hace posible
 
 ```bash
 # ninguna URL externa de imagen debería quedar
-grep -oE 'https://(commons\.wikimedia|upload\.wikimedia|images\.unsplash)[^"]*' index.html fallatemporal.html | wc -l
+grep -oE 'https://(commons\.wikimedia|upload\.wikimedia|images\.unsplash)[^"]*' index.html practica47.html | wc -l
 
 # y todas las rutas locales deben existir
 python3 herramientas/localizar-imagenes.py --listar | wc -l

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Descarga a ./img todas las imágenes externas del proyecto y reescribe
-index.html y fallatemporal.html para que apunten a las copias locales.
+index.html y practica47.html para que apunten a las copias locales.
 
 Uso:
     python3 herramientas/localizar-imagenes.py            # descarga y reescribe
@@ -30,7 +30,7 @@ import urllib.request
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIR_IMG = os.path.join(RAIZ, "img")
 INVENTARIO = os.path.join(RAIZ, "herramientas", "inventario-imagenes.txt")
-ARCHIVOS = ["index.html", "fallatemporal.html"]
+ARCHIVOS = ["index.html", "practica47.html"]
 HOSTS = ("commons.wikimedia.org", "upload.wikimedia.org", "images.unsplash.com")
 PATRON = re.compile(r'https://(?:' + "|".join(h.replace(".", r"\.") for h in HOSTS) + r')[^"\s\\]+')
 

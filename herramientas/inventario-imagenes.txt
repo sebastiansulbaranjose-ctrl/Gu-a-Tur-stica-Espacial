@@ -13,7 +13,6 @@ Venus_globe.jpg                                             https://upload.wikim
 The_Earth_seen_from_Apollo_17.jpg                           https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg
 Blue_Marble_Western_Hemisphere.jpg                          https://upload.wikimedia.org/wikipedia/commons/6/61/Blue_Marble_Western_Hemisphere.jpg
 Top_of_Atmosphere.jpg                                       https://upload.wikimedia.org/wikipedia/commons/b/be/Top_of_Atmosphere.jpg
-Full_Moon_-201507310003HQ.jpg                               https://commons.wikimedia.org/wiki/Special:FilePath/Full_Moon_(201507310003HQ).jpg?width=900
 OSIRIS_Mars_true_color.jpg                                  https://upload.wikimedia.org/wikipedia/commons/0/02/OSIRIS_Mars_true_color.jpg
 Mars_Valles_Marineris.jpeg                                  https://upload.wikimedia.org/wikipedia/commons/5/56/Mars_Valles_Marineris.jpeg
 Olympus_Mons_alt.jpg                                        https://upload.wikimedia.org/wikipedia/commons/0/00/Olympus_Mons_alt.jpg
@@ -125,7 +124,6 @@ The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA-s_Solar_Dynamics_Observatory
 OSIRIS_Mars_true_color-2.jpg                                https://commons.wikimedia.org/wiki/Special:FilePath/OSIRIS_Mars_true_color.jpg?width=1100
 Jupiter_and_its_shrunken_Great_Red_Spot-2.jpg               https://commons.wikimedia.org/wiki/Special:FilePath/Jupiter_and_its_shrunken_Great_Red_Spot.jpg?width=1100
 Callisto-2.jpg                                              https://commons.wikimedia.org/wiki/Special:FilePath/Callisto.jpg?width=1100
-Full_Moon_-201507310003HQ-2.jpg                             https://commons.wikimedia.org/wiki/Special:FilePath/Full_Moon_(201507310003HQ).jpg?width=1100
 Top_of_Atmosphere-2.jpg                                     https://commons.wikimedia.org/wiki/Special:FilePath/Top_of_Atmosphere.jpg?width=1200
 Stromatolite_-Strelley_Pool_Formation-_Paleoarchean-_3.35-3.46_Ga.jpg  https://commons.wikimedia.org/wiki/Special:FilePath/Stromatolite_(Strelley_Pool_Formation,_Paleoarchean,_3.35-3.46_Ga;_East_Strelley_Greenstone_Belt,_Pilbara_Craton,_Western_Australia)_1_(17346619166).jpg?width=1100
 Banded_iron_formation.jpg                                   https://commons.wikimedia.org/wiki/Special:FilePath/Banded_iron_formation.jpg?width=1100

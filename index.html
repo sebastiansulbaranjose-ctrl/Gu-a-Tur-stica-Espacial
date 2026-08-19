@@ -176,23 +176,18 @@
     }
     .scale-console.es-premium .scale-data .eyebrow{color:var(--oro);text-shadow:0 0 14px rgba(var(--oro-rgb),.5)}
     .scale-console.es-premium .fact-card{border-color:rgba(var(--oro-rgb),.35);background:var(--oro-tenue)}
+    /* La mitad derecha de la consola se quedaba con los azules y morados
+       del catálogo normal, así que estos dos objetos no parecían
+       desbloqueados por más borde dorado que tuviera el marco. */
+    .scale-console.es-premium .scale-stats div{border-color:rgba(var(--oro-rgb),.32);background:rgba(var(--oro-rgb),.05)}
+    .scale-console.es-premium .scale-stats dt{color:#c8a97c}
+    .scale-console.es-premium .scale-stats dd{color:var(--oro)}
+    .scale-console.es-premium .fact-card span{color:#ffd9a0}
+    .scale-console.es-premium .scale-data h3{text-shadow:0 0 26px rgba(var(--oro-rgb),.3)}
+    .scale-console.es-premium .scale-btn{border-color:rgba(var(--oro-rgb),.4);color:var(--oro)}
+    .scale-console.es-premium .scale-bar-fill,
+    .scale-console.es-premium #scale-bar-fill{background:linear-gradient(90deg,var(--oro-hondo),var(--oro))}
 
-    /* --- 3. anomalías de nivel 5 --- */
-    .anomaly-card.es-premium{
-      border-color:rgba(var(--oro-rgb),.5);
-      background:linear-gradient(145deg,rgba(46,31,12,.72),rgba(12,9,24,.72));
-      box-shadow:0 0 32px rgba(var(--oro-rgb),.14);
-    }
-    .anomaly-card.es-premium:hover{
-      border-color:var(--oro);
-      box-shadow:0 0 46px rgba(var(--oro-rgb),.3);
-    }
-    .anomaly-card.es-premium .anomaly-id{color:var(--oro)}
-    .anomaly-card.es-premium .risk-badge{
-      background:linear-gradient(135deg,var(--oro),var(--oro-hondo));color:#1a1204;border-color:transparent;
-    }
-    /* el sello va arriba a la derecha para no chocar con el código del expediente */
-    .anomaly-card.es-premium .premium-sello{left:auto;right:14px;top:14px}
 
     @media (prefers-reduced-motion:reduce){
       .premium-brillo::after{animation:none;opacity:0}
@@ -213,6 +208,17 @@
     .anomaly-card.bloqueada::after{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2352e7ff' stroke-width='1.7' stroke-linecap='round'%3E%3Crect x='4.8' y='10.6' width='14.4' height='9.6' rx='1.7'/%3E%3Cpath d='M8.4 10.6V7.6a3.6 3.6 0 0 1 7.2 0v3'/%3E%3C/svg%3E") center 42%/44px no-repeat,rgba(4,6,20,.5)}
 
     /* satélites de la órbita exterior */
+    /* ---- exoplanetas del mapa estelar ---- */
+    /* Mismo tratamiento que las anomalías: la tarjeta tiene el tamaño
+       suficiente para el candado grande y el desenfoque. */
+    .planet-card.bloqueada{cursor:not-allowed}
+    .planet-card.bloqueada>*{filter:blur(7px) saturate(.3);opacity:.5}
+    .planet-card.bloqueada:hover{transform:none;border-color:var(--line);box-shadow:none}
+    /* aquí va ::before y no ::after: el ::after de la tarjeta ya dibuja el
+       anillo del planeta, y reutilizarlo dejaba el candado con su tamaño y su
+       rotación */
+    .planet-card.bloqueada::before{content:"";position:absolute;inset:0;z-index:2;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2352e7ff' stroke-width='1.7' stroke-linecap='round'%3E%3Crect x='4.8' y='10.6' width='14.4' height='9.6' rx='1.7'/%3E%3Cpath d='M8.4 10.6V7.6a3.6 3.6 0 0 1 7.2 0v3'/%3E%3C/svg%3E") center 42%/44px no-repeat,rgba(4,6,20,.5)}
+
     .satellite-node.bloqueada{cursor:not-allowed}
     .satellite-node.bloqueada>img{filter:grayscale(1) brightness(.55);opacity:.4}
     .satellite-node.bloqueada::after{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2352e7ff' stroke-width='1.7' stroke-linecap='round'%3E%3Crect x='4.8' y='10.6' width='14.4' height='9.6' rx='1.7'/%3E%3Cpath d='M8.4 10.6V7.6a3.6 3.6 0 0 1 7.2 0v3'/%3E%3C/svg%3E") center/17px no-repeat}
@@ -1056,17 +1062,9 @@
         {name:"IC 1101",classification:"Galaxia Elíptica Supergigante",tier:"galactico",diameterKm:4000000*LY,diameterLabel:"≈ 4.000.000 de años luz de diámetro",fact:"Es una de las galaxias más grandes jamás descubiertas: unas 40 veces más ancha que la Vía Láctea.",image:"img/IC_1101.jpg"},
         {name:"Grupo Local",classification:"Agrupación de Galaxias",tier:"galactico",diameterKm:10000000*LY,diameterLabel:"≈ 10.000.000 de años luz de diámetro",fact:"Reúne más de 80 galaxias, dominado por la Vía Láctea y Andrómeda.",image:"img/Local_Group_and_nearest_galaxies.jpg"},
         {name:"Supercúmulo de Laniakea",classification:"Supercúmulo de Galaxias",tier:"cosmico",diameterKm:520000000*LY,diameterLabel:"≈ 520.000.000 de años luz de diámetro",fact:"Su nombre significa «cielo inconmensurable» en hawaiano y contiene unas 100.000 galaxias, incluida la Vía Láctea.",image:"img/07-Laniakea_-LofE07240.png",
-        gallery:[
-          {src:"img/07-Laniakea_-LofE07240.png",caption:"El supercúmulo completo: unas 100.000 galaxias fluyendo hacia un mismo punto"},
-          {src:"img/Local_Group_and_nearest_galaxies.jpg",caption:"El Grupo Local, el rincón de Laniakea donde está la Vía Láctea"},
-          {src:"img/Large-scale_structure_of_light_distribution_in_the_universe.jpg",caption:"La telaraña cósmica en la que Laniakea es solo un nudo"}
-        ]},
+        },
         {name:"Universo Observable",classification:"Límite Cósmico Observable",tier:"cosmico",diameterKm:93000000000*LY,diameterLabel:"≈ 93.000 millones de años luz de diámetro",fact:"Es solo la porción del universo cuya luz ha tenido tiempo de llegar hasta nosotros; el universo total podría ser muchísimo mayor.",image:"img/Observable_Universe_logarithmic_illustration_-circular_layout_english_annotations.png",
-        gallery:[
-          {src:"img/Observable_Universe_logarithmic_illustration_-circular_layout_english_annotations.png",caption:"Mapa logarítmico: del Sol al fondo de microondas en una sola imagen"},
-          {src:"img/Large-scale_structure_of_light_distribution_in_the_universe.jpg",caption:"Cómo se reparte la materia a la mayor escala que sabemos medir"},
-          {src:"img/Webb-s_First_Deep_Field_-adjusted.jpg",caption:"La mirada más profunda jamás obtenida, cerca del límite de lo observable"}
-        ]}
+        }
       ];
       const TIER_LABELS={planetario:"PLANETARIO",estelar:"ESTELAR",galactico:"GALÁCTICO",cosmico:"CÓSMICO"};
       const SUP_DIGITS={"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","-":"⁻"};
@@ -1177,25 +1175,6 @@
       if(pie)pie.textContent=(galeria[0]&&galeria[0].caption)||"";
     }
 
-    /* Las tarjetas de anomalía se repintan al filtrar, así que el aspecto hay
-       que reaplicarlo igual que hace el bloqueo, con su propio observador. */
-    (function(){
-      const rejilla=document.getElementById("anomaly-grid");
-      if(!rejilla)return;
-      function vestirTarjetas(){
-        rejilla.querySelectorAll('.anomaly-card[data-level="5"]').forEach(tarjeta=>{
-          /* Sin sello aquí: chocaba con la distancia del expediente y repetía
-             lo que ya dice la etiqueta dorada de riesgo. El borde en escuadra,
-             el fondo cálido y esa etiqueta bastan para distinguirlas. */
-          vestirPremium(tarjeta,true);
-        });
-      }
-      vestirTarjetas();
-      if("MutationObserver" in window){
-        new MutationObserver(vestirTarjetas).observe(rejilla,{childList:true});
-      }
-    })();
-
     /* ---------- CONTENIDO QUE SE DESBLOQUEA CON LA MEDALLA ---------- */
     /* La medalla se consigue completando «Práctica 47». El juego va dentro de
        un iframe del mismo origen, así que ambos comparten localStorage y el
@@ -1214,6 +1193,7 @@
 
       const nivel5=anomalies.filter(a=>a.level===5).length;
       const enHeo=satellites.filter(s=>s.orbit==="heo").length;
+      const exoplanetas=planets.filter(p=>p.kind==="exoplaneta").length;
 
       function marcar(nodos){
         nodos.forEach(n=>{
@@ -1262,9 +1242,11 @@
 
       function aplicar(){
         marcar(document.querySelectorAll('#anomaly-grid .anomaly-card[data-level="5"]'));
+        marcar(document.querySelectorAll('#planet-grid .planet-card[data-kind="exoplaneta"]'));
         marcar(document.querySelectorAll(".sat-orbit-anchor.orbit-heo .satellite-node"));
         revisarEscala();
         aviso("#anomalias",nivel5+" EXPEDIENTES DE NIVEL 5 BLOQUEADOS");
+        aviso("#mapa",exoplanetas+" EXOPLANETAS BLOQUEADOS");
         aviso("#escalas-universo","LAS MAGNITUDES CÓSMICAS ESTÁN BLOQUEADAS");
         aviso("#radar-satelital",enHeo+" SATÉLITES DE ÓRBITA HEO BLOQUEADOS");
       }
@@ -1278,6 +1260,14 @@
         new MutationObserver(()=>{
           marcar(document.querySelectorAll('#anomaly-grid .anomaly-card[data-level="5"]'));
         }).observe(rejilla,{childList:true});
+      }
+      /* el mapa estelar se vuelve a pintar entero cada vez que se cambia de
+         filtro, así que hay que remarcar los exoplanetas después */
+      const mapa=document.getElementById("planet-grid");
+      if(mapa&&"MutationObserver" in window){
+        new MutationObserver(()=>{
+          marcar(document.querySelectorAll('#planet-grid .planet-card[data-kind="exoplaneta"]'));
+        }).observe(mapa,{childList:true});
       }
       const esfera=document.getElementById("scale-sphere");
       if(esfera&&"MutationObserver" in window){

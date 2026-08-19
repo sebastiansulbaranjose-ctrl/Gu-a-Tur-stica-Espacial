@@ -124,7 +124,7 @@
       background:linear-gradient(135deg,var(--oro),var(--oro-hondo));
       box-shadow:0 0 18px rgba(var(--oro-rgb),.5);
     }
-    .premium-sello::before{content:"";width:12px;height:12px;background:var(--medalla) center/contain no-repeat;filter:brightness(.25)}
+    .premium-sello::before{content:"";width:15px;height:15px;background:var(--medalla) center/contain no-repeat}
     .es-premium .premium-sello{display:inline-flex}
 
     /* --- galería de miniaturas --- */
@@ -200,11 +200,11 @@
 
     /* ---- Contenido que se desbloquea con la medalla de «Práctica 47» ---- */
     /* Los iconos van incrustados como SVG: ni una petición más ni un archivo suelto. */
-    :root{--candado:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2352e7ff' stroke-width='1.7' stroke-linecap='round'%3E%3Crect x='4.8' y='10.6' width='14.4' height='9.6' rx='1.7'/%3E%3Cpath d='M8.4 10.6V7.6a3.6 3.6 0 0 1 7.2 0v3'/%3E%3C/svg%3E");--medalla:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffb454' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.2 2.8h7.6l-2.7 6.4'/%3E%3Cpath d='M8.2 2.8l2.7 6.4'/%3E%3Ccircle cx='12' cy='15.5' r='5.5'/%3E%3C/svg%3E")}
+    :root{--candado:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2352e7ff' stroke-width='1.7' stroke-linecap='round'%3E%3Crect x='4.8' y='10.6' width='14.4' height='9.6' rx='1.7'/%3E%3Cpath d='M8.4 10.6V7.6a3.6 3.6 0 0 1 7.2 0v3'/%3E%3C/svg%3E");--medalla:url("img/insignia-comandante.png")}
 
     /* aviso en la cabecera de la sección */
     .aviso-medalla{display:inline-flex;align-items:center;gap:10px;margin:16px 0 0;padding:9px 15px;border:1px solid rgba(255,180,84,.32);background:rgba(255,180,84,.06);color:#ffc98a;font-size:.56rem;letter-spacing:1.2px;line-height:1.6}
-    .aviso-medalla::before{content:"";width:17px;height:17px;flex:none;background:var(--medalla) center/contain no-repeat}
+    .aviso-medalla::before{content:"";width:21px;height:21px;flex:none;background:var(--medalla) center/contain no-repeat;filter:drop-shadow(0 0 4px rgba(255,180,84,.4))}
 
     /* anomalías de nivel 5: se difuminan los hijos, nunca la tarjeta, para que
        el candado del pseudoelemento quede nítido por encima */
@@ -282,11 +282,12 @@
        cabecera aun estando invisibles */
     .insignia[hidden],.mando[hidden]{display:none}
 
-    .insignia{position:relative;display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;flex:none;border-radius:50%;color:var(--oro);border:1px solid rgba(var(--oro-rgb),.42);background:radial-gradient(circle at 50% 32%,rgba(var(--oro-rgb),.26),rgba(var(--oro-rgb),.04) 72%);box-shadow:0 0 14px rgba(var(--oro-rgb),.26),inset 0 0 10px rgba(var(--oro-rgb),.12)}
-    .insignia svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-    /* aro que respira: recuerda que la insignia está ahí sin pedir atención */
-    .insignia::before{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(var(--oro-rgb),.3);animation:insignia-pulso 3.6s ease-in-out infinite}
-    @keyframes insignia-pulso{0%,100%{opacity:.14;transform:scale(1)}50%{opacity:.5;transform:scale(1.12)}}
+    .insignia{position:relative;display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;flex:none}
+    .insignia img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 0 5px rgba(var(--oro-rgb),.3))}
+    /* halo que respira, no un aro: la insignia es un escudo con punta y un
+       círculo alrededor le quedaba encima */
+    .insignia::before{content:"";position:absolute;inset:-7px;border-radius:50%;z-index:-1;background:radial-gradient(circle,rgba(var(--oro-rgb),.24),transparent 68%);animation:insignia-pulso 3.6s ease-in-out infinite}
+    @keyframes insignia-pulso{0%,100%{opacity:.35;transform:scale(.92)}50%{opacity:1;transform:scale(1.1)}}
     /* solo al ganarla en esta misma visita, cuando el juego avisa por storage */
     .insignia.recien{animation:insignia-llega .9s cubic-bezier(.2,1.2,.3,1)}
     @keyframes insignia-llega{0%{transform:scale(.2) rotate(-40deg);opacity:0}62%{transform:scale(1.16) rotate(5deg);opacity:1}100%{transform:none}}
@@ -342,7 +343,7 @@
 </head>
 <body>
   <div class="star-field" aria-hidden="true"></div><div class="nebula nebula-one" aria-hidden="true"></div><div class="nebula nebula-two" aria-hidden="true"></div>
-  <header class="site-header"><div class="brand-zona"><a class="brand" href="#inicio" aria-label="ORBITA, ir al inicio"><span class="brand-mark">◌</span><span>ORB<span>IT</span>A</span></a><span class="insignia" id="insignia-medalla" role="img" hidden aria-label="Medalla: misión completada" data-tip="Misión completada"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8.2 2.8h7.6l-2.7 6.4"/><path d="M8.2 2.8l2.7 6.4"/><circle cx="12" cy="15.5" r="5.5"/><path d="M12 12.6l1.05 2.13 2.35.34-1.7 1.66.4 2.34L12 17.99l-2.1 1.08.4-2.34-1.7-1.66 2.35-.34z"/></svg></span><button type="button" class="mando" id="mando-tema" hidden aria-pressed="false" data-tip="Cambia la paleta del sitio"><span class="mando-riel" aria-hidden="true"><i></i></span><span class="mando-texto">MODO COMANDANTE</span></button></div><nav aria-label="Navegación principal"><a href="#cronica">CRÓNICA</a><a href="#mapa">MAPA ESTELAR</a><a href="#biometria">BIOMETRÍA</a><a href="#radar-satelital">SATÉLITES</a><a href="#escalas-universo">ESCALAS</a><a href="#anomalias">ANOMALÍAS</a><a href="#entrenamiento">SIMULADOR</a></nav><div class="signal"><i></i> SEÑAL ESTABLE</div></header>
+  <header class="site-header"><div class="brand-zona"><a class="brand" href="#inicio" aria-label="ORBITA, ir al inicio"><span class="brand-mark">◌</span><span>ORB<span>IT</span>A</span></a><span class="insignia" id="insignia-medalla" role="img" hidden aria-label="Medalla: misión completada" data-tip="Misión completada"><img src="img/insignia-comandante.png" alt="" width="30" height="30" decoding="async"></span><button type="button" class="mando" id="mando-tema" hidden aria-pressed="false" data-tip="Cambia la paleta del sitio"><span class="mando-riel" aria-hidden="true"><i></i></span><span class="mando-texto">MODO COMANDANTE</span></button></div><nav aria-label="Navegación principal"><a href="#cronica">CRÓNICA</a><a href="#mapa">MAPA ESTELAR</a><a href="#biometria">BIOMETRÍA</a><a href="#radar-satelital">SATÉLITES</a><a href="#escalas-universo">ESCALAS</a><a href="#anomalias">ANOMALÍAS</a><a href="#entrenamiento">SIMULADOR</a></nav><div class="signal"><i></i> SEÑAL ESTABLE</div></header>
   <main id="inicio">
     <section class="hero" aria-labelledby="hero-title"><div class="hero-boot" id="hero-boot" role="status" aria-live="polite" hidden><p class="boot-line" data-paso="1"><i>&gt;</i> INICIANDO SISTEMAS<b></b></p><p class="boot-line" data-paso="2"><i>&gt;</i> CALIBRANDO SENSORES DE PROFUNDIDAD<b></b></p><p class="boot-line" data-paso="3"><i>&gt;</i> CONEXIÓN ESTABLECIDA</p><div class="boot-bar" aria-hidden="true"><span></span></div><p class="boot-skip" aria-hidden="true">PULSA EN CUALQUIER SITIO PARA OMITIR</p></div><div class="hero-parallax" aria-hidden="true"><div class="hero-stars depth-far"></div><div class="hero-stars depth-mid"></div><div class="hero-stars depth-near"></div></div><div class="hero-copy"><p class="eyebrow">GUÍA TURÍSTICA ESPACIAL // EDICIÓN 01</p><h1 id="hero-title" aria-label="EL UNIVERSO ES TU DESTINO."><span class="tw-line">EL UNIVERSO</span><br><span class="tw-line accent">ES TU DESTINO.</span></h1><p class="hero-description">Activa el navegador de a bordo. Recorre 13.800 millones de años de historia, inspecciona nuevos mundos y demuestra lo que sabes.</p><a class="primary-button" href="#cronica">INICIAR RECORRIDO <span>→</span></a><p class="hero-stats"><span><strong id="stat-mundos">21</strong> mundos documentados</span><span><strong id="stat-satelites">15</strong> satélites rastreados</span><span><strong id="stat-amenazas">12</strong> amenazas catalogadas</span></p></div><div class="hero-radar" aria-hidden="true"><div class="radar-planet" id="radar-planet"><canvas id="planeta-lienzo"></canvas></div><div class="radar-label top">SECTOR // SOL-01</div><div class="radar-grid"></div><div class="radar-orbit orbit-one"></div><div class="radar-orbit orbit-two"></div><div class="radar-orbit orbit-three"></div><div class="radar-sweep"></div><div class="radar-core"></div><span class="radar-dot dot-one"></span><span class="radar-dot dot-two"></span><span class="radar-dot dot-three"></span><div class="radar-label bottom">OBJETOS RASTREADOS: <span id="radar-count">48</span></div></div><div class="scroll-cue"><span></span> DESLIZA PARA NAVEGAR</div></section>
 

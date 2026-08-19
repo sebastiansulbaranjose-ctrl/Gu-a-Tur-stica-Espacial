@@ -145,3 +145,4 @@ U.S._Department_of_Energy_-_Science_-_114_036_002_-14281232250.jpg  https://comm
 # levantadas y reducción a 256 px) para que se lea a tamaño de icono. Al no
 # tener URL, el modo --rehacer no puede regenerarla: el original está en el
 # historial de git junto a este commit.
+FullMoon2010.jpg                                            https://commons.wikimedia.org/wiki/Special:FilePath/FullMoon2010.jpg?width=1100

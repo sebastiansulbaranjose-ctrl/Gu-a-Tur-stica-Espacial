@@ -320,6 +320,54 @@
     z-index:2;
   }
 
+  /* ---------- Barrido de detección al entrar en una época ---------- */
+  /* Toma el color de la época, como el resto del radar, para que no parezca
+     un elemento pegado de otro sitio. */
+  .ft-scan{
+    position:absolute;inset:0;z-index:6;
+    display:grid;place-items:center;
+    pointer-events:none;opacity:0;transition:opacity .4s ease;
+  }
+  .ft-scan.is-on{opacity:1;}
+  /* ecos concéntricos saliendo del centro, como un sonar */
+  .ft-scan-eco{
+    position:absolute;top:50%;left:50%;width:14%;aspect-ratio:1;margin:-7% 0 0 -7%;
+    border-radius:50%;border:1px solid var(--era-accent,#52e7ff);opacity:0;
+  }
+  .ft-scan.is-on .ft-scan-eco{animation:ft-eco 1.9s ease-out infinite;}
+  .ft-scan.is-on .ft-scan-eco:nth-of-type(2){animation-delay:.46s;}
+  .ft-scan.is-on .ft-scan-eco:nth-of-type(3){animation-delay:.92s;}
+  @keyframes ft-eco{
+    0%  {transform:scale(.3);opacity:.85;}
+    70% {opacity:.3;}
+    100%{transform:scale(6.4);opacity:0;}
+  }
+  .ft-scan-texto{
+    position:relative;z-index:2;margin:0;
+    font-size:.6rem;letter-spacing:2.2px;
+    color:var(--era-accent,#52e7ff);text-shadow:0 0 14px currentColor;
+    background:rgba(4,6,20,.6);padding:9px 17px;
+    border:1px solid rgba(130,200,255,.28);
+  }
+
+  /* Revelado una a una. Va con CSS y no con GSAP a propósito: la librería
+     viene de un CDN y su sustituto de emergencia ignora los retardos, así que
+     sin conexión las cinco aparecían de golpe. */
+  .ft-anomaly.por-detectar{opacity:0;transform:scale(.3);pointer-events:none;}
+
+  /* El destello es un elemento aparte: ::before y ::after ya los usa la propia
+     anomalía para su anillo y su núcleo, y pisarlos la deformaría. */
+  .ft-ping{
+    position:absolute;inset:-30%;border-radius:50%;
+    border:1px solid var(--dot-color,#52e7ff);
+    pointer-events:none;z-index:4;
+    animation:ft-deteccion .75s ease-out forwards;
+  }
+  @keyframes ft-deteccion{
+    0%  {transform:scale(.4);opacity:.95;}
+    100%{transform:scale(2.6);opacity:0;}
+  }
+
   .ft-anomaly{
     position:absolute;
     width:38px;height:38px;
@@ -631,7 +679,9 @@
     text-shadow:0 0 8px var(--dot-color,var(--purple));
     -webkit-tap-highlight-color:transparent;touch-action:manipulation;
     cursor:pointer;
-    transition:transform .28s cubic-bezier(.22,1,.36,1),filter .28s ease;
+    /* opacity va aquí y no en la regla de arriba: esta es posterior y
+       redefine transition entera, así que allí quedaba anulada. */
+    transition:transform .28s cubic-bezier(.22,1,.36,1),filter .28s ease,opacity .34s ease;
     animation:none;
   }
   /* anillo neón exterior con corte tipo HUD */
@@ -1378,6 +1428,10 @@
         <div class="ft-radar-rings" aria-hidden="true"></div>
         <div class="ft-radar-sweep" id="radar-sweep" aria-hidden="true"></div>
         <div class="ft-radar-core" aria-hidden="true"></div>
+        <div class="ft-scan" id="radar-scan" aria-hidden="true">
+          <span class="ft-scan-eco"></span><span class="ft-scan-eco"></span><span class="ft-scan-eco"></span>
+          <p class="ft-scan-texto" id="radar-scan-texto">RASTREANDO</p>
+        </div>
       </div>
     </div>
 
@@ -2514,6 +2568,41 @@ if (typeof window.gsap === "undefined") {
     sweepTween = null;
   }
 
+  /* Ritmo del barrido de detección. Se ve cuatro veces por partida, una por
+     época, así que va justo de tiempo: ni tan corto que no se lea, ni tan
+     largo que canse al repetirse. */
+  const DURACION_BARRIDO = 1700;   /* ms buscando, con el radar vacío */
+  const ESPERA_ENTRE_SENALES = 0.34;  /* s entre una anomalía y la siguiente */
+
+  function barridoDeDeteccion(era, alTerminar) {
+    const capa = document.getElementById("radar-scan");
+    const texto = document.getElementById("radar-scan-texto");
+    const total = era.subtopics.length;
+
+    if (!capa) {                       /* sin la capa, todo sigue como antes */
+      spawnEraAnomalies(era);
+      alTerminar();
+      return;
+    }
+
+    hudStatus.textContent = "BARRIDO EN CURSO";
+    texto.textContent = "RASTREANDO ANOMALÍAS";
+    capa.classList.add("is-on");
+
+    window.setTimeout(() => {
+      texto.textContent = `${total} SEÑALES LOCALIZADAS`;
+    }, DURACION_BARRIDO * 0.62);
+
+    window.setTimeout(() => {
+      capa.classList.remove("is-on");
+      /* las anomalías se crean cuando el barrido ya las ha "encontrado" */
+      spawnEraAnomalies(era);
+      /* el radar no queda disponible hasta que la última ha aparecido */
+      const revelado = (ESPERA_ENTRE_SENALES * (total - 1) + 0.42) * 1000;
+      window.setTimeout(alTerminar, revelado + 120);
+    }, DURACION_BARRIDO);
+  }
+
   function startEra(index) {
     currentEraIndex = index;
     currentEra = ERAS[index];
@@ -2526,11 +2615,16 @@ if (typeof window.gsap === "undefined") {
     updateTimelineNodes();
     applyEraTheme(currentEra);
     renderEraContext(currentEra);
-    spawnEraAnomalies(currentEra);
     startSweep();
-    /* Vista previa de contexto: exploración libre de la época, sin evaluación,
-       antes de enfrentarse a ninguna pregunta. */
-    window.setTimeout(openContextModal, 520);
+    /* Primero el radar busca, después revela las señales una a una y solo al
+       final queda disponible. La ficha de contexto se abre cuando termina,
+       para que el barrido no ocurra detrás de un diálogo. */
+    barridoDeDeteccion(currentEra, () => {
+      hudStatus.textContent = "RASTREANDO SEÑALES TEMPORALES";
+      /* Vista previa de contexto: exploración libre de la época, sin evaluación,
+         antes de enfrentarse a ninguna pregunta. */
+      openContextModal();
+    });
   }
 
   /* Cada anomalía recibe su propio anillo orbital: así nunca se solapan y
@@ -2593,11 +2687,20 @@ if (typeof window.gsap === "undefined") {
       orbit.appendChild(pos);
       radarDisc.appendChild(orbit);
 
-      gsap.fromTo(
-        el,
-        { scale: 0, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.4, delay: orderIndex * 0.08, ease: "back.out(2)" }
-      );
+      /* Aparecen de una en una, no todas de golpe: el retardo entre ellas es
+         el que hace que se lean como detecciones sucesivas del radar. */
+      el.classList.add("por-detectar");
+      /* Se fuerza el cálculo del estado oculto antes de quitarlo: sin esto la
+         primera, cuyo retardo es cero, aparecía de golpe en vez de fundirse. */
+      void el.offsetWidth;
+      window.setTimeout(() => {
+        el.classList.remove("por-detectar");
+        const ping = document.createElement("span");
+        ping.className = "ft-ping";
+        el.appendChild(ping);
+        window.setTimeout(() => ping.remove(), 800);
+        hudStatus.textContent = `SEÑAL ${orderIndex + 1} DE ${order.length} DETECTADA`;
+      }, ESPERA_ENTRE_SENALES * orderIndex * 1000);
     });
   }
 

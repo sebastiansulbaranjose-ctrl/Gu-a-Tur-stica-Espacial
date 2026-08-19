@@ -608,8 +608,7 @@
     fill:currentColor;
     filter:drop-shadow(0 0 6px currentColor);
   }
-  .ft-rocket-icon.is-large{width:46px;height:46px;}
-  .ft-rocket-icon .ft-rocket-window{fill:#04101e;opacity:.85;}
+    .ft-rocket-icon .ft-rocket-window{fill:#04101e;opacity:.85;}
   .ft-rocket-icon .ft-rocket-flame{fill:var(--amber);}
   .ft-timeline-ship{
     clip-path:none;
@@ -942,17 +941,17 @@
     background:linear-gradient(140deg,rgba(255,180,84,.11),rgba(174,115,255,.07));
     box-shadow:0 0 34px rgba(255,180,84,.22),inset 0 0 26px rgba(255,180,84,.05);
   }
+  /* La insignia es un escudo con punta y trae su propio marco: el disco
+     dorado que había antes le quedaba encima. El resplandor se anima con
+     drop-shadow, que sigue la silueta recortada en vez de la caja. */
   .ft-badge-medal{
-    width:86px;height:86px;display:grid;place-items:center;border-radius:50%;
-    color:var(--amber);
-    background:radial-gradient(circle at 36% 30%,rgba(255,255,255,.22),rgba(6,10,26,.9) 68%);
-    border:2px solid var(--amber);
-    box-shadow:0 0 26px rgba(255,180,84,.45),inset 0 0 18px rgba(255,180,84,.16);
+    width:96px;height:96px;flex:none;display:grid;place-items:center;
     animation:ft-badge-glow 2.8s ease-in-out infinite;
   }
+  .ft-badge-medal img{width:100%;height:100%;object-fit:contain;display:block;}
   @keyframes ft-badge-glow{
-    0%,100%{box-shadow:0 0 26px rgba(255,180,84,.45),inset 0 0 18px rgba(255,180,84,.16);}
-    50%{box-shadow:0 0 40px rgba(255,180,84,.7),inset 0 0 24px rgba(255,180,84,.24);}
+    0%,100%{filter:drop-shadow(0 0 9px rgba(255,180,84,.42));}
+    50%{filter:drop-shadow(0 0 18px rgba(255,180,84,.78));}
   }
   .ft-badge-rank{margin:0 0 6px;font:700 .48rem var(--display);letter-spacing:1.6px;color:var(--amber);}
   .ft-badge-name{margin:0 0 11px;font-size:clamp(1.3rem,3.4vw,2rem);letter-spacing:-.8px;color:#fff;}
@@ -1587,11 +1586,7 @@
         <!-- Insignia de Explorador Temporal -->
         <div class="ft-badge" id="explorer-badge">
           <div class="ft-badge-medal" aria-hidden="true">
-            <svg viewBox="0 0 24 24" class="ft-rocket-icon is-large" focusable="false">
-              <path d="M12 2c2.6 2.5 4.1 6 4.1 9.6v3.1l2 2c.2.2.3.4.3.7v2.9c0 .5-.5.8-.9.6l-3.2-1.8-.4.4c-.2.2-.5.4-.8.4h-1.2l-.4 1.4c-.1.3-.4.5-.7.5s-.6-.2-.7-.5l-.4-1.4H8.5c-.3 0-.6-.1-.8-.4l-.4-.4-3.2 1.8c-.4.2-.9-.1-.9-.6v-2.9c0-.3.1-.5.3-.7l2-2v-3.1C5.5 8 7 4.5 9.6 2L12 2z"/>
-              <circle cx="12" cy="9.4" r="2.1" class="ft-rocket-window"/>
-              <path d="M10.4 19.8c.4 1.1 1 2 1.6 2.7.6-.7 1.2-1.6 1.6-2.7-.5.2-1 .3-1.6.3s-1.1-.1-1.6-.3z" class="ft-rocket-flame"/>
-            </svg>
+            <img src="img/insignia-comandante.png" alt="" width="96" height="96" decoding="async">
           </div>
           <div class="ft-badge-data">
             <p class="ft-badge-rank">INSIGNIA OTORGADA</p>

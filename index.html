@@ -86,6 +86,118 @@
        se parte, el renglón nuevo empieza por la cifra y no por un «·» suelto */
     .hero-stats span:not(:last-child)::after{content:"·";color:var(--line);margin:0 9px}
 
+    /* ================= TRATAMIENTO PREMIUM =================
+       Lo que se abre con la medalla se reconoce por el mismo lenguaje en las
+       tres secciones: oro en vez del cian del sitio, esquinas en escuadra,
+       un brillo que recorre la superficie y el sello de acceso concedido.
+       El oro no es arbitrario: es el color de la medalla que hay que ganar. */
+    :root{--oro:#ffc266;--oro-hondo:#ff9d3d;--oro-tenue:rgba(255,194,102,.16)}
+
+    /* --- borde en escuadra, común a los tres --- */
+    .es-premium{position:relative;border-color:rgba(255,194,102,.55)!important}
+    .es-premium::before,.es-premium::after{
+      content:"";position:absolute;width:22px;height:22px;pointer-events:none;z-index:4;
+      border:2px solid var(--oro);
+    }
+    .es-premium::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+    .es-premium::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+
+    /* --- brillo que recorre la superficie, lento --- */
+    .premium-brillo{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:3}
+    .premium-brillo::after{
+      content:"";position:absolute;top:-60%;left:-40%;width:26%;height:220%;
+      background:linear-gradient(100deg,transparent,rgba(255,194,102,.16),transparent);
+      transform:rotate(14deg);
+      animation:premium-pase 5.5s ease-in-out infinite;
+    }
+    @keyframes premium-pase{
+      0%,62%{transform:translateX(0) rotate(14deg);opacity:0}
+      68%   {opacity:1}
+      100%  {transform:translateX(560%) rotate(14deg);opacity:0}
+    }
+
+    /* --- sello de acceso --- */
+    .premium-sello{
+      position:absolute;top:14px;left:14px;z-index:5;display:none;
+      align-items:center;gap:7px;padding:6px 11px;
+      font-size:.5rem;letter-spacing:1.6px;color:#1a1204;
+      background:linear-gradient(135deg,var(--oro),var(--oro-hondo));
+      box-shadow:0 0 18px rgba(255,194,102,.5);
+    }
+    .premium-sello::before{content:"";width:12px;height:12px;background:var(--medalla) center/contain no-repeat;filter:brightness(.25)}
+    .es-premium .premium-sello{display:inline-flex}
+
+    /* --- galería de miniaturas --- */
+    /* a la derecha, no centrada: la etiqueta de órbita ocupa la esquina
+       izquierda del visor de satélites y se solapaban */
+    .premium-galeria{position:absolute;bottom:12px;right:12px;display:none;gap:8px;z-index:5}
+    .es-premium .premium-galeria{display:flex}
+    .premium-galeria button{
+      width:44px;height:32px;padding:0;overflow:hidden;
+      border:1px solid rgba(255,194,102,.4);background:#0a1024;
+      opacity:.62;transition:opacity .2s ease,border-color .2s ease,box-shadow .2s ease;
+    }
+    /* muchas imágenes astronómicas son casi negras y a 44 px parecían
+       recuadros vacíos; se realzan solo en la miniatura */
+    .premium-galeria button img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(1.4) contrast(1.08)}
+    .premium-galeria button:hover,.premium-galeria button:focus-visible{opacity:1;border-color:var(--oro)}
+    .premium-galeria button.is-selected{opacity:1;border-color:var(--oro);box-shadow:0 0 16px rgba(255,194,102,.55)}
+    .premium-pie{
+      position:absolute;bottom:52px;left:50%;transform:translateX(-50%);z-index:5;
+      display:none;margin:0;max-width:82%;text-align:center;
+      font-size:.54rem;letter-spacing:.7px;line-height:1.6;color:#ffd9a0;
+      background:rgba(6,9,24,.78);padding:6px 12px;
+    }
+    .es-premium .premium-pie{display:block}
+
+    /* --- 1. modal de satélite en órbita HEO --- */
+    .satellite-frame.es-premium{
+      border-color:var(--oro);
+      box-shadow:0 0 60px rgba(255,194,102,.28),inset 0 0 90px rgba(255,157,61,.05);
+    }
+    .satellite-frame.es-premium .satellite-visual{
+      background:radial-gradient(circle at center,rgba(255,194,102,.16),transparent 62%),
+                 repeating-linear-gradient(0deg,transparent 0 29px,rgba(255,194,102,.05) 30px 31px);
+      border-color:rgba(255,194,102,.32);
+    }
+    .satellite-frame.es-premium .satellite-orbit-tag{
+      background:linear-gradient(135deg,var(--oro),var(--oro-hondo));color:#1a1204;border-color:transparent;
+    }
+    .satellite-frame.es-premium .eyebrow{color:var(--oro);text-shadow:0 0 14px rgba(255,194,102,.5)}
+    .satellite-frame.es-premium .fact-card{border-color:rgba(255,194,102,.35);background:var(--oro-tenue)}
+
+    /* --- 2. objeto de magnitud cósmica en el comparador --- */
+    .scale-console.es-premium{border-color:rgba(255,194,102,.5)}
+    .scale-console.es-premium .scale-visual{
+      border-color:rgba(255,194,102,.4);
+      background:radial-gradient(circle at center,rgba(255,194,102,.14),transparent 62%),
+                 repeating-linear-gradient(0deg,transparent 0 29px,rgba(255,194,102,.055) 30px 31px),
+                 repeating-linear-gradient(90deg,transparent 0 29px,rgba(255,194,102,.055) 30px 31px);
+    }
+    .scale-console.es-premium .scale-data .eyebrow{color:var(--oro);text-shadow:0 0 14px rgba(255,194,102,.5)}
+    .scale-console.es-premium .fact-card{border-color:rgba(255,194,102,.35);background:var(--oro-tenue)}
+
+    /* --- 3. anomalías de nivel 5 --- */
+    .anomaly-card.es-premium{
+      border-color:rgba(255,194,102,.5);
+      background:linear-gradient(145deg,rgba(46,31,12,.72),rgba(12,9,24,.72));
+      box-shadow:0 0 32px rgba(255,194,102,.14);
+    }
+    .anomaly-card.es-premium:hover{
+      border-color:var(--oro);
+      box-shadow:0 0 46px rgba(255,194,102,.3);
+    }
+    .anomaly-card.es-premium .anomaly-id{color:var(--oro)}
+    .anomaly-card.es-premium .risk-badge{
+      background:linear-gradient(135deg,var(--oro),var(--oro-hondo));color:#1a1204;border-color:transparent;
+    }
+    /* el sello va arriba a la derecha para no chocar con el código del expediente */
+    .anomaly-card.es-premium .premium-sello{left:auto;right:14px;top:14px}
+
+    @media (prefers-reduced-motion:reduce){
+      .premium-brillo::after{animation:none;opacity:0}
+    }
+
     /* ---- Contenido que se desbloquea con la medalla de «Práctica 47» ---- */
     /* Los iconos van incrustados como SVG: ni una petición más ni un archivo suelto. */
     :root{--candado:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2352e7ff' stroke-width='1.7' stroke-linecap='round'%3E%3Crect x='4.8' y='10.6' width='14.4' height='9.6' rx='1.7'/%3E%3Cpath d='M8.4 10.6V7.6a3.6 3.6 0 0 1 7.2 0v3'/%3E%3C/svg%3E");--medalla:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffb454' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.2 2.8h7.6l-2.7 6.4'/%3E%3Cpath d='M8.2 2.8l2.7 6.4'/%3E%3Ccircle cx='12' cy='15.5' r='5.5'/%3E%3C/svg%3E")}
@@ -185,7 +297,7 @@
     <section class="star-map-section" id="mapa" aria-labelledby="map-title"><div class="section-heading map-heading"><div><p class="eyebrow">BASE DE DATOS // SISTEMAS CONOCIDOS</p><h2 id="map-title">El mapa estelar.</h2></div><p class="section-description">Explora los cuerpos celestes de nuestro sistema planetario en <mark>360°</mark>. Selecciona cualquier planeta para desplegar sus datos orbitales, composición atmosférica y fichas de exploración espacial en <mark>tiempo real</mark>.</p></div><div class="map-tools"><p><span class="blinking-dot"></span> <span id="planet-count">21</span> OBJETOS DISPONIBLES</p><div class="filter-group" aria-label="Filtrar planetas por tipo"><button class="filter-button is-selected" type="button" data-filter="all">TODOS</button><button class="filter-button" type="button" data-filter="rocoso">ROCOSOS</button><button class="filter-button" type="button" data-filter="gaseoso">GASEOSOS</button><button class="filter-button" type="button" data-filter="exoplaneta">EXOPLANETAS</button><button class="filter-button" type="button" data-filter="enano">PLANETAS ENANOS</button></div></div><div class="planet-grid" id="planet-grid" aria-live="polite"></div></section>
     <section class="biometria-section" id="biometria" aria-labelledby="biometria-title"><div class="section-heading"><div><p class="eyebrow">LABORATORIO DE A BORDO // FISIOLOGÍA ESPACIAL</p><h2 id="biometria-title">Calculadora biométrica<br>y fisiología espacial.</h2></div><p class="section-description">Ingresa tu peso y edad terrestres para simular el <mark>impacto de la gravedad</mark> sobre tu cuerpo en otros mundos. Descubre tu capacidad de salto, masa relativa y los requerimientos biológicos para sobrevivir en <mark>entornos extremos</mark>.</p></div><div class="bio-console"><div class="bio-inputs"><div class="bio-field"><label for="bio-weight">PESO EN LA TIERRA (KG)</label><div class="bio-number-control"><button class="bio-step" type="button" data-target="weight" data-step="-5" aria-label="Restar 5 kg">−5</button><input type="number" id="bio-weight" min="20" max="200" step="1" value="70"><button class="bio-step" type="button" data-target="weight" data-step="5" aria-label="Sumar 5 kg">+5</button></div><input type="range" id="bio-weight-slider" class="bio-slider" min="20" max="200" step="1" value="70" aria-label="Deslizador de peso en kilogramos"></div><div class="bio-field"><label for="bio-age">EDAD TERRESTRE (AÑOS)</label><div class="bio-number-control"><button class="bio-step" type="button" data-target="age" data-step="-1" aria-label="Restar 1 año">−1</button><input type="number" id="bio-age" min="1" max="120" step="1" value="30"><button class="bio-step" type="button" data-target="age" data-step="1" aria-label="Sumar 1 año">+1</button></div><input type="range" id="bio-age-slider" class="bio-slider" min="1" max="120" step="1" value="30" aria-label="Deslizador de edad en años"></div><div class="bio-field"><label>CUERPO CELESTE DE DESTINO</label><div class="bio-body-grid" id="bio-body-grid" role="group" aria-label="Seleccionar cuerpo celeste de destino"></div></div></div><div class="bio-readout"><div class="bio-gravity-scale"><div class="bio-gravity-label"><span>GRAVEDAD RELATIVA</span><strong id="bio-gravity-value">0.00 G</strong></div><div class="bio-gravity-bar" id="bio-gravity-bar"><span class="bio-gravity-fill" id="bio-gravity-fill"></span><span class="bio-gravity-earth-marker"></span></div></div><div class="bio-metrics" id="bio-metrics" aria-live="polite"></div><div class="bio-risk-card" id="bio-risk-card" aria-live="polite"><span class="bio-risk-label" id="bio-risk-label">RIESGO</span><p id="bio-risk-text"></p></div><section class="bio-sim" id="bio-sim" aria-live="polite"><h3 class="bio-sim-title">SIMULADOR BIOMÉTRICO Y FISIOLÓGICO</h3><div class="bio-sim-grid"><article class="bio-sim-card"><span class="bio-sim-label">ATLETISMO Y GRAVEDAD</span><div class="bio-sim-jump"><strong id="bio-sim-jump-value">0,00 m</strong><small>ALTURA DE SALTO ESTIMADA</small></div><p class="bio-sim-force" id="bio-sim-force"></p></article><article class="bio-sim-card"><span class="bio-sim-label">CALCULADORA DE EDAD PLANETARIA</span><p class="bio-sim-age" id="bio-sim-age-text"></p></article><article class="bio-sim-card bio-sim-suit"><span class="bio-sim-label">DIAGNÓSTICO DEL TRAJE ESPACIAL</span><ul class="bio-sim-suit-list" id="bio-sim-suit-list"></ul></article></div></section></div></div></section>
     <section class="satellite-section" id="radar-satelital" aria-labelledby="satellite-title"><div class="section-heading"><div><p class="eyebrow">RASTREADOR DE SATÉLITES // COBERTURA ORBITAL TERRESTRE</p><h2 id="satellite-title">Radar de<br>tráfico orbital.</h2></div><p class="section-description">Monitorea en <mark>tiempo real</mark> los satélites más importantes que orbitan la Tierra. Pasa el cursor sobre cualquier nodo orbital para fijar su trayectoria o haz clic para acceder a la <mark>telemetría oficial</mark> y misiones activas.</p></div><div class="sat-tools"><p><span class="blinking-dot"></span> 15 SATÉLITES RASTREADOS</p><div class="sat-legend"><span><i class="leo"></i>LEO // ÓRBITA BAJA</span><span><i class="meo"></i>MEO // ÓRBITA MEDIA</span><span><i class="geo"></i>GEO // ÓRBITA GEOESTACIONARIA</span><span><i class="heo"></i>HEO // ESPACIO PROFUNDO</span></div></div><div class="sat-console"><div class="sat-stage" id="sat-stage"><div class="sat-earth-wrap" id="sat-earth-wrap"><img src="img/The_Earth_seen_from_Apollo_17_with_transparent_background.png" alt="La Tierra vista desde el espacio" onerror="this.onerror=null;this.closest('.sat-earth-wrap').classList.add('is-fallback');"></div><div class="sat-radar-sweep" aria-hidden="true"></div><div class="sat-orbit-ring ring-leo" aria-hidden="true"></div><div class="sat-orbit-ring ring-meo" aria-hidden="true"></div><div class="sat-orbit-ring ring-geo" aria-hidden="true"></div><div class="sat-orbit-ring ring-heo" aria-hidden="true"></div></div></div></section>
-    <section class="scale-section" id="escalas-universo" aria-labelledby="scale-title"><div class="section-heading"><div><p class="eyebrow">COMPARADOR DE ESCALA CÓSMICA // DE LUNAS A GALAXIAS</p><h2 id="scale-title">Escalas del<br>cosmos.</h2></div><p class="section-description">Toma la Tierra como punto de partida y desplázate a través de <mark>cifras descomunales</mark>. Experimenta cómo la escala, la masa y la gravedad hacen temblar el tejido del espacio-tiempo a medida que te aproximas al <mark>Universo Observable</mark>.</p></div><div class="scale-tools"><p><span class="blinking-dot"></span> 22 OBJETOS EN PROGRESIÓN</p></div><div class="scale-console"><div class="scale-stage"><div class="scale-visual"><div class="scale-sphere-wrap" id="scale-sphere-wrap"><div class="scale-sphere tier-planetario" id="scale-sphere"><img id="scale-img" src="" alt="" loading="lazy" onerror="this.onerror=null;this.closest('.scale-sphere').classList.add('is-fallback');"></div></div><div class="scale-magnitude"><p class="scale-magnitude-number tier-planetario" id="scale-magnitude-number" data-text="1x">1x</p><p class="scale-magnitude-label" id="scale-magnitude-label">Punto de referencia: 1 vez el tamaño de la Tierra.</p></div></div><div class="scale-nav"><button type="button" class="scale-btn" id="scale-prev" aria-label="Objeto anterior">‹ ANTERIOR</button><div class="scale-progress"><span class="scale-count" id="scale-count">Objeto 01 de 22</span><div class="scale-bar"><div class="scale-bar-fill" id="scale-bar-fill"></div></div></div><button type="button" class="scale-btn" id="scale-next" aria-label="Objeto siguiente">SIGUIENTE ›</button></div></div><div class="scale-data"><p class="eyebrow" id="scale-classification">CLASIFICACIÓN</p><h3 id="scale-name">NOMBRE</h3><dl class="scale-stats"><div><dt>DIÁMETRO</dt><dd id="scale-diameter"></dd></div><div><dt>NIVEL DE MAGNITUD</dt><dd id="scale-tier"></dd></div></dl><div class="fact-card"><span>DATO COMPARATIVO</span><p id="scale-fact"></p></div></div></div></section>
+    <section class="scale-section" id="escalas-universo" aria-labelledby="scale-title"><div class="section-heading"><div><p class="eyebrow">COMPARADOR DE ESCALA CÓSMICA // DE LUNAS A GALAXIAS</p><h2 id="scale-title">Escalas del<br>cosmos.</h2></div><p class="section-description">Toma la Tierra como punto de partida y desplázate a través de <mark>cifras descomunales</mark>. Experimenta cómo la escala, la masa y la gravedad hacen temblar el tejido del espacio-tiempo a medida que te aproximas al <mark>Universo Observable</mark>.</p></div><div class="scale-tools"><p><span class="blinking-dot"></span> 22 OBJETOS EN PROGRESIÓN</p></div><div class="scale-console"><div class="scale-stage"><div class="scale-visual"><div class="scale-sphere-wrap" id="scale-sphere-wrap"><div class="scale-sphere tier-planetario" id="scale-sphere"><img id="scale-img" src="" alt="" loading="lazy" onerror="this.onerror=null;this.closest('.scale-sphere').classList.add('is-fallback');"></div></div><span class="premium-sello" aria-hidden="true">ACCESO CONCEDIDO</span><p class="premium-pie" id="scale-caption"></p><div class="premium-galeria" id="scale-gallery" role="tablist" aria-label="Galería del objeto"></div><div class="scale-magnitude"><p class="scale-magnitude-number tier-planetario" id="scale-magnitude-number" data-text="1x">1x</p><p class="scale-magnitude-label" id="scale-magnitude-label">Punto de referencia: 1 vez el tamaño de la Tierra.</p></div></div><div class="scale-nav"><button type="button" class="scale-btn" id="scale-prev" aria-label="Objeto anterior">‹ ANTERIOR</button><div class="scale-progress"><span class="scale-count" id="scale-count">Objeto 01 de 22</span><div class="scale-bar"><div class="scale-bar-fill" id="scale-bar-fill"></div></div></div><button type="button" class="scale-btn" id="scale-next" aria-label="Objeto siguiente">SIGUIENTE ›</button></div></div><div class="scale-data"><p class="eyebrow" id="scale-classification">CLASIFICACIÓN</p><h3 id="scale-name">NOMBRE</h3><dl class="scale-stats"><div><dt>DIÁMETRO</dt><dd id="scale-diameter"></dd></div><div><dt>NIVEL DE MAGNITUD</dt><dd id="scale-tier"></dd></div></dl><div class="fact-card"><span>DATO COMPARATIVO</span><p id="scale-fact"></p></div></div></div></section>
     <section class="anomaly-section" id="anomalias" aria-labelledby="anomaly-title"><div class="section-heading"><div><p class="eyebrow">CATÁLOGO DE AMENAZAS ESPACIALES // ZONAS DE EVACUACIÓN</p><h2 id="anomaly-title">Zona de riesgo<br>cósmico.</h2></div><p class="section-description"><mark>Expedientes clasificados</mark> de las 12 amenazas más peligrosas del espacio profundo, con su nivel de riesgo, distancia mínima de seguridad y <mark>protocolo de evacuación</mark> para la tripulación.</p></div><div class="anomaly-tools"><p><span class="blinking-dot"></span> 12 AMENAZAS CATALOGADAS</p><div class="filter-group" aria-label="Filtrar amenazas por nivel de riesgo"><button class="filter-button is-selected" type="button" data-anomaly-filter="all">TODOS (12)</button><button class="filter-button" type="button" data-anomaly-filter="5">CRÍTICOS / NIVEL 5</button><button class="filter-button" type="button" data-anomaly-filter="4">EXTREMOS / NIVEL 4</button><button class="filter-button" type="button" data-anomaly-filter="theoretical">INCÓGNITAS / TEÓRICOS</button></div></div><div class="anomaly-grid" id="anomaly-grid" aria-live="polite"></div></section>
     <section class="training-section" id="entrenamiento" aria-labelledby="training-title">
       <div class="section-heading training-heading">
@@ -215,7 +327,7 @@
   <dialog class="scanner-modal" id="scanner-modal" aria-labelledby="scanner-name"><div class="scanner-frame"><button class="modal-close" id="modal-close" type="button" aria-label="Cerrar escáner">×</button><div class="scanner-head"><span><i></i> ESCÁNER PLANETARIO</span><span>ENLACE SEGURO // 01</span></div><div class="scanner-body"><div class="scanner-visual"><div class="scanner-rings" aria-hidden="true"></div><div class="scanner-planet" id="scanner-planet" aria-hidden="true"><img id="scanner-planet-img" src="" alt="" loading="lazy"></div><p id="scanner-visual-caption">ANÁLISIS COMPLETO</p><div class="scanner-gallery" id="scanner-gallery" role="tablist" aria-label="Galería de imágenes del cuerpo celeste"></div></div><div class="scanner-data" id="scanner-data"><p class="eyebrow" id="scanner-classification">CUERPO CELESTE</p><h2 id="scanner-name">PLANETA</h2><div class="scanner-tabs" role="tablist"><button class="scanner-tab is-selected" type="button" data-tab="planet" role="tab" aria-selected="true">FICHA PLANETARIA</button><button class="scanner-tab" type="button" data-tab="moons" role="tab" aria-selected="false">[ SISTEMA ORBITAL DE LUNAS ]</button><button class="scanner-tab" type="button" data-tab="layers" role="tab" aria-selected="false">[ ESTRUCTURA Y CAPAS INTERNAS ]</button></div><div class="scanner-tab-panel" id="scanner-panel-planet" data-panel="planet"><p id="scanner-description"></p><div class="expedition-card"><span class="expedition-title">FICHA DE EXPEDICIÓN</span><div class="expedition-grid" id="expedition-grid"></div></div><dl><div><dt>CLASIFICACIÓN</dt><dd id="scanner-type"></dd></div><div><dt>GRAVEDAD</dt><dd id="scanner-gravity"></dd></div><div><dt>TEMPERATURA MEDIA</dt><dd id="scanner-temperature"></dd></div></dl><div class="scanner-sections" id="scanner-sections"></div><div class="fact-card"><span>REGISTRO CURIOSO</span><p id="scanner-fact"></p></div></div><div class="scanner-tab-panel" id="scanner-panel-moons" data-panel="moons" hidden><p class="moons-empty" id="moons-empty" hidden>Sin satélites naturales detectados.</p><div class="moon-selector" id="moon-selector"></div><div class="moon-detail" id="moon-detail"><div class="moon-detail-visual"><img id="moon-image" src="" alt="" loading="lazy" onerror="this.onerror=null;this.closest('.moon-detail-visual').classList.add('is-fallback');"></div><div class="moon-detail-info"><span class="moon-badge" id="moon-badge"></span><h3 id="moon-name"></h3><dl class="moon-stats"><div><dt>DIÁMETRO</dt><dd id="moon-diameter"></dd></div><div><dt>DISTANCIA AL PLANETA</dt><dd id="moon-distance"></dd></div><div><dt>PERIODO ORBITAL</dt><dd id="moon-period"></dd></div></dl><div class="moon-bio"><div class="moon-bio-label"><span>POTENCIAL BIOLÓGICO / AGUA</span><strong id="moon-bio-value"></strong></div><div class="moon-bio-bar"><div class="moon-bio-fill" id="moon-bio-fill"></div></div></div><div class="fact-card"><span>DATO FASCINANTE</span><p id="moon-fact"></p></div></div></div></div><div class="scanner-tab-panel" id="scanner-panel-layers" data-panel="layers" hidden><p class="layers-empty" id="layers-empty" hidden>Sin datos de estructura interna disponibles para este cuerpo.</p><p class="layers-note" id="layers-note" hidden>◈ MODELO ESTIMADO — La estructura interna de un exoplaneta no puede observarse directamente: los valores proceden de modelos teóricos basados en su masa, su radio y su temperatura.</p><div class="layers-console" id="layers-console"><div class="layers-stage"><div class="layers-figure"><div class="layers-diagram" id="layers-diagram" role="tablist" aria-label="Capas internas del planeta"></div><p class="layers-caption">SECCIÓN TRANSVERSAL ESQUEMÁTICA</p></div><div class="layer-legend" id="layer-legend"></div></div><div class="layer-detail" id="layer-detail"><span class="layer-badge" id="layer-badge"></span><h3 id="layer-name"></h3><dl class="layer-stats"><div><dt>COMPOSICIÓN Y ESTADO DE LA MATERIA</dt><dd id="layer-composition"></dd></div><div><dt>ESPESOR / PROFUNDIDAD</dt><dd id="layer-thickness"></dd></div><div><dt>TEMPERATURA ESTIMADA</dt><dd id="layer-temperature"></dd></div><div><dt>PRESIÓN RELATIVA</dt><dd id="layer-pressure"></dd></div></dl><div class="fact-card"><span>FENÓMENO DESTACADO</span><p id="layer-description"></p></div></div></div></div></div><div class="scanner-foot"><span>DATOS PARA EXPLORADORES // VALORES APROX.</span><button type="button" id="modal-close-footer">CERRAR [ESC]</button></div></div></dialog>
   <dialog class="era-modal" id="era-modal" aria-labelledby="era-title"><div class="era-frame"><button class="era-close" id="era-close" type="button" aria-label="Cerrar registro">×</button><div class="era-head"><span><i></i> ARCHIVO DE CRÓNICA CÓSMICA</span><span id="era-index-label">REGISTRO // 01</span></div><div class="era-body"><p class="era-eyebrow" id="era-eyebrow">ÉPOCA DEL UNIVERSO</p><h2 id="era-title">TÍTULO</h2><p class="era-period" id="era-period">PERIODO</p><div class="era-text" id="era-text"></div><div class="era-milestones"><span>HITOS Y DATOS CURIOSOS</span><ul id="era-milestones"></ul></div></div><div class="era-foot"><span>TRANSMISIÓN ARCHIVADA // DATOS DE REFERENCIA</span><button type="button" id="era-close-footer">[ ESC / CERRAR ]</button></div></div></dialog>
   <dialog class="anomaly-modal" id="anomaly-modal" aria-labelledby="anomaly-name"><div class="anomaly-frame"><button class="modal-close" id="anomaly-close" type="button" aria-label="Cerrar análisis de anomalía">×</button><div class="anomaly-head"><span><i></i> ANÁLISIS DE ANOMALÍA</span><span id="anomaly-code">EXPEDIENTE // 01</span></div><div class="anomaly-body"><div class="anomaly-viewer"><div class="viewer-frame" id="anomaly-viewer-frame"><img id="anomaly-viewer-image" src="" alt="" onerror="if(this.getAttribute('src')){this.closest('.viewer-frame').classList.add('is-fallback');}"><div class="viewer-scanlines" aria-hidden="true"></div><span class="viewer-tag">ANÁLISIS VISUAL // EN VIVO</span></div><p class="viewer-caption" id="anomaly-viewer-caption"></p><div class="viewer-thumbs" id="anomaly-thumbs"></div></div><div class="anomaly-data"><p class="eyebrow" id="anomaly-classification">CLASIFICACIÓN</p><h2 id="anomaly-name">FENÓMENO</h2><dl class="anomaly-stats"><div><dt>NIVEL DE RIESGO</dt><dd id="anomaly-risk"></dd></div><div><dt>DISTANCIA MÍNIMA</dt><dd id="anomaly-distance"></dd></div><div><dt>IMPACTO EN LA NAVE</dt><dd id="anomaly-impact"></dd></div></dl><p id="anomaly-description"></p><div class="advice-card"><span>PROTOCOLO DE EVACUACIÓN</span><p id="anomaly-advice"></p></div></div></div><div class="anomaly-foot"><span>REGISTRO CATALOGADO // ORBITA-DEEP</span><button type="button" id="anomaly-close-footer">[ CERRAR / ESC ]</button></div></div></dialog>
-  <dialog class="satellite-modal" id="satellite-modal" aria-labelledby="satellite-name"><div class="satellite-frame"><button class="modal-close" id="satellite-close" type="button" aria-label="Cerrar telemetría">×</button><div class="satellite-head"><span><i></i> TERMINAL DE TELEMETRÍA</span><span id="satellite-code">ENLACE // 01</span></div><div class="satellite-body"><div class="satellite-visual" id="satellite-visual"><img id="satellite-visual-img" src="" alt="" onerror="if(this.getAttribute('src')){this.onerror=null;this.src='img/Communications_satellite_with_TEMPO_spacecraft_model.png de Comunicaciones TEMPO';}"><span class="satellite-orbit-tag" id="satellite-orbit-tag">LEO</span></div><div class="satellite-data"><p class="eyebrow" id="satellite-agency">AGENCIA</p><h2 id="satellite-name">NOMBRE</h2><p id="satellite-summary"></p><dl class="satellite-stats"><div><dt>ALTITUD ORBITAL</dt><dd id="satellite-altitude"></dd></div><div><dt>VELOCIDAD ORBITAL</dt><dd id="satellite-velocity"></dd></div><div><dt>TIPO DE MISIÓN</dt><dd id="satellite-mission"></dd></div></dl><div class="fact-card"><span>DATO CURIOSO</span><p id="satellite-fact"></p></div></div></div><div class="satellite-foot"><span>SEGUIMIENTO ORBITAL // DATOS APROX.</span><button type="button" id="satellite-close-footer">CERRAR [ESC]</button></div></div></dialog>
+  <dialog class="satellite-modal" id="satellite-modal" aria-labelledby="satellite-name"><div class="satellite-frame"><button class="modal-close" id="satellite-close" type="button" aria-label="Cerrar telemetría">×</button><div class="satellite-head"><span><i></i> TERMINAL DE TELEMETRÍA</span><span id="satellite-code">ENLACE // 01</span></div><div class="satellite-body"><div class="satellite-visual" id="satellite-visual"><img id="satellite-visual-img" src="" alt="" onerror="if(this.getAttribute('src')){this.onerror=null;this.src='img/Communications_satellite_with_TEMPO_spacecraft_model.png de Comunicaciones TEMPO';}"><span class="satellite-orbit-tag" id="satellite-orbit-tag">LEO</span><span class="premium-sello" aria-hidden="true">ACCESO CONCEDIDO</span><p class="premium-pie" id="satellite-caption"></p><div class="premium-galeria" id="satellite-gallery" role="tablist" aria-label="Galería del satélite"></div></div><div class="satellite-data"><p class="eyebrow" id="satellite-agency">AGENCIA</p><h2 id="satellite-name">NOMBRE</h2><p id="satellite-summary"></p><dl class="satellite-stats"><div><dt>ALTITUD ORBITAL</dt><dd id="satellite-altitude"></dd></div><div><dt>VELOCIDAD ORBITAL</dt><dd id="satellite-velocity"></dd></div><div><dt>TIPO DE MISIÓN</dt><dd id="satellite-mission"></dd></div></dl><div class="fact-card"><span>DATO CURIOSO</span><p id="satellite-fact"></p></div></div></div><div class="satellite-foot"><span>SEGUIMIENTO ORBITAL // DATOS APROX.</span><button type="button" id="satellite-close-footer">CERRAR [ESC]</button></div></div></dialog>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script>
     /* En gigantes gaseosos, la gravedad se expresa cerca del nivel de las nubes. Los parámetros de exoplanetas son estimaciones basadas en observaciones. */
@@ -820,8 +932,17 @@
       {id:"goes16",name:"Satélite Meteorológico GOES-16",orbit:"geo",type:"c",angle:30,duration:42,altitude:"≈ 35.786 km",velocity:"≈ 11.070 km/h",agency:"NOAA · NASA",mission:"Clima",image:"img/GOES_3_artist_rendering.jpg",summary:"Satélite meteorológico geoestacionario que vigila huracanes, tormentas y el clima espacial sobre el continente americano.",fact:"Permanece fijo sobre el mismo punto del ecuador porque su periodo orbital iguala la rotación terrestre: 24 horas."},
       {id:"inmarsat6",name:"Inmarsat-6 F1",orbit:"geo",type:"b",angle:150,duration:44,altitude:"≈ 35.786 km",velocity:"≈ 11.070 km/h",agency:"Inmarsat",mission:"Telecomunicaciones",image:"img/Inmarsat-3_crop.jpg",summary:"Primer satélite de doble carga útil de Inmarsat, combinando banda L y banda Ka para telecomunicaciones marítimas y aéreas.",fact:"Fue construido sobre la plataforma Eurostar 3000EOR de Airbus y lanzado en diciembre de 2021."},
       {id:"meteosat11",name:"Meteosat-11",orbit:"geo",type:"c",angle:270,duration:40,altitude:"≈ 35.786 km",velocity:"≈ 11.070 km/h",agency:"EUMETSAT · ESA",mission:"Clima",image:"img/Meteosat_Third_Generation_ESA418057.jpg",summary:"Satélite meteorológico geoestacionario europeo que fotografía el hemisferio boreal cada 15 minutos para pronósticos del clima.",fact:"Forma parte del programa Meteosat de EUMETSAT, en operación continua desde 1977 sin interrupciones en la cobertura."},
-      {id:"jwst",name:"Telescopio Espacial James Webb (JWST)",orbit:"heo",type:"a",angle:45,duration:60,altitude:"≈ 1.500.000 km (punto de Lagrange L2)",velocity:"≈ 3.700 km/h (órbita halo)",agency:"NASA · ESA · CSA",mission:"Investigación científica",image:"img/JWST_spacecraft_model_1.png",summary:"El observatorio infrarrojo más grande jamás construido, ubicado en el punto de Lagrange L2 para observar el universo primitivo.",fact:"Su espejo principal segmentado mide 6,5 metros de diámetro: el más grande jamás lanzado al espacio."},
-      {id:"lro",name:"Lunar Reconnaissance Orbiter (LRO)",orbit:"heo",type:"c",angle:225,duration:56,altitude:"≈ 384.400 km (órbita lunar)",velocity:"≈ 5.760 km/h (en torno a la Luna)",agency:"NASA",mission:"Cartografía y reconocimiento lunar",image:"img/Lunar_Reconnaissance_Orbiter_spacecraft_model_1.png",summary:"Sonda en órbita lunar que ha cartografiado la Luna con más detalle que ninguna otra misión, a solo 50 km de altitud sobre su superficie.",fact:"Ha detectado evidencia de hielo de agua en cráteres permanentemente sombreados cerca de los polos lunares."}
+      {id:"jwst",name:"Telescopio Espacial James Webb (JWST)",orbit:"heo",type:"a",angle:45,duration:60,altitude:"≈ 1.500.000 km (punto de Lagrange L2)",velocity:"≈ 3.700 km/h (órbita halo)",agency:"NASA · ESA · CSA",mission:"Investigación científica",image:"img/JWST_spacecraft_model_1.png",summary:"El observatorio infrarrojo más grande jamás construido, ubicado en el punto de Lagrange L2 para observar el universo primitivo.",fact:"Su espejo principal segmentado mide 6,5 metros de diámetro: el más grande jamás lanzado al espacio.",
+        gallery:[
+          {src:"img/JWST_spacecraft_model_1.png",caption:"El observatorio con su espejo segmentado y el parasol desplegados"},
+          {src:"img/Webb-s_First_Deep_Field_-adjusted.jpg",caption:"Su primer campo profundo: miles de galaxias en un fragmento diminuto de cielo"},
+          {src:"img/STScI-Uranus-NIRCam.png",caption:"Urano y sus anillos captados por su cámara infrarroja NIRCam"}
+        ]},
+      {id:"lro",name:"Lunar Reconnaissance Orbiter (LRO)",orbit:"heo",type:"c",angle:225,duration:56,altitude:"≈ 384.400 km (órbita lunar)",velocity:"≈ 5.760 km/h (en torno a la Luna)",agency:"NASA",mission:"Cartografía y reconocimiento lunar",image:"img/Lunar_Reconnaissance_Orbiter_spacecraft_model_1.png",summary:"Sonda en órbita lunar que ha cartografiado la Luna con más detalle que ninguna otra misión, a solo 50 km de altitud sobre su superficie.",fact:"Ha detectado evidencia de hielo de agua en cráteres permanentemente sombreados cerca de los polos lunares.",
+        gallery:[
+          {src:"img/Lunar_Reconnaissance_Orbiter_spacecraft_model_1.png",caption:"La sonda que cartografía la Luna sin interrupción desde 2009"},
+          {src:"img/Full_Moon_-201507310003HQ.jpg",caption:"La cara visible de la Luna, el terreno que lleva más de una década midiendo"}
+        ]}
     ];
     const satOrbitLabels={leo:"LEO // ÓRBITA BAJA",meo:"MEO // ÓRBITA MEDIA",geo:"GEO // ÓRBITA GEOESTACIONARIA",heo:"HEO // ESPACIO PROFUNDO"};
     const satStage=document.querySelector("#sat-stage"),satelliteModal=document.querySelector("#satellite-modal");
@@ -829,7 +950,7 @@
     const SAT_NODE_ICON="img/Communications_satellite_with_TEMPO_spacecraft_model-2.png",ISS_NODE_ICON="img/ISS_spacecraft_model_1.png";
     const SAT_TYPE_ICONS={a:"img/Hubble_Space_Telescope_spacecraft_model.png",b:SAT_NODE_ICON,c:"img/Landsat_9_spacecraft_model_1-2.png"};
     function satelliteMarkup(sat){const isIss=sat.id==="iss",nodeClass=isIss?"satellite-node iss-node":`satellite-node sat-type-${sat.type}`,nodeIcon=isIss?ISS_NODE_ICON:SAT_TYPE_ICONS[sat.type];return`<div class="sat-orbit-anchor orbit-${sat.orbit}" style="--sat-duration:${sat.duration}s;transform:rotate(${sat.angle}deg)"><div class="sat-orbit-spin"><div class="satellite-pos"><button class="${nodeClass}" type="button" data-id="${sat.id}" aria-haspopup="dialog" aria-label="Ver telemetría de ${sat.name}"><img src="${nodeIcon}" alt="" loading="lazy" onerror="this.onerror=null;"></button></div></div></div>`}
-    function openSatelliteModal(sat){satEls.code.textContent=`ENLACE // ${sat.id.toUpperCase()}`;satEls.agency.textContent=sat.agency.toUpperCase();satEls.name.textContent=sat.name;satEls.summary.textContent=sat.summary;satEls.altitude.textContent=sat.altitude;satEls.velocity.textContent=sat.velocity;satEls.mission.textContent=sat.mission;satEls.fact.textContent=sat.fact;satEls.visualImg.src=sat.image;satEls.visualImg.alt=sat.name;satEls.orbitTag.textContent=satOrbitLabels[sat.orbit];satelliteModal.showModal();if(window.gsap){gsap.fromTo(satelliteModal.querySelector(".satellite-frame"),{y:26,opacity:0,scale:.97},{y:0,opacity:1,scale:1,duration:.45,ease:"power3.out"})}}
+    function openSatelliteModal(sat){satEls.code.textContent=`ENLACE // ${sat.id.toUpperCase()}`;satEls.agency.textContent=sat.agency.toUpperCase();satEls.name.textContent=sat.name;satEls.summary.textContent=sat.summary;satEls.altitude.textContent=sat.altitude;satEls.velocity.textContent=sat.velocity;satEls.mission.textContent=sat.mission;satEls.fact.textContent=sat.fact;satEls.visualImg.src=sat.image;satEls.visualImg.alt=sat.name;satEls.orbitTag.textContent=satOrbitLabels[sat.orbit];/* La última órbita es la que concede la medalla: se viste de oro y estrena galería. */const esHeo=sat.orbit==="heo";vestirPremium(satelliteModal.querySelector(".satellite-frame"),esHeo);pintarGaleria(document.getElementById("satellite-gallery"),document.getElementById("satellite-caption"),esHeo?sat.gallery:null,vista=>{satEls.visualImg.src=vista.src;satEls.visualImg.alt=`${sat.name} — ${vista.caption}`;});satelliteModal.showModal();if(window.gsap){gsap.fromTo(satelliteModal.querySelector(".satellite-frame"),{y:26,opacity:0,scale:.97},{y:0,opacity:1,scale:1,duration:.45,ease:"power3.out"})}}
     function renderSatellites(){satStage.insertAdjacentHTML("beforeend",satellites.map(satelliteMarkup).join(""));satStage.querySelectorAll(".satellite-node").forEach(btn=>{const sat=satellites.find(s=>s.id===btn.dataset.id),anchor=btn.closest(".sat-orbit-anchor"),ring=satStage.querySelector(`.ring-${sat.orbit}`),pause=()=>{anchor.classList.add("is-paused");ring.classList.add("is-highlighted")},resume=()=>{anchor.classList.remove("is-paused");ring.classList.remove("is-highlighted")};btn.addEventListener("mouseenter",pause);btn.addEventListener("mouseleave",resume);btn.addEventListener("focus",pause);btn.addEventListener("blur",resume);btn.addEventListener("click",()=>openSatelliteModal(sat))})}
     renderSatellites();
     document.querySelector("#satellite-close").addEventListener("click",()=>satelliteModal.close());document.querySelector("#satellite-close-footer").addEventListener("click",()=>satelliteModal.close());satelliteModal.addEventListener("click",event=>{if(event.target===satelliteModal)satelliteModal.close()});
@@ -856,8 +977,18 @@
         {name:"Galaxia de Andrómeda",classification:"Galaxia Espiral (Vecina Mayor)",tier:"galactico",diameterKm:220000*LY,diameterLabel:"≈ 220.000 años luz de diámetro",fact:"Se acerca a la Vía Láctea a 110 km/s: colisionarán en unos 4.500 millones de años.",image:"img/Andromeda_Galaxy_M31_-_Heic1502a_Full_resolution.jpg"},
         {name:"IC 1101",classification:"Galaxia Elíptica Supergigante",tier:"galactico",diameterKm:4000000*LY,diameterLabel:"≈ 4.000.000 de años luz de diámetro",fact:"Es una de las galaxias más grandes jamás descubiertas: unas 40 veces más ancha que la Vía Láctea.",image:"img/IC_1101.jpg"},
         {name:"Grupo Local",classification:"Agrupación de Galaxias",tier:"galactico",diameterKm:10000000*LY,diameterLabel:"≈ 10.000.000 de años luz de diámetro",fact:"Reúne más de 80 galaxias, dominado por la Vía Láctea y Andrómeda.",image:"img/Local_Group_and_nearest_galaxies.jpg"},
-        {name:"Supercúmulo de Laniakea",classification:"Supercúmulo de Galaxias",tier:"cosmico",diameterKm:520000000*LY,diameterLabel:"≈ 520.000.000 de años luz de diámetro",fact:"Su nombre significa «cielo inconmensurable» en hawaiano y contiene unas 100.000 galaxias, incluida la Vía Láctea.",image:"img/07-Laniakea_-LofE07240.png"},
-        {name:"Universo Observable",classification:"Límite Cósmico Observable",tier:"cosmico",diameterKm:93000000000*LY,diameterLabel:"≈ 93.000 millones de años luz de diámetro",fact:"Es solo la porción del universo cuya luz ha tenido tiempo de llegar hasta nosotros; el universo total podría ser muchísimo mayor.",image:"img/Observable_Universe_logarithmic_illustration_-circular_layout_english_annotations.png"}
+        {name:"Supercúmulo de Laniakea",classification:"Supercúmulo de Galaxias",tier:"cosmico",diameterKm:520000000*LY,diameterLabel:"≈ 520.000.000 de años luz de diámetro",fact:"Su nombre significa «cielo inconmensurable» en hawaiano y contiene unas 100.000 galaxias, incluida la Vía Láctea.",image:"img/07-Laniakea_-LofE07240.png",
+        gallery:[
+          {src:"img/07-Laniakea_-LofE07240.png",caption:"El supercúmulo completo: unas 100.000 galaxias fluyendo hacia un mismo punto"},
+          {src:"img/Local_Group_and_nearest_galaxies.jpg",caption:"El Grupo Local, el rincón de Laniakea donde está la Vía Láctea"},
+          {src:"img/Large-scale_structure_of_light_distribution_in_the_universe.jpg",caption:"La telaraña cósmica en la que Laniakea es solo un nudo"}
+        ]},
+        {name:"Universo Observable",classification:"Límite Cósmico Observable",tier:"cosmico",diameterKm:93000000000*LY,diameterLabel:"≈ 93.000 millones de años luz de diámetro",fact:"Es solo la porción del universo cuya luz ha tenido tiempo de llegar hasta nosotros; el universo total podría ser muchísimo mayor.",image:"img/Observable_Universe_logarithmic_illustration_-circular_layout_english_annotations.png",
+        gallery:[
+          {src:"img/Observable_Universe_logarithmic_illustration_-circular_layout_english_annotations.png",caption:"Mapa logarítmico: del Sol al fondo de microondas en una sola imagen"},
+          {src:"img/Large-scale_structure_of_light_distribution_in_the_universe.jpg",caption:"Cómo se reparte la materia a la mayor escala que sabemos medir"},
+          {src:"img/Webb-s_First_Deep_Field_-adjusted.jpg",caption:"La mirada más profunda jamás obtenida, cerca del límite de lo observable"}
+        ]}
       ];
       const TIER_LABELS={planetario:"PLANETARIO",estelar:"ESTELAR",galactico:"GALÁCTICO",cosmico:"CÓSMICO"};
       const SUP_DIGITS={"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","-":"⁻"};
@@ -888,6 +1019,13 @@
         const magText=`${formatted}x`;
         scaleEls.magNumber.textContent=magText;scaleEls.magNumber.dataset.text=magText;
         scaleEls.magNumber.className=`scale-magnitude-number tier-${obj.tier}`;
+        /* Los de magnitud cósmica son los que abre la medalla. */
+        const esCosmico=obj.tier==="cosmico";
+        vestirPremium(document.querySelector(".scale-console"),esCosmico);
+        pintarGaleria(document.getElementById("scale-gallery"),
+                      document.getElementById("scale-caption"),
+                      esCosmico?obj.gallery:null,
+                      vista=>{scaleEls.img.src=vista.src;scaleEls.img.alt=`${obj.name} — ${vista.caption}`;});
         const t=Math.max(0,Math.min(1,(Math.log10(mult)-scaleLogMin)/(scaleLogMax-scaleLogMin)));
         scaleEls.magNumber.style.setProperty("--mag-t",t.toFixed(3));
         scaleEls.sphereWrap.style.setProperty("--mag-scale",(0.8+t*1.6).toFixed(3));
@@ -914,6 +1052,70 @@
         if(event.key==="ArrowLeft")scaleEls.prevBtn.click();else scaleEls.nextBtn.click();
       });
       renderScale(false);
+    })();
+
+    /* ---------- ASPECTO PREMIUM DEL CONTENIDO DESBLOQUEADO ---------- */
+    /* Solo estética: no decide qué está bloqueado ni lo abre. Se limita a
+       vestir de oro lo que la medalla concede, con el mismo lenguaje en las
+       tres secciones. */
+    function vestirPremium(nodo, esPremium){
+      if(!nodo)return;
+      nodo.classList.toggle("es-premium",esPremium);
+      let brillo=nodo.querySelector(":scope > .premium-brillo");
+      if(esPremium&&!brillo){
+        brillo=document.createElement("span");
+        brillo.className="premium-brillo";
+        brillo.setAttribute("aria-hidden","true");
+        nodo.appendChild(brillo);
+      }else if(!esPremium&&brillo){
+        brillo.remove();
+      }
+    }
+
+    /* Tira de miniaturas compartida por el modal de satélites y el comparador.
+       Devuelve el pie de la imagen activa para que cada sitio lo coloque. */
+    function pintarGaleria(tira, pie, galeria, alElegir){
+      if(!tira)return;
+      tira.innerHTML="";
+      if(pie)pie.textContent="";
+      if(!Array.isArray(galeria)||galeria.length<2)return;   /* con una sola imagen no hay galería que enseñar */
+      galeria.forEach((vista,i)=>{
+        const boton=document.createElement("button");
+        boton.type="button";
+        boton.setAttribute("role","tab");
+        boton.setAttribute("aria-label",vista.caption||`Imagen ${i+1}`);
+        boton.className=i===0?"is-selected":"";
+        const mini=document.createElement("img");
+        mini.src=vista.src;mini.alt="";mini.loading="lazy";
+        boton.appendChild(mini);
+        boton.addEventListener("click",()=>{
+          tira.querySelectorAll("button").forEach(b=>b.classList.remove("is-selected"));
+          boton.classList.add("is-selected");
+          if(pie)pie.textContent=vista.caption||"";
+          alElegir(vista);
+        });
+        tira.appendChild(boton);
+      });
+      if(pie)pie.textContent=(galeria[0]&&galeria[0].caption)||"";
+    }
+
+    /* Las tarjetas de anomalía se repintan al filtrar, así que el aspecto hay
+       que reaplicarlo igual que hace el bloqueo, con su propio observador. */
+    (function(){
+      const rejilla=document.getElementById("anomaly-grid");
+      if(!rejilla)return;
+      function vestirTarjetas(){
+        rejilla.querySelectorAll('.anomaly-card[data-level="5"]').forEach(tarjeta=>{
+          /* Sin sello aquí: chocaba con la distancia del expediente y repetía
+             lo que ya dice la etiqueta dorada de riesgo. El borde en escuadra,
+             el fondo cálido y esa etiqueta bastan para distinguirlas. */
+          vestirPremium(tarjeta,true);
+        });
+      }
+      vestirTarjetas();
+      if("MutationObserver" in window){
+        new MutationObserver(vestirTarjetas).observe(rejilla,{childList:true});
+      }
     })();
 
     /* ---------- CONTENIDO QUE SE DESBLOQUEA CON LA MEDALLA ---------- */

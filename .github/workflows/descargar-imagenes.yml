@@ -86,7 +86,8 @@ jobs:
 
           descargadas = len(os.listdir("img")) if os.path.isdir("img") else 0
           externas, locales, rotas = 0, 0, set()
-          for archivo in ("index.html", "practica47.html"):
+          for archivo in ("index.html", "practica47.html",
+                          "js/orbita.js", "js/practica47.js"):
               texto = io.open(archivo, encoding="utf-8").read()
               externas += len(EXTERNAS.findall(texto))
               for ruta in LOCALES.findall(texto):
@@ -132,7 +133,7 @@ jobs:
           # El inventario va aquí a propósito: el script anota en él cada
           # descarga nueva, y si no se subiera, esa anotación se perdería al
           # destruirse el servidor y nadie sabría de dónde salió la imagen.
-          git add img index.html practica47.html herramientas/inventario-imagenes.txt
+          git add img index.html practica47.html js herramientas/inventario-imagenes.txt
           if git diff --cached --quiet; then
             echo "No hay cambios que subir."
             exit 0

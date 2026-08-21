@@ -1,0 +1,1325 @@
+  /* ===================================================================
+     DESIGN TOKENS
+  =================================================================== */
+  :root{
+    --ink:#f2f7ff;
+    --muted:#93a3c8;
+    --bg:#040614;
+    --line:rgba(128,177,255,.2);
+    --cyan:#52e7ff;
+    --purple:#ae73ff;
+    --green:#75f7ab;
+    --red:#ff6389;
+    --amber:#ffb454;
+    --mono:"Space Mono",monospace;
+    --display:"Orbitron",sans-serif;
+    --hud-alert:var(--red);
+    --hud-alert-soft:rgba(255,99,137,.16);
+  }
+  .ft-root.is-repaired{
+    --hud-alert:var(--cyan);
+    --hud-alert-soft:rgba(82,231,255,.16);
+  }
+
+  /* ===================================================================
+     RESET
+  =================================================================== */
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    min-height:100vh;
+    color:var(--ink);
+    background:var(--bg);
+    font-family:var(--mono);
+    overflow-x:hidden;
+  }
+  button{font:inherit;cursor:pointer;}
+  p{margin:0;}
+  h1,h2,h3{font-family:var(--display);margin:0;}
+
+  /* ===================================================================
+     ROOT SHELL
+  =================================================================== */
+  .ft-root{
+    position:relative;
+    min-height:100vh;
+    overflow:hidden;
+    isolation:isolate;
+  }
+  .ft-bg{
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    background:
+      radial-gradient(circle at 12% 20%,#d6f5ff 0 1px,transparent 1.6px),
+      radial-gradient(circle at 82% 14%,#fff 0 1px,transparent 1.4px),
+      radial-gradient(circle at 40% 62%,#a5e8ff 0 1px,transparent 1.6px),
+      radial-gradient(circle at 66% 80%,#fff 0 1px,transparent 1.5px),
+      radial-gradient(circle at 15% 20%,rgba(255,99,137,.08),transparent 32%),
+      radial-gradient(circle at 85% 75%,rgba(82,231,255,.06),transparent 38%),
+      var(--bg);
+    background-size:240px 240px,180px 180px,270px 270px,210px 210px,auto,auto,auto;
+    transition:background 1s ease;
+  }
+  .ft-root.is-repaired .ft-bg{
+    background:
+      radial-gradient(circle at 12% 20%,#d6f5ff 0 1px,transparent 1.6px),
+      radial-gradient(circle at 82% 14%,#fff 0 1px,transparent 1.4px),
+      radial-gradient(circle at 40% 62%,#a5e8ff 0 1px,transparent 1.6px),
+      radial-gradient(circle at 66% 80%,#fff 0 1px,transparent 1.5px),
+      radial-gradient(circle at 15% 20%,rgba(82,231,255,.08),transparent 32%),
+      radial-gradient(circle at 85% 75%,rgba(117,247,171,.07),transparent 38%),
+      var(--bg);
+    background-size:240px 240px,180px 180px,270px 270px,210px 210px,auto,auto,auto;
+  }
+  .ft-root.is-repaired .ft-strobe{opacity:0;}
+
+  .ft-phase{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:48px clamp(20px,5vw,80px);
+  }
+  .ft-phase[hidden]{display:none;}
+
+  .ft-pulse-dot{
+    display:inline-block;
+    width:7px;height:7px;
+    margin-right:7px;
+    border-radius:50%;
+    background:var(--red);
+    box-shadow:0 0 10px var(--red);
+    animation:ft-blink 1.4s infinite;
+  }
+  @keyframes ft-blink{50%{opacity:.25;}}
+
+  /* ===================================================================
+     PHASE 1 — ALERTA HUD
+  =================================================================== */
+  .ft-strobe{
+    position:fixed;
+    left:0;right:0;
+    height:4px;
+    z-index:30;
+    pointer-events:none;
+    animation:ft-strobe-cycle 1.6s ease-in-out infinite;
+    transition:opacity .6s ease;
+  }
+  .ft-strobe.top{top:0;}
+  .ft-strobe.bottom{bottom:0;}
+  @keyframes ft-strobe-cycle{
+    0%,100%{background:var(--red);opacity:.85;box-shadow:0 0 22px var(--red);}
+    50%{background:var(--amber);opacity:.5;box-shadow:0 0 22px var(--amber);}
+  }
+
+  .ft-alert-frame{
+    width:min(720px,100%);
+    border:1px solid rgba(255,99,137,.45);
+    background:rgba(9,6,20,.72);
+    backdrop-filter:blur(16px);
+    box-shadow:0 0 60px rgba(255,99,137,.16),inset 0 0 60px rgba(255,99,137,.05);
+    position:relative;
+  }
+  .ft-alert-frame.is-success{
+    border-color:rgba(117,247,171,.5);
+    box-shadow:0 0 60px rgba(117,247,171,.18),inset 0 0 60px rgba(117,247,171,.06);
+  }
+  .ft-alert-frame.is-success .ft-alert-topbar{color:#c9ffdf;border-bottom-color:rgba(117,247,171,.3);}
+  .ft-alert-frame.is-success .ft-pulse-dot{background:var(--green);box-shadow:0 0 10px var(--green);}
+  .ft-alert-topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:13px 20px;
+    border-bottom:1px solid rgba(255,99,137,.3);
+    color:#ffc4d3;
+    font-size:.58rem;
+    letter-spacing:1.2px;
+  }
+  .ft-alert-body{padding:clamp(28px,5vw,52px);}
+  .ft-alert-eyebrow{color:var(--amber);font-size:.65rem;letter-spacing:2px;margin:0 0 16px;}
+  .ft-alert-title{
+    font-size:clamp(2rem,5vw,3.4rem);
+    line-height:1.08;
+    letter-spacing:-1.5px;
+  }
+  .ft-alert-title span{color:var(--red);text-shadow:0 0 26px rgba(255,99,137,.45);}
+  .ft-alert-frame.is-success .ft-alert-title span{color:var(--green);text-shadow:0 0 26px rgba(117,247,171,.45);}
+  .ft-alert-sub{
+    margin:20px 0 0;
+    max-width:520px;
+    color:var(--muted);
+    line-height:1.85;
+    font-size:.82rem;
+  }
+  .ft-diagnostic-log{
+    margin:28px 0 34px;
+    padding:16px 18px;
+    border:1px solid var(--line);
+    background:rgba(3,5,16,.6);
+    min-height:120px;
+  }
+  .ft-log-line{
+    margin:0 0 9px;
+    font-size:.68rem;
+    letter-spacing:.4px;
+    color:#ffb9c7;
+  }
+  .ft-log-line:last-child{margin-bottom:0;color:var(--amber);}
+
+  /* ===================================================================
+     PHASE 2 — LÍNEA TEMPORAL / MAPA DE ÉPOCAS
+  =================================================================== */
+  .ft-timeline{
+    position:relative;
+    width:min(720px,92vw);
+    height:56px;
+    margin:0 0 26px;
+  }
+  .ft-timeline-track{
+    position:absolute;
+    left:16px;right:16px;top:21px;
+    height:2px;
+    background:rgba(130,158,225,.25);
+  }
+  .ft-timeline-fill{
+    position:absolute;
+    left:16px;top:21px;
+    height:2px;
+    width:0%;
+    background:linear-gradient(90deg,var(--cyan),var(--purple));
+    box-shadow:0 0 10px rgba(82,231,255,.4);
+  }
+  .ft-timeline-node{
+    position:absolute;
+    top:9px;
+    width:24px;height:24px;
+    margin-left:-12px;
+    border-radius:50%;
+    border:2px solid rgba(130,158,225,.4);
+    background:#0a0f22;
+    display:grid;
+    place-items:center;
+    font:700 .56rem var(--display);
+    color:var(--muted);
+    transition:border-color .4s ease,background .4s ease,box-shadow .4s ease,color .4s ease;
+  }
+  .ft-timeline-node span{
+    position:absolute;
+    top:29px;
+    white-space:nowrap;
+    font-size:.5rem;
+    letter-spacing:.8px;
+    color:inherit;
+  }
+  .ft-timeline-node.is-active{
+    border-color:var(--cyan);
+    color:var(--cyan);
+    box-shadow:0 0 14px rgba(82,231,255,.5);
+  }
+  .ft-timeline-node.is-done{
+    border-color:var(--green);
+    background:var(--green);
+    color:#04180d;
+    box-shadow:0 0 14px rgba(117,247,171,.5);
+  }
+  .ft-timeline-ship{
+    position:absolute;
+    top:13px;left:0%;
+    width:16px;height:16px;
+    margin-left:-8px;
+    clip-path:polygon(0 50%,100% 0,68% 50%,100% 100%);
+    background:var(--amber);
+    box-shadow:0 0 14px var(--amber);
+    z-index:2;
+  }
+
+  /* ===================================================================
+     RADAR DE ANOMALÍAS
+  =================================================================== */
+  .ft-radar-hud-top{
+    width:min(720px,100%);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 6px 22px;
+    font-size:.6rem;
+    letter-spacing:1.1px;
+    color:#9eb2dc;
+  }
+  .ft-hud-id{color:var(--cyan);}
+  .ft-hud-status{color:var(--muted);transition:color .6s ease;}
+
+  .ft-radar-stage{
+    width:min(420px,80vw);
+    aspect-ratio:1;
+    position:relative;
+    margin-bottom:34px;
+  }
+  .ft-radar-disc{
+    position:absolute;inset:0;
+    border-radius:50%;
+    border:1px solid rgba(82,231,255,.28);
+    background:
+      repeating-radial-gradient(circle,rgba(82,231,255,.05) 0 1px,transparent 1px 16%),
+      radial-gradient(circle,rgba(53,42,124,.28),transparent 68%);
+    box-shadow:inset 0 0 70px rgba(63,100,255,.12),0 0 46px rgba(61,77,195,.16);
+    overflow:hidden;
+  }
+  .ft-radar-grid-lines{
+    position:absolute;inset:0;
+    background:
+      linear-gradient(90deg,transparent 49.6%,rgba(82,231,255,.22) 50%,transparent 50.4%),
+      linear-gradient(transparent 49.6%,rgba(82,231,255,.22) 50%,transparent 50.4%);
+  }
+  .ft-radar-rings{
+    position:absolute;inset:16%;
+    border:1px solid rgba(190,151,255,.32);
+    border-radius:50%;
+  }
+  .ft-radar-rings::before,
+  .ft-radar-rings::after{
+    content:"";
+    position:absolute;
+    border:1px solid rgba(190,151,255,.22);
+    border-radius:50%;
+  }
+  .ft-radar-rings::before{inset:-16%;}
+  .ft-radar-rings::after{inset:16%;}
+  .ft-radar-sweep{
+    position:absolute;inset:0;
+    background:conic-gradient(from 0deg,rgba(82,231,255,.45),transparent 34deg 360deg);
+    clip-path:polygon(50% 50%,50% 0,100% 0,100% 50%);
+    transform-origin:50% 50%;
+    mix-blend-mode:screen;
+    will-change:transform;
+  }
+  .ft-radar-core{
+    position:absolute;
+    width:16px;height:16px;
+    left:calc(50% - 8px);top:calc(50% - 8px);
+    border:3px solid var(--cyan);
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 0 24px var(--cyan);
+    z-index:2;
+  }
+
+  /* ---------- Barrido de detección al entrar en una época ---------- */
+  /* Toma el color de la época, como el resto del radar, para que no parezca
+     un elemento pegado de otro sitio. */
+  .ft-scan{
+    position:absolute;inset:0;z-index:6;
+    display:grid;place-items:center;
+    pointer-events:none;opacity:0;transition:opacity .4s ease;
+  }
+  .ft-scan.is-on{opacity:1;}
+  /* ecos concéntricos saliendo del centro, como un sonar */
+  .ft-scan-eco{
+    position:absolute;top:50%;left:50%;width:14%;aspect-ratio:1;margin:-7% 0 0 -7%;
+    border-radius:50%;border:1px solid var(--era-accent,#52e7ff);opacity:0;
+  }
+  .ft-scan.is-on .ft-scan-eco{animation:ft-eco 1.9s ease-out infinite;}
+  .ft-scan.is-on .ft-scan-eco:nth-of-type(2){animation-delay:.46s;}
+  .ft-scan.is-on .ft-scan-eco:nth-of-type(3){animation-delay:.92s;}
+  @keyframes ft-eco{
+    0%  {transform:scale(.3);opacity:.85;}
+    70% {opacity:.3;}
+    100%{transform:scale(6.4);opacity:0;}
+  }
+  .ft-scan-texto{
+    position:relative;z-index:2;margin:0;
+    font-size:.6rem;letter-spacing:2.2px;
+    color:var(--era-accent,#52e7ff);text-shadow:0 0 14px currentColor;
+    background:rgba(4,6,20,.6);padding:9px 17px;
+    border:1px solid rgba(130,200,255,.28);
+  }
+
+  /* Revelado una a una. Va con CSS y no con GSAP a propósito: la librería
+     viene de un CDN y su sustituto de emergencia ignora los retardos, así que
+     sin conexión las cinco aparecían de golpe. */
+  .ft-anomaly.por-detectar{opacity:0;transform:scale(.3);pointer-events:none;}
+
+  /* El destello es un elemento aparte: ::before y ::after ya los usa la propia
+     anomalía para su anillo y su núcleo, y pisarlos la deformaría. */
+  .ft-ping{
+    position:absolute;inset:-30%;border-radius:50%;
+    border:1px solid var(--dot-color,#52e7ff);
+    pointer-events:none;z-index:4;
+    animation:ft-deteccion .75s ease-out forwards;
+  }
+  @keyframes ft-deteccion{
+    0%  {transform:scale(.4);opacity:.95;}
+    100%{transform:scale(2.6);opacity:0;}
+  }
+
+  .ft-anomaly{
+    position:absolute;
+    width:38px;height:38px;
+    margin:-19px 0 0 -19px;
+    padding:0;
+    border:3px solid #fff;
+    border-radius:50%;
+    background:var(--dot-color,var(--purple));
+    box-shadow:0 0 22px var(--dot-color,var(--purple));
+    z-index:3;
+    display:grid;
+    place-items:center;
+    font:800 .82rem var(--display);
+    color:#04101e;
+    text-shadow:0 1px 0 rgba(255,255,255,.35);
+    animation:ft-anomaly-pulse 1.5s ease-out infinite;
+  }
+  .ft-anomaly:hover{filter:brightness(1.15);transform:scale(1.06);}
+  @keyframes ft-anomaly-pulse{
+    0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--dot-color,var(--purple)) 55%,transparent),0 0 22px var(--dot-color,var(--purple));}
+    70%{box-shadow:0 0 0 22px color-mix(in srgb,var(--dot-color,var(--purple)) 0%,transparent),0 0 22px var(--dot-color,var(--purple));}
+    100%{box-shadow:0 0 0 0 transparent,0 0 22px var(--dot-color,var(--purple));}
+  }
+  .ft-anomaly-ripple{
+    position:absolute;
+    width:22px;height:22px;
+    margin:-11px 0 0 -11px;
+    border:2px solid var(--cyan);
+    border-radius:50%;
+    pointer-events:none;
+    z-index:2;
+  }
+
+  .ft-exploration-hud{width:min(420px,80vw);}
+  .ft-exploration-label{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:10px;
+    font-size:.6rem;
+    letter-spacing:1.1px;
+    color:var(--muted);
+  }
+  .ft-exploration-label strong{
+    font:700 1.6rem var(--display);
+    color:var(--cyan);
+    letter-spacing:0;
+  }
+  .ft-progressbar{
+    width:100%;
+    height:14px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.06);
+    position:relative;
+    overflow:hidden;
+  }
+  .ft-progressbar-fill{
+    position:absolute;
+    inset:0;
+    width:0%;
+    background:linear-gradient(90deg,var(--cyan),var(--green));
+    box-shadow:0 0 16px rgba(82,231,255,.45);
+    transition:width .6s ease;
+  }
+  .ft-exploration-hint{
+    margin-top:14px;
+    font-size:.62rem;
+    letter-spacing:.5px;
+    color:#7c8bb3;
+    text-align:center;
+  }
+
+  /* ===================================================================
+     DOSSIER / DESAFÍO
+  =================================================================== */
+  .ft-dossier-modal{
+    width:min(920px,calc(100vw - 32px));
+    padding:0;
+    color:var(--ink);
+    background:transparent;
+    border:0;
+  }
+  .ft-dossier-modal::backdrop{
+    background:rgba(1,3,14,.8);
+    backdrop-filter:blur(8px);
+  }
+  .ft-dossier-frame{
+    border:1px solid var(--hud-alert);
+    background:#081127;
+    box-shadow:0 0 54px var(--hud-alert-soft);
+    transition:border-color .6s ease,box-shadow .6s ease;
+  }
+  .ft-dossier-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:13px 20px;
+    border-bottom:1px solid var(--line);
+    color:#91acd4;
+    font-size:.56rem;
+    letter-spacing:1.2px;
+  }
+  .ft-dossier-body{
+    min-height:440px;
+    display:grid;
+    grid-template-columns:.86fr 1.14fr;
+  }
+  .ft-dossier-visual{
+    position:relative;
+    min-height:340px;
+    display:grid;
+    place-items:center;
+    border-right:1px solid var(--line);
+    background:
+      radial-gradient(circle at center,rgba(94,52,162,.25),transparent 54%),
+      repeating-linear-gradient(0deg,transparent 0 28px,rgba(82,231,255,.06) 29px 30px),
+      repeating-linear-gradient(90deg,transparent 0 28px,rgba(82,231,255,.06) 29px 30px);
+  }
+  .ft-dossier-data{padding:44px clamp(24px,4vw,52px) 36px;}
+  .ft-dossier-data h2{
+    font-size:clamp(1.7rem,3.4vw,2.7rem);
+    letter-spacing:-1px;
+    margin-bottom:14px;
+  }
+  .ft-dossier-data > p:not(.eyebrow){
+    color:var(--muted);
+    font-size:.76rem;
+    line-height:1.8;
+    margin:0 0 22px;
+  }
+  .ft-trivia-block{padding-top:20px;border-top:1px solid var(--line);}
+  .ft-fail-tracker{
+    color:var(--red);
+    font-size:.62rem;
+    letter-spacing:1px;
+    margin:0 0 12px;
+  }
+  .ft-trivia-block h3{
+    font-family:var(--mono);
+    font-size:clamp(.9rem,1.4vw,1.05rem);
+    line-height:1.6;
+    margin:12px 0 0;
+  }
+  .ft-trivia-continue{margin-top:16px;}
+
+  /* ===================================================================
+     COMPONENTES COMPARTIDOS
+  =================================================================== */
+  .eyebrow{color:var(--cyan);font-size:.62rem;letter-spacing:2px;margin:0 0 16px;}
+  .prompt{color:var(--purple);font-size:.58rem;letter-spacing:1.2px;margin:0 0 14px;}
+  .answer-list{display:grid;gap:8px;margin-top:16px;}
+  .answer-button{
+    border:1px solid rgba(130,158,225,.36);
+    color:#d9e6ff;
+    background:rgba(29,49,98,.25);
+    padding:12px 14px;
+    text-align:left;
+    font:.68rem var(--mono);
+    transition:.2s;
+  }
+  .answer-button:hover:not(:disabled){
+    border-color:var(--cyan);color:var(--cyan);background:rgba(82,231,255,.08);
+  }
+  .answer-button:disabled{cursor:default;}
+  .answer-button.correct{color:var(--green);border-color:var(--green);background:rgba(117,247,171,.1);}
+  .answer-button.incorrect{color:var(--red);border-color:var(--red);background:rgba(255,99,137,.1);}
+  .quiz-feedback{min-height:20px;margin:13px 0 0;color:var(--muted);font-size:.64rem;}
+  .quiz-feedback.success{color:var(--green);}
+  .quiz-feedback.error{color:var(--red);}
+
+  .primary-button{
+    display:inline-flex;gap:20px;align-items:center;
+    color:#04101e;font-weight:700;font-size:.7rem;letter-spacing:1.1px;
+    background:var(--cyan);padding:15px 19px;border:0;
+    box-shadow:0 0 27px rgba(82,231,255,.33);
+    transition:transform .2s,box-shadow .2s;
+  }
+  .primary-button:hover{transform:translateY(-3px);box-shadow:0 0 38px rgba(82,231,255,.5);}
+  .primary-button span:last-child{font-size:1.05rem;}
+  .primary-button.button-repair{background:var(--green);box-shadow:0 0 27px rgba(117,247,171,.35);}
+  .primary-button.button-repair:hover{box-shadow:0 0 40px rgba(117,247,171,.55);}
+  .primary-button.button-ghost{
+    background:transparent;color:var(--cyan);box-shadow:none;border:1px solid var(--cyan);
+  }
+
+  /* ===================================================================
+     RESPONSIVE
+  =================================================================== */
+  @media (max-width:760px){
+    .ft-dossier-body{grid-template-columns:1fr;}
+    .ft-dossier-visual{min-height:220px;border-right:0;border-bottom:1px solid var(--line);}
+    .ft-radar-stage{width:min(320px,86vw);}
+    .ft-anomaly{width:32px;height:32px;margin:-16px 0 0 -16px;font-size:.72rem;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+      animation-duration:.01ms!important;
+      animation-iteration-count:1!important;
+      scroll-behavior:auto!important;
+    }
+  }
+  /* ===================================================================
+     ACTUALIZACIÓN INTEGRAL — bloque añadido
+     Intro narrativa · nodos agujero de gusano · anomalías cyberpunk ·
+     fondos por época · cohete vectorial · diario · contexto · dispositivo · insignia
+     =================================================================== */
+
+  /* ---------- 1. Fondo dinámico por época ---------- */
+  .ft-root{
+    --era-accent:var(--cyan);
+    --era-glow-a:rgba(82,231,255,.10);
+    --era-glow-b:rgba(174,115,255,.08);
+    transition:--era-accent .8s ease;
+  }
+  .ft-bg{
+    background:
+      radial-gradient(circle at 12% 20%,#d6f5ff 0 1px,transparent 1.6px),
+      radial-gradient(circle at 82% 14%,#fff 0 1px,transparent 1.4px),
+      radial-gradient(circle at 40% 62%,#a5e8ff 0 1px,transparent 1.6px),
+      radial-gradient(circle at 66% 80%,#fff 0 1px,transparent 1.5px),
+      radial-gradient(circle at 18% 24%,var(--era-glow-a),transparent 42%),
+      radial-gradient(circle at 82% 74%,var(--era-glow-b),transparent 46%),
+      var(--bg);
+    background-size:240px 240px,180px 180px,270px 270px,210px 210px,auto,auto,auto;
+    transition:background 1.1s ease;
+  }
+  /* Velo de color de la época, por encima del campo de estrellas */
+  .ft-era-veil{
+    position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:radial-gradient(ellipse at 50% 0%,var(--era-glow-a),transparent 62%);
+    opacity:0;transition:opacity 1.1s ease;
+  }
+  .ft-root[data-era]:not([data-era=""]) .ft-era-veil{opacity:1;}
+
+  /* ---------- 2. Cohete vectorial (sustituye la flecha) ---------- */
+  .ft-rocket-icon{
+    width:18px;height:18px;flex:none;
+    fill:currentColor;
+    filter:drop-shadow(0 0 6px currentColor);
+  }
+    .ft-rocket-icon .ft-rocket-window{fill:#04101e;opacity:.85;}
+  .ft-rocket-icon .ft-rocket-flame{fill:var(--amber);}
+  .ft-timeline-ship{
+    clip-path:none;
+    background:transparent;
+    box-shadow:none;
+    width:26px;height:26px;
+    margin-left:-13px;top:6px;
+    display:grid;place-items:center;
+    color:var(--amber);
+    transform:rotate(90deg);
+  }
+  .ft-timeline-ship .ft-rocket-icon{
+    width:22px;height:22px;
+    filter:drop-shadow(0 0 8px var(--amber)) drop-shadow(0 0 14px rgba(255,180,84,.5));
+  }
+
+  /* ---------- 3. Nodos de progresión: agujeros de gusano ---------- */
+  .ft-timeline-node{
+    width:30px;height:30px;margin-left:-15px;top:6px;
+    border:0;background:transparent;box-shadow:none;
+    overflow:visible;
+  }
+  .ft-timeline-node::before{
+    content:"";position:absolute;inset:0;border-radius:50%;
+    background:conic-gradient(from 0deg,transparent 0deg,rgba(130,158,225,.55) 90deg,transparent 200deg,rgba(130,158,225,.35) 300deg,transparent 360deg);
+    -webkit-mask:radial-gradient(circle,transparent 34%,#000 36%);
+            mask:radial-gradient(circle,transparent 34%,#000 36%);
+    animation:ft-wormhole 5.5s linear infinite;
+    transition:filter .4s ease;
+  }
+  .ft-timeline-node::after{
+    content:"";position:absolute;inset:32%;border-radius:50%;
+    background:radial-gradient(circle at 42% 38%,rgba(255,255,255,.5),rgba(10,15,34,.95) 68%);
+    border:1px solid rgba(130,158,225,.45);
+    transition:background .4s ease,border-color .4s ease,box-shadow .4s ease;
+  }
+  @keyframes ft-wormhole{to{transform:rotate(360deg);}}
+  .ft-timeline-node span{top:34px;}
+  .ft-timeline-node.is-active::before{
+    background:conic-gradient(from 0deg,transparent 0deg,var(--cyan) 80deg,transparent 190deg,rgba(82,231,255,.6) 300deg,transparent 360deg);
+    filter:drop-shadow(0 0 8px var(--cyan));
+    animation-duration:2.4s;
+  }
+  .ft-timeline-node.is-active::after{
+    background:radial-gradient(circle at 42% 38%,#fff,var(--cyan) 55%,#05304a 100%);
+    border-color:var(--cyan);
+    box-shadow:0 0 16px rgba(82,231,255,.75);
+  }
+  .ft-timeline-node.is-active{color:var(--cyan);}
+  .ft-timeline-node.is-done::before{
+    background:conic-gradient(from 0deg,transparent 0deg,var(--green) 110deg,transparent 240deg,rgba(117,247,171,.5) 330deg,transparent 360deg);
+    filter:drop-shadow(0 0 7px var(--green));
+    animation-duration:8s;
+  }
+  .ft-timeline-node.is-done::after{
+    background:radial-gradient(circle at 42% 38%,#fff,var(--green) 60%,#08341f 100%);
+    border-color:var(--green);
+    box-shadow:0 0 14px rgba(117,247,171,.6);
+  }
+  .ft-timeline-node.is-done{color:var(--green);}
+
+  /* ---------- 4. Anomalías cyberpunk ---------- */
+  .ft-anomaly{
+    width:46px;height:46px;margin:-23px 0 0 -23px;
+    border:0;background:transparent;box-shadow:none;
+    color:#eaf6ff;font:800 .74rem var(--display);
+    text-shadow:0 0 8px var(--dot-color,var(--purple));
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+    cursor:pointer;
+    /* opacity va aquí y no en la regla de arriba: esta es posterior y
+       redefine transition entera, así que allí quedaba anulada. */
+    transition:transform .28s cubic-bezier(.22,1,.36,1),filter .28s ease,opacity .34s ease;
+    animation:none;
+  }
+  /* anillo neón exterior con corte tipo HUD */
+  .ft-anomaly::before{
+    content:"";position:absolute;inset:0;border-radius:50%;
+    border:2px solid var(--dot-color,var(--purple));
+    box-shadow:0 0 14px var(--dot-color,var(--purple)),inset 0 0 12px color-mix(in srgb,var(--dot-color,var(--purple)) 45%,transparent);
+    clip-path:polygon(0 0,100% 0,100% 34%,86% 50%,100% 66%,100% 100%,0 100%,0 66%,14% 50%,0 34%);
+    animation:ft-anomaly-spin 7s linear infinite;
+    transition:box-shadow .28s ease;
+  }
+  /* núcleo latente */
+  .ft-anomaly::after{
+    content:"";position:absolute;inset:8px;border-radius:50%;
+    background:radial-gradient(circle at 36% 32%,#fff,var(--dot-color,var(--purple)) 52%,#080b1c 100%);
+    box-shadow:0 0 18px var(--dot-color,var(--purple));
+    animation:ft-anomaly-core 1.6s ease-in-out infinite;
+  }
+  .ft-anomaly > *{position:relative;z-index:1;}
+  @keyframes ft-anomaly-spin{to{transform:rotate(360deg);}}
+  @keyframes ft-anomaly-core{
+    0%,100%{transform:scale(1);opacity:.94;}
+    50%{transform:scale(1.09);opacity:1;}
+  }
+  .ft-anomaly:hover,.ft-anomaly:focus-visible{
+    transform:scale(1.16);
+    filter:brightness(1.25) saturate(1.2);
+  }
+  .ft-anomaly:hover::before,.ft-anomaly:focus-visible::before{
+    box-shadow:0 0 26px var(--dot-color,var(--purple)),0 0 46px var(--dot-color,var(--purple)),inset 0 0 16px color-mix(in srgb,var(--dot-color,var(--purple)) 60%,transparent);
+    animation-duration:1.6s;
+  }
+  .ft-anomaly:focus-visible{outline:2px solid #fff;outline-offset:6px;border-radius:50%;}
+  .ft-anomaly:active{transform:scale(1.02);}
+  .ft-anomaly.is-scanning{animation:ft-anomaly-lock .5s ease-out;}
+  @keyframes ft-anomaly-lock{
+    0%{transform:scale(1.16);}
+    55%{transform:scale(.82);filter:brightness(2.2);}
+    100%{transform:scale(1.16);}
+  }
+
+  /* ---------- 5. Intro de simulación ---------- */
+  .ft-alert-frame.is-sim{border-color:rgba(82,231,255,.45);}
+  .ft-alert-frame.is-sim .ft-alert-title span{color:var(--cyan);}
+  .ft-pulse-dot.is-calm{background:var(--green);box-shadow:0 0 8px var(--green);}
+  .ft-sim-visual{
+    position:relative;width:min(190px,44vw);aspect-ratio:1;margin:20px auto 6px;
+    display:grid;place-items:center;
+  }
+  .ft-sim-ring{
+    position:absolute;inset:0;border-radius:50%;
+    border:1px dashed rgba(82,231,255,.4);
+    animation:ft-sim-spin 14s linear infinite;
+  }
+  .ft-sim-ring.delay{inset:16%;border-style:solid;border-color:rgba(174,115,255,.3);animation-duration:9s;animation-direction:reverse;}
+  @keyframes ft-sim-spin{to{transform:rotate(360deg);}}
+  .ft-sim-core{
+    width:44%;aspect-ratio:1;border-radius:50%;
+    background:radial-gradient(circle at 36% 30%,#fff,var(--cyan) 48%,#06243a 100%);
+    box-shadow:0 0 30px rgba(82,231,255,.55);
+    transition:background .5s ease,box-shadow .5s ease,transform .4s ease;
+  }
+  .ft-sim-core.is-critical{
+    background:radial-gradient(circle at 36% 30%,#fff,var(--red) 48%,#3a0612 100%);
+    box-shadow:0 0 46px rgba(255,99,137,.85);
+  }
+  .ft-intro-dots{display:flex;gap:8px;justify-content:center;margin:14px 0 20px;}
+  .ft-intro-dots i{
+    width:26px;height:3px;border-radius:2px;background:rgba(130,158,225,.3);
+    transition:background .35s ease,box-shadow .35s ease;
+  }
+  .ft-intro-dots i.is-on{background:var(--cyan);box-shadow:0 0 8px var(--cyan);}
+  .ft-intro-dots i.is-crit{background:var(--red);box-shadow:0 0 8px var(--red);}
+
+  /* ---------- 6. Herramientas del HUD ---------- */
+  /* El HUD pasa a rejilla para que el nombre de la época, el estado y las
+     herramientas no se aplasten entre sí al añadir los botones nuevos. */
+  .ft-radar-hud-top{
+    width:min(980px,100%);
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-areas:"id tools" "status tools";
+    gap:6px 18px;
+    align-items:center;
+  }
+  .ft-hud-id{grid-area:id;}
+  .ft-hud-status{grid-area:status;}
+  .ft-hud-tools{grid-area:tools;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+  /* El número de la anomalía debe quedar por encima del núcleo luminoso. */
+  .ft-anomaly{isolation:isolate;}
+  .ft-anomaly::after{z-index:-1;}
+  .ft-anomaly::before{z-index:1;}
+  .ft-tool-btn{
+    display:inline-flex;align-items:center;gap:7px;min-height:38px;
+    padding:8px 13px;
+    font:700 .52rem var(--display);letter-spacing:1px;
+    color:#9eacd0;background:rgba(9,15,36,.6);
+    border:1px solid rgba(130,158,225,.35);
+    cursor:pointer;transition:.22s;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  }
+  .ft-tool-btn:hover,.ft-tool-btn:focus-visible{
+    color:var(--cyan);border-color:var(--cyan);
+    background:rgba(82,231,255,.09);
+    box-shadow:0 0 14px rgba(82,231,255,.28);
+  }
+  .ft-tool-count{
+    display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 5px;
+    border-radius:10px;background:var(--cyan);color:#04101e;font-size:.5rem;
+  }
+  .ft-tool-btn.is-new{border-color:var(--amber);color:var(--amber);animation:ft-tool-ping 1.4s ease-in-out 3;}
+  @keyframes ft-tool-ping{0%,100%{box-shadow:0 0 0 0 rgba(255,180,84,0);}50%{box-shadow:0 0 0 7px rgba(255,180,84,.18);}}
+
+  /* ---------- 7. Inventario del dispositivo ---------- */
+  .ft-device{
+    position:absolute;left:clamp(14px,4vw,46px);bottom:clamp(96px,16vh,150px);
+    width:min(232px,46vw);z-index:4;
+    padding:13px 15px;
+    border:1px solid rgba(130,158,225,.3);
+    background:rgba(6,10,26,.78);
+    backdrop-filter:blur(6px);
+  }
+  .ft-device-title{
+    margin:0 0 10px;display:flex;justify-content:space-between;gap:8px;align-items:baseline;
+    font:700 .48rem var(--display);letter-spacing:1.1px;color:var(--muted);
+  }
+  .ft-device-title strong{color:var(--cyan);font-size:.68rem;}
+  .ft-device-list{list-style:none;margin:0;padding:0;display:grid;gap:7px;}
+  .ft-device-list li{
+    display:flex;align-items:center;gap:9px;
+    padding:7px 9px;
+    border:1px solid rgba(130,158,225,.22);
+    background:rgba(255,255,255,.015);
+    font-size:.5rem;letter-spacing:.7px;color:#6f7ea3;
+    transition:.4s;
+  }
+  .ft-device-list li i{
+    flex:none;width:11px;height:11px;border-radius:50%;
+    border:1px solid rgba(130,158,225,.4);background:transparent;transition:.4s;
+  }
+  .ft-device-list li.is-owned{
+    color:#eaf6ff;border-color:var(--era-accent,var(--cyan));
+    background:color-mix(in srgb,var(--era-accent,var(--cyan)) 8%,transparent);
+    box-shadow:0 0 13px color-mix(in srgb,var(--era-accent,var(--cyan)) 28%,transparent);
+  }
+  .ft-device-list li.is-owned i{
+    background:var(--piece-color,var(--cyan));
+    border-color:var(--piece-color,var(--cyan));
+    box-shadow:0 0 9px var(--piece-color,var(--cyan));
+  }
+  .ft-device-list li.just-added{animation:ft-piece-in .8s cubic-bezier(.22,1,.36,1);}
+  @keyframes ft-piece-in{
+    0%{transform:translateX(-14px) scale(.9);opacity:0;}
+    60%{transform:translateX(3px) scale(1.04);opacity:1;}
+    100%{transform:none;opacity:1;}
+  }
+
+  /* ---------- 8. Modales laterales: contexto y diario ---------- */
+  .ft-side-modal{
+    width:min(680px,92vw);padding:0;border:0;background:transparent;color:var(--ink);
+  }
+  .ft-side-modal::backdrop{background:rgba(1,3,14,.8);backdrop-filter:blur(6px);}
+  .ft-side-frame{
+    border:1px solid var(--cyan);background:#070c1d;
+    box-shadow:0 0 50px rgba(82,231,255,.2);
+  }
+  .ft-side-body{
+    padding:24px clamp(20px,3.4vw,34px) 28px;
+    max-height:min(72vh,620px);max-height:min(72dvh,620px);
+    overflow-y:auto;
+  }
+  .ft-side-body h2{margin:0 0 14px;font-size:clamp(1.4rem,3vw,2.1rem);letter-spacing:-1px;}
+  .ft-side-intro{margin:0 0 20px;color:var(--muted);font-size:.76rem;line-height:1.85;}
+  .ft-side-label{
+    margin:0 0 11px;font:700 .5rem var(--display);letter-spacing:1.4px;color:var(--cyan);
+  }
+  .ft-side-foot{
+    margin:20px 0 0;padding-top:14px;border-top:1px solid rgba(130,158,225,.22);
+    color:var(--muted);font-size:.62rem;line-height:1.75;
+  }
+  .ft-close-btn{
+    width:38px;height:38px;display:grid;place-items:center;padding:0;
+    background:transparent;border:0;color:var(--cyan);font-size:1.6rem;line-height:1;
+    cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  }
+  .ft-close-btn:hover{color:#fff;}
+  .ft-context-list{list-style:none;margin:0;padding:0;display:grid;gap:9px;}
+  .ft-context-list li{
+    position:relative;padding:11px 13px 11px 34px;
+    border:1px solid rgba(130,158,225,.25);background:rgba(255,255,255,.02);
+    font-size:.7rem;line-height:1.7;color:#c9d3ef;
+  }
+  .ft-context-list li::before{
+    content:"◈";position:absolute;left:13px;top:11px;color:var(--era-accent,var(--cyan));font-size:.6rem;
+  }
+  .ft-journal-list{list-style:none;margin:0;padding:0;display:grid;gap:14px;counter-reset:jr;}
+  .ft-journal-list li{
+    position:relative;padding:15px 17px 15px 19px;
+    border:1px solid rgba(130,158,225,.25);
+    border-left:2px solid var(--entry-color,var(--cyan));
+    background:rgba(255,255,255,.02);
+  }
+  .ft-journal-entry-head{
+    display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    margin:0 0 8px;font:700 .46rem var(--display);letter-spacing:1.1px;
+    color:var(--entry-color,var(--cyan));
+  }
+  .ft-journal-list p{margin:0;font-size:.72rem;line-height:1.9;color:#d5dcf0;font-style:italic;}
+  .ft-journal-empty{color:var(--muted);font-size:.72rem;line-height:1.8;padding:16px 0;}
+
+  /* ---------- 9. Expediente: imagen intercalada y datos clave ---------- */
+  .ft-topic-figure{
+    margin:0 0 18px;border:1px solid rgba(130,158,225,.3);background:#050a18;overflow:hidden;
+  }
+  .ft-topic-figure[hidden]{display:none;}
+  .ft-topic-figure img{
+    display:block;width:100%;height:clamp(140px,20vh,208px);object-fit:cover;
+    filter:saturate(1.05) contrast(1.04);
+  }
+  .ft-topic-figure figcaption{
+    padding:8px 12px;border-top:1px solid rgba(130,158,225,.22);
+    font-size:.53rem;letter-spacing:.8px;color:var(--muted);line-height:1.6;
+  }
+  .ft-topic-figure.is-broken img{display:none;}
+  .ft-topic-figure.is-broken{
+    background:radial-gradient(circle at 34% 30%,color-mix(in srgb,var(--era-accent,var(--cyan)) 30%,transparent),transparent 62%),#050a18;
+  }
+  /* dato clave resaltado dentro de la teoría */
+  mark.ft-key{
+    background:color-mix(in srgb,var(--era-accent,var(--cyan)) 17%,transparent);
+    color:#fff;font-weight:700;padding:1px 5px;border-radius:3px;
+    box-shadow:0 0 10px color-mix(in srgb,var(--era-accent,var(--cyan)) 26%,transparent);
+  }
+  .ft-keycard{
+    margin:16px 0 20px;padding:13px 15px;
+    border:1px solid color-mix(in srgb,var(--era-accent,var(--cyan)) 50%,transparent);
+    border-left:3px solid var(--era-accent,var(--cyan));
+    background:color-mix(in srgb,var(--era-accent,var(--cyan)) 6%,transparent);
+  }
+  .ft-keycard[hidden]{display:none;}
+  .ft-keycard-label{
+    display:block;margin-bottom:9px;
+    font:700 .46rem var(--display);letter-spacing:1.4px;color:var(--era-accent,var(--cyan));
+  }
+  .ft-keycard ul{list-style:none;margin:0;padding:0;display:grid;gap:6px;}
+  .ft-keycard li{
+    position:relative;padding-left:16px;font-size:.63rem;line-height:1.65;color:#e4ebff;
+  }
+  .ft-keycard li::before{
+    content:"▸";position:absolute;left:0;color:var(--era-accent,var(--cyan));
+  }
+
+  /* ---------- 10. Insignia de Explorador Temporal ---------- */
+  .ft-badge{
+    display:grid;grid-template-columns:auto minmax(0,1fr);gap:20px;align-items:start;
+    margin:24px 0;padding:20px;
+    border:1px solid var(--amber);
+    background:linear-gradient(140deg,rgba(255,180,84,.11),rgba(174,115,255,.07));
+    box-shadow:0 0 34px rgba(255,180,84,.22),inset 0 0 26px rgba(255,180,84,.05);
+  }
+  /* La insignia es un escudo con punta y trae su propio marco: el disco
+     dorado que había antes le quedaba encima. El resplandor se anima con
+     drop-shadow, que sigue la silueta recortada en vez de la caja. */
+  .ft-badge-medal{
+    width:96px;height:96px;flex:none;display:grid;place-items:center;
+    animation:ft-badge-glow 2.8s ease-in-out infinite;
+  }
+  .ft-badge-medal img{width:100%;height:100%;object-fit:contain;display:block;}
+  @keyframes ft-badge-glow{
+    0%,100%{filter:drop-shadow(0 0 9px rgba(255,180,84,.42));}
+    50%{filter:drop-shadow(0 0 18px rgba(255,180,84,.78));}
+  }
+  .ft-badge-rank{margin:0 0 6px;font:700 .48rem var(--display);letter-spacing:1.6px;color:var(--amber);}
+  .ft-badge-name{margin:0 0 11px;font-size:clamp(1.3rem,3.4vw,2rem);letter-spacing:-.8px;color:#fff;}
+  .ft-badge-desc{margin:0 0 14px;font-size:.7rem;line-height:1.8;color:#d5dcf0;}
+  .ft-badge-desc strong{color:var(--amber);}
+  .ft-badge-pieces{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px;}
+  .ft-badge-pieces li{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:5px 9px;border:1px solid rgba(255,180,84,.4);
+    background:rgba(255,180,84,.07);
+    font:700 .44rem var(--display);letter-spacing:.9px;color:#ffd9a0;
+  }
+  .ft-final-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+  .ft-final-actions .primary-button{text-decoration:none;}
+
+  /* ---------- 11. Responsive ---------- */
+  @media (max-width:820px){
+    .ft-device{
+      position:static;width:auto;margin:14px auto 0;max-width:420px;
+    }
+    .ft-hud-tools{width:100%;}
+    .ft-tool-btn{flex:1;justify-content:center;min-height:44px;}
+    .ft-badge{grid-template-columns:1fr;justify-items:center;text-align:center;}
+    .ft-badge-pieces{justify-content:center;}
+    .ft-final-actions .primary-button{width:100%;justify-content:center;}
+  }
+  @media (max-width:560px){
+    .ft-anomaly{width:52px;height:52px;margin:-26px 0 0 -26px;}
+    .ft-side-body{max-height:min(76vh,620px);max-height:min(76dvh,620px);}
+    .ft-close-btn{width:44px;height:44px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .ft-timeline-node::before,.ft-anomaly::before,.ft-anomaly::after,
+    .ft-sim-ring,.ft-badge-medal{animation:none!important;}
+  }
+  /* ===================================================================
+     FASE 2 — imágenes en lugar de esferas · anomalías en órbita ·
+     diario acordeón · animación de candados
+     =================================================================== */
+
+  /* ---------- 1. Fuera las esferas CSS ---------- */
+  /* Las esferas CSS quedaron eliminadas del hoja de estilos: todo cuerpo
+     se representa ahora con una imagen real. */
+  .ft-anomaly::after{content:none!important;}
+  .ft-sim-core{
+    background:none;box-shadow:none;
+    width:100%;height:100%;border-radius:0;
+    overflow:hidden;position:relative;
+    border:1px solid rgba(82,231,255,.35);
+  }
+  .ft-sim-core img{
+    width:100%;height:100%;object-fit:cover;display:block;
+    filter:saturate(1.1) contrast(1.05);
+    transition:filter .5s ease;
+  }
+  .ft-sim-core::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(160deg,rgba(82,231,255,.18),transparent 55%),
+               repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.22) 3px 4px);
+    transition:background .5s ease;
+  }
+  /* El núcleo ya no se agranda y encoge: late la luz del marco, sin mover
+     nada de sitio, y la imagen sufre un tirón irregular como de señal mala. */
+  .ft-sim-core.is-critical{animation:ft-pulso-nucleo 1.15s ease-in-out infinite;}
+  .ft-sim-core.is-critical img{animation:ft-tiron 2.6s steps(1,end) infinite;}
+  @keyframes ft-pulso-nucleo{
+    0%,100%{border-color:rgba(255,99,137,.4);box-shadow:0 0 10px rgba(255,99,137,.15),inset 0 0 22px rgba(255,99,137,.12);}
+    50%    {border-color:rgba(255,99,137,.95);box-shadow:0 0 36px rgba(255,99,137,.6),inset 0 0 48px rgba(255,99,137,.32);}
+  }
+  /* pasos irregulares: los tirones caen en momentos sueltos, no a compás */
+  @keyframes ft-tiron{
+    0%,7%   {transform:translate3d(0,0,0);}
+    8%      {transform:translate3d(-2.4%,0,0);}
+    9.5%    {transform:translate3d(2%,0,0);}
+    11%,41% {transform:translate3d(0,0,0);}
+    42%     {transform:translate3d(1.6%,0,0);}
+    43.5%   {transform:translate3d(-1.2%,0,0);}
+    45%,72% {transform:translate3d(0,0,0);}
+    73%     {transform:translate3d(-1%,0,0);}
+    74.5%,100%{transform:translate3d(0,0,0);}
+  }
+  .ft-sim-core.is-critical img{filter:saturate(1.5) contrast(1.2) hue-rotate(-35deg);}
+  /* línea de escaneo que baja por la imagen; el ::after ya estaba ocupado por
+     la retícula, así que va en el ::before */
+  .ft-sim-core::before{
+    content:"";position:absolute;left:0;right:0;top:0;height:14%;z-index:2;pointer-events:none;
+    background:linear-gradient(180deg,transparent,rgba(82,231,255,.55),transparent);
+    box-shadow:0 0 18px rgba(82,231,255,.45);
+    animation:ft-escaneo 3.4s linear infinite;
+  }
+  .ft-sim-core.is-critical::before{
+    background:linear-gradient(180deg,transparent,rgba(255,99,137,.7),transparent);
+    box-shadow:0 0 22px rgba(255,99,137,.55);
+    animation-duration:1.1s;
+  }
+  /* recorre 114% del alto del marco: entra por arriba y sale por abajo */
+  @keyframes ft-escaneo{
+    0%  {transform:translateY(-100%);opacity:0;}
+    10% {opacity:1;}
+    90% {opacity:1;}
+    100%{transform:translateY(714%);opacity:0;}
+  }
+  .ft-sim-core.is-critical::after{
+    background:linear-gradient(160deg,rgba(255,99,137,.4),transparent 55%),
+               repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.28) 3px 4px);
+  }
+  .ft-sim-visual{width:min(300px,66vw);aspect-ratio:16/10;}
+
+  /* ---------- 2. Panel visual del expediente = imagen real ---------- */
+  .ft-dossier-visual{padding:20px;overflow:hidden;}
+  .ft-dossier-visual .ft-topic-figure{
+    margin:0;width:100%;max-width:420px;border:1px solid rgba(130,158,225,.35);
+    background:#050a18;overflow:hidden;position:relative;z-index:1;
+    box-shadow:0 0 34px rgba(0,0,0,.5);
+  }
+  .ft-dossier-visual .ft-topic-figure img{
+    height:clamp(190px,30vh,290px);
+    transition:transform .6s cubic-bezier(.22,1,.36,1);
+  }
+  .ft-dossier-visual .ft-topic-figure:hover img{transform:scale(1.05);}
+  /* marco de escáner que sustituye a los antiguos anillos de la esfera */
+  .ft-scan-frame{
+    position:absolute;inset:12px;pointer-events:none;
+    border:1px solid rgba(82,231,255,.22);
+  }
+  .ft-scan-frame::before,.ft-scan-frame::after{
+    content:"";position:absolute;width:22px;height:22px;
+    border:2px solid var(--era-accent,var(--cyan));
+  }
+  .ft-scan-frame::before{top:-1px;left:-1px;border-right:0;border-bottom:0;}
+  .ft-scan-frame::after{bottom:-1px;right:-1px;border-left:0;border-top:0;}
+
+  /* ---------- 3. Anomalías: miniatura real + órbita continua ---------- */
+  .ft-orbit{
+    position:absolute;
+    inset:var(--orbit-inset,25%);
+    pointer-events:none;
+    animation:ft-orbit-spin var(--orbit-dur,110s) linear infinite;
+  }
+  @keyframes ft-orbit-spin{
+    from{transform:rotate(var(--orbit-start,0deg));}
+    to{transform:rotate(calc(var(--orbit-start,0deg) + 360deg));}
+  }
+  .ft-orbit-pos{
+    position:absolute;top:0;left:50%;
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+  }
+  /* contrarrotación: el icono nunca se pone del revés */
+  .ft-orbit-counter{
+    animation:ft-orbit-counter var(--orbit-dur,110s) linear infinite;
+    pointer-events:none;
+  }
+  @keyframes ft-orbit-counter{
+    from{transform:rotate(calc(var(--orbit-start,0deg) * -1));}
+    to{transform:rotate(calc((var(--orbit-start,0deg) * -1) - 360deg));}
+  }
+  /* huella tenue de la órbita, para que el movimiento se lea */
+  .ft-orbit-path{
+    position:absolute;inset:var(--orbit-inset,25%);
+    border-radius:50%;
+    border:1px dashed rgba(130,158,225,.14);
+    pointer-events:none;
+  }
+  .ft-anomaly{
+    position:relative;left:auto;top:auto;margin:0;
+    width:56px;height:56px;
+    pointer-events:auto;
+    overflow:visible;
+  }
+  .ft-anomaly-img{
+    position:absolute;inset:4px;
+    width:calc(100% - 8px);height:calc(100% - 8px);
+    object-fit:cover;border-radius:50%;
+    z-index:0;
+    background:radial-gradient(circle at 34% 30%,#2a3560,#070b1c 72%);
+    transition:filter .28s ease;
+  }
+  .ft-anomaly-num{
+    position:absolute;right:-3px;bottom:-3px;z-index:2;
+    min-width:19px;height:19px;padding:0 4px;
+    display:grid;place-items:center;border-radius:10px;
+    background:var(--dot-color,var(--purple));
+    color:#04101e;font:800 .56rem var(--display);
+    box-shadow:0 0 10px var(--dot-color,var(--purple));
+    text-shadow:none;
+  }
+  .ft-anomaly:hover .ft-anomaly-img,.ft-anomaly:focus-visible .ft-anomaly-img{
+    filter:brightness(1.2) saturate(1.15);
+  }
+
+  /* ---------- 4. Imágenes en contexto y diario ---------- */
+  .ft-context-figure{
+    margin:0 0 20px;border:1px solid rgba(130,158,225,.3);
+    background:#050a18;overflow:hidden;
+  }
+  .ft-context-figure img{
+    display:block;width:100%;height:clamp(150px,24vh,230px);object-fit:cover;
+  }
+  .ft-context-figure figcaption{
+    padding:9px 13px;border-top:1px solid rgba(130,158,225,.22);
+    font-size:.55rem;letter-spacing:.7px;color:var(--muted);line-height:1.6;
+  }
+  .ft-context-figure.is-broken img,.ft-journal-figure.is-broken img{display:none;}
+  .ft-context-figure.is-broken,.ft-journal-figure.is-broken{
+    background:radial-gradient(circle at 32% 28%,color-mix(in srgb,var(--era-accent,var(--cyan)) 26%,transparent),transparent 64%),#050a18;
+  }
+
+  /* ---------- 5. Diario del Viajero en acordeón ---------- */
+  .ft-journal-list li{padding:0;overflow:hidden;}
+  .ft-journal-toggle{
+    width:100%;display:flex;align-items:center;gap:12px;
+    padding:14px 15px;
+    background:transparent;border:0;cursor:pointer;text-align:left;
+    color:inherit;font:inherit;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+    transition:background .22s ease;
+  }
+  .ft-journal-toggle:hover,.ft-journal-toggle:focus-visible{
+    background:color-mix(in srgb,var(--entry-color,var(--cyan)) 8%,transparent);
+  }
+  .ft-journal-toggle:focus-visible{outline:2px solid var(--entry-color,var(--cyan));outline-offset:-2px;}
+  .ft-journal-index{
+    flex:none;display:grid;place-items:center;
+    width:30px;height:30px;border-radius:50%;
+    border:1px solid var(--entry-color,var(--cyan));
+    color:var(--entry-color,var(--cyan));
+    font:800 .5rem var(--display);
+    box-shadow:0 0 10px color-mix(in srgb,var(--entry-color,var(--cyan)) 30%,transparent);
+  }
+  .ft-journal-heading{
+    flex:1;min-width:0;
+    font:700 .58rem var(--display);letter-spacing:1px;
+    color:#eaf6ff;line-height:1.5;
+  }
+  .ft-journal-heading small{
+    display:block;margin-top:3px;
+    font:400 .48rem var(--display);letter-spacing:.9px;
+    color:var(--entry-color,var(--cyan));opacity:.85;
+  }
+  .ft-journal-arrow{
+    flex:none;width:22px;height:22px;display:grid;place-items:center;
+    color:var(--entry-color,var(--cyan));font-size:.7rem;
+    transition:transform .32s cubic-bezier(.22,1,.36,1);
+  }
+  .ft-journal-toggle[aria-expanded="true"] .ft-journal-arrow{transform:rotate(180deg);}
+  .ft-journal-panel{
+    display:grid;grid-template-rows:0fr;
+    transition:grid-template-rows .38s cubic-bezier(.22,1,.36,1);
+  }
+  .ft-journal-panel > div{overflow:hidden;min-height:0;}
+  .ft-journal-panel.is-open{grid-template-rows:1fr;}
+  .ft-journal-inner{padding:0 15px 16px 57px;}
+  .ft-journal-figure{
+    margin:0 0 12px;border:1px solid rgba(130,158,225,.28);
+    background:#050a18;overflow:hidden;
+  }
+  .ft-journal-figure img{display:block;width:100%;height:clamp(110px,16vh,158px);object-fit:cover;}
+  .ft-journal-list p{margin:0;font-size:.72rem;line-height:1.9;color:#d5dcf0;font-style:italic;}
+  .ft-journal-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;}
+  .ft-journal-toolbar button{
+    padding:8px 12px;min-height:38px;
+    font:700 .48rem var(--display);letter-spacing:1px;
+    color:#9eacd0;background:rgba(9,15,36,.6);
+    border:1px solid rgba(130,158,225,.35);cursor:pointer;transition:.22s;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  }
+  .ft-journal-toolbar button:hover{color:var(--cyan);border-color:var(--cyan);}
+
+  /* ---------- 6. Desbloqueo: candados rompiéndose ---------- */
+  .ft-unlock{
+    position:fixed;inset:0;z-index:60;
+    display:grid;place-items:center;
+    background:rgba(1,3,14,.86);backdrop-filter:blur(7px);
+    animation:ft-fade-in .32s ease;
+  }
+  .ft-unlock[hidden]{display:none;}
+  @keyframes ft-fade-in{from{opacity:0;}to{opacity:1;}}
+  .ft-unlock-card{
+    width:min(460px,90vw);padding:30px 28px 26px;text-align:center;
+    border:1px solid var(--era-accent,var(--cyan));
+    background:linear-gradient(160deg,rgba(10,16,38,.97),rgba(6,10,26,.99));
+    box-shadow:0 0 60px color-mix(in srgb,var(--era-accent,var(--cyan)) 30%,transparent);
+  }
+  .ft-unlock-eyebrow{
+    margin:0 0 20px;font:700 .5rem var(--display);letter-spacing:1.6px;
+    color:var(--era-accent,var(--cyan));
+  }
+  .ft-unlock-stage{
+    position:relative;width:170px;height:170px;margin:0 auto 20px;
+    display:grid;place-items:center;
+  }
+  .ft-unlock-piece{
+    width:112px;height:112px;display:grid;place-items:center;
+    color:var(--era-accent,var(--cyan));
+    filter:grayscale(1) brightness(.55);
+    transition:filter .7s ease,transform .7s cubic-bezier(.22,1,.36,1);
+  }
+  .ft-piece-glyph{width:100%;height:100%;}
+  .ft-piece-shell{fill:none;stroke:currentColor;stroke-width:2;opacity:.55;}
+  .ft-piece-core{fill:color-mix(in srgb,currentColor 16%,transparent);stroke:currentColor;stroke-width:1.5;}
+  .ft-piece-spark{fill:currentColor;opacity:0;}
+  .ft-unlock-piece.is-free{
+    filter:none;transform:scale(1.06);
+    animation:ft-piece-pulse 1.6s ease-in-out infinite;
+  }
+  .ft-unlock-piece.is-free .ft-piece-spark{opacity:1;animation:ft-spark 1.2s ease-in-out infinite;}
+  @keyframes ft-piece-pulse{
+    0%,100%{filter:drop-shadow(0 0 10px currentColor);}
+    50%{filter:drop-shadow(0 0 24px currentColor);}
+  }
+  @keyframes ft-spark{0%,100%{opacity:.5;}50%{opacity:1;}}
+  /* los tres candados, repartidos alrededor de la pieza */
+  .ft-locks{position:absolute;inset:0;pointer-events:none;}
+  .ft-lock{
+    position:absolute;top:50%;left:50%;
+    width:34px;height:34px;margin:-17px 0 0 -17px;
+    color:var(--amber);
+    transform:rotate(var(--lock-a)) translateY(-70px) rotate(calc(var(--lock-a) * -1));
+    transition:opacity .3s ease;
+  }
+  .ft-lock svg{width:100%;height:100%;overflow:visible;}
+  .ft-lock .ft-lock-body{
+    fill:rgba(10,16,38,.95);stroke:currentColor;stroke-width:2;
+  }
+  .ft-lock .ft-lock-shackle{
+    fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;
+    transform-origin:12px 9px;
+    transition:transform .35s cubic-bezier(.22,1,.36,1);
+  }
+  .ft-lock.is-breaking{animation:ft-lock-shake .3s ease-in-out 2;}
+  @keyframes ft-lock-shake{
+    0%,100%{transform:rotate(var(--lock-a)) translateY(-70px) rotate(calc(var(--lock-a) * -1)) translateX(0);}
+    25%{transform:rotate(var(--lock-a)) translateY(-70px) rotate(calc(var(--lock-a) * -1)) translateX(-3px);}
+    75%{transform:rotate(var(--lock-a)) translateY(-70px) rotate(calc(var(--lock-a) * -1)) translateX(3px);}
+  }
+  .ft-lock.is-open .ft-lock-shackle{transform:rotate(-38deg) translateY(-3px);}
+  .ft-lock.is-open{color:var(--green);}
+  .ft-lock.is-gone{
+    animation:ft-lock-burst .55s cubic-bezier(.22,1,.36,1) forwards;
+  }
+  @keyframes ft-lock-burst{
+    0%{opacity:1;}
+    100%{
+      opacity:0;
+      transform:rotate(var(--lock-a)) translateY(-118px) rotate(calc(var(--lock-a) * -1)) scale(.4);
+    }
+  }
+  /* esquirlas al romperse */
+  .ft-shard{
+    position:absolute;top:50%;left:50%;width:4px;height:11px;
+    background:var(--amber);margin:-5px 0 0 -2px;
+    box-shadow:0 0 8px var(--amber);
+    animation:ft-shard-fly .7s ease-out forwards;
+    pointer-events:none;
+  }
+  @keyframes ft-shard-fly{
+    from{opacity:1;transform:rotate(var(--sa)) translateY(-70px) scale(1);}
+    to{opacity:0;transform:rotate(var(--sa)) translateY(-150px) scale(.3) rotate(180deg);}
+  }
+  .ft-unlock-code{
+    margin:0 0 6px;font:700 .5rem var(--display);letter-spacing:1.8px;
+    color:var(--era-accent,var(--cyan));
+  }
+  .ft-unlock-name{
+    margin:0 0 10px;font-size:clamp(1.1rem,3vw,1.6rem);letter-spacing:-.5px;color:#fff;
+  }
+  .ft-unlock-role{margin:0 0 16px;font-size:.68rem;line-height:1.75;color:#c9d3ef;}
+  .ft-unlock-status{
+    margin:0;font:700 .5rem var(--display);letter-spacing:1.3px;color:var(--muted);
+    min-height:1.2em;transition:color .4s ease;
+  }
+  .ft-unlock-status.is-done{color:var(--green);}
+
+  @media (max-width:560px){
+    .ft-anomaly{width:52px;height:52px;}
+    .ft-unlock-stage{width:150px;height:150px;}
+    .ft-lock{transform:rotate(var(--lock-a)) translateY(-60px) rotate(calc(var(--lock-a) * -1));}
+    .ft-journal-inner{padding-left:15px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .ft-orbit,.ft-orbit-counter{animation:none!important;}
+  }

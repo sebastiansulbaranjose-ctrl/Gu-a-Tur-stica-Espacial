@@ -30,7 +30,12 @@ import urllib.request
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIR_IMG = os.path.join(RAIZ, "img")
 INVENTARIO = os.path.join(RAIZ, "herramientas", "inventario-imagenes.txt")
-ARCHIVOS = ["index.html", "practica47.html"]
+# Se buscan URLs de imagen en el HTML y en el JavaScript: al separar el
+# código, los datos de planetas, satélites y anomalías —con sus rutas de
+# imagen— se fueron a los archivos de js/. Las hojas de estilo quedan fuera a
+# propósito: viven en css/, así que una ruta reescrita a «img/…» apuntaría un
+# nivel más arriba de donde debe.
+ARCHIVOS = ["index.html", "practica47.html", "js/orbita.js", "js/practica47.js"]
 HOSTS = ("commons.wikimedia.org", "upload.wikimedia.org", "images.unsplash.com")
 PATRON = re.compile(r'https://(?:' + "|".join(h.replace(".", r"\.") for h in HOSTS) + r')[^"\s\\]+')
 

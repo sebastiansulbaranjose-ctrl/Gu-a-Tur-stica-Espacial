@@ -9,53 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    :root{--ink:#f2f7ff;--muted:#93a3c8;--bg:#040614;--line:rgba(128,177,255,.2);--cyan:#52e7ff;--purple:#ae73ff;--green:#75f7ab;--red:#ff6389;--mono:"Space Mono",monospace;--display:"Orbitron",sans-serif}
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;color:var(--ink);background:var(--bg);font-family:var(--mono);overflow-x:hidden}
-    a{color:inherit;text-decoration:none}
-    .star-field{position:fixed;inset:0;pointer-events:none;z-index:-3;background-image:radial-gradient(circle at 11% 18%,#d6f5ff 0 1px,transparent 1.7px),radial-gradient(circle at 84% 11%,#fff 0 1px,transparent 1.4px),radial-gradient(circle at 38% 59%,#a5e8ff 0 1px,transparent 1.6px),radial-gradient(circle at 63% 79%,#fff 0 1px,transparent 1.5px),radial-gradient(circle at 91% 55%,#c8b4ff 0 1px,transparent 1.6px),radial-gradient(circle at 22% 88%,#fff 0 1px,transparent 1.5px);background-size:240px 240px,180px 180px,270px 270px,210px 210px,260px 260px,310px 310px;opacity:.7}
-    .site-header{height:80px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,5vw,86px);border-bottom:1px solid var(--line);background:rgba(4,6,20,.68);backdrop-filter:blur(18px);position:sticky;top:0;z-index:5}
-    .brand{display:inline-flex;align-items:center;gap:7px;font-family:var(--display);font-weight:800;letter-spacing:3px;font-size:1rem}
-    .brand span span{color:var(--cyan)}
-    .brand-mark{color:var(--cyan);font-size:2rem;line-height:1;text-shadow:0 0 18px var(--cyan)}
-    .back-link{font-size:.66rem;letter-spacing:1.5px;color:#b8c6e5;border:1px solid var(--line);padding:10px 16px;transition:color .2s ease,border-color .2s ease}
-    .back-link:hover{color:var(--cyan);border-color:var(--cyan)}
-    main{padding:70px clamp(24px,8vw,140px) 100px;max-width:1400px;margin:0 auto}
-    .eyebrow{color:var(--cyan);font-size:.8rem;font-weight:700;letter-spacing:2.4px;text-shadow:0 0 14px rgba(82,231,255,.55);margin:0 0 16px}
-    h1{font-family:var(--display);font-size:clamp(2rem,4vw,3.4rem);line-height:1.1;letter-spacing:-1.5px;margin:0 0 22px}
-    h1 span{color:var(--purple);text-shadow:0 0 25px rgba(174,115,255,.3)}
-    .intro{color:var(--muted);max-width:780px;line-height:1.85;font-size:.9rem;margin:0 0 20px}
-    .stat-bar{display:flex;flex-wrap:wrap;gap:14px;margin:36px 0 56px}
-    .stat-chip{border:1px solid var(--line);padding:10px 18px;font-size:.62rem;letter-spacing:1px;color:var(--muted);display:flex;align-items:center;gap:8px}
-    .stat-chip strong{color:var(--ink);font-family:var(--display);font-size:.9rem}
-    .stat-chip.pd{border-color:rgba(117,247,171,.35)}
-    .stat-chip.pd strong{color:var(--green)}
-    .stat-chip.ccby{border-color:rgba(82,231,255,.35)}
-    .stat-chip.ccby strong{color:var(--cyan)}
-    .stat-chip.ccsa{border-color:rgba(174,115,255,.35)}
-    .stat-chip.ccsa strong{color:var(--purple)}
-    section.license-group{margin-bottom:64px}
-    .group-heading{display:flex;align-items:baseline;gap:16px;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:26px}
-    .group-heading h2{font-family:var(--display);font-size:1.3rem;margin:0;letter-spacing:.5px}
-    .group-heading .group-count{color:var(--muted);font-size:.66rem;letter-spacing:1px}
-    .group-note{color:var(--muted);font-size:.76rem;line-height:1.7;margin:-10px 0 26px;max-width:760px}
-    .credit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-    .credit-card{border:1px solid var(--line);background:rgba(255,255,255,.02);padding:18px 20px;transition:border-color .2s ease,background .2s ease}
-    .credit-card:hover{border-color:rgba(82,231,255,.4);background:rgba(255,255,255,.04)}
-    .credit-card h3{font-family:var(--display);font-size:.82rem;font-weight:600;line-height:1.4;margin:0 0 14px;color:var(--ink)}
-    .credit-card dl{margin:0;display:flex;flex-direction:column;gap:8px}
-    .credit-card dt{font-size:.56rem;letter-spacing:1.2px;color:#7488ad;margin:0}
-    .credit-card dd{font-size:.72rem;color:var(--muted);margin:2px 0 0;line-height:1.5}
-    .credit-card .src-link{color:var(--cyan);overflow-wrap:anywhere;border-bottom:1px solid rgba(82,231,255,.28);transition:border-color .2s ease}
-    .credit-card .src-link:hover,.credit-card .src-link:focus-visible{border-color:var(--cyan)}
-    .unsplash-note{border:1px solid var(--line);padding:22px 24px;background:rgba(255,255,255,.02);font-size:.78rem;color:var(--muted);line-height:1.8;margin-top:16px}
-    .unsplash-note strong{color:var(--ink)}
-    footer{border-top:1px solid var(--line);min-height:110px;display:flex;align-items:center;justify-content:space-between;padding:25px clamp(24px,5vw,86px);color:#8494b9;font-size:.56rem;letter-spacing:1px;flex-wrap:wrap;gap:12px}
-    footer .brand{color:var(--ink)}
-    footer a:hover{color:var(--cyan)}
-  </style>
+  <link rel="stylesheet" href="css/creditos.css">
 </head>
 <body>
   <div class="star-field" aria-hidden="true"></div>

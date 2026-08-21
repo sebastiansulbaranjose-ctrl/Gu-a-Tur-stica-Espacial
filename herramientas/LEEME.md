@@ -17,7 +17,13 @@ python3 herramientas/localizar-imagenes.py
 Eso hace dos cosas, en este orden:
 
 1. Descarga las 138 imágenes a `img/`.
-2. Reescribe `index.html` y `practica47.html` para que apunten a `img/…`.
+2. Reescribe `index.html`, `practica47.html`, `js/orbita.js` y
+   `js/practica47.js` para que apunten a `img/…`.
+
+   Los dos archivos de `js/` entran en la lista porque ahí viven los datos de
+   planetas, satélites y anomalías con sus rutas de imagen. Las hojas de
+   `css/` se quedan fuera a propósito: una ruta reescrita a `img/…` desde
+   `css/` apuntaría un nivel más arriba de donde debe.
 
 Tarda unos 3-4 minutos (hay una pausa de 0,6 s entre descargas por cortesía con
 los servidores de Wikimedia).
@@ -103,7 +109,7 @@ anotando cada descarga nueva según la hace. Ese archivo es lo que hace posible
 
 ```bash
 # ninguna URL externa de imagen debería quedar
-grep -oE 'https://(commons\.wikimedia|upload\.wikimedia|images\.unsplash)[^"]*' index.html practica47.html | wc -l
+grep -oE 'https://(commons\.wikimedia|upload\.wikimedia|images\.unsplash)[^"]*' index.html practica47.html js/*.js | wc -l
 
 # y todas las rutas locales deben existir
 python3 herramientas/localizar-imagenes.py --listar | wc -l

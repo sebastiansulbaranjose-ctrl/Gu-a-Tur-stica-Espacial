@@ -198,11 +198,13 @@ def urls_descarga(url, cdn):
         entrada = cdn.get(nombre) or cdn.get(nombre.replace("_", " ")) or {}
         if entrada.get("thumb"):
             candidatas.append(entrada["thumb"])       # CDN redimensionado
-        if es_tiff(nombre):
+        if es_tiff(nombre) or es_svg(nombre):
             # Muchas fotos de ESO y la NASA solo están en Commons como TIFF, que
             # los navegadores no muestran. La miniatura del CDN sí llega en JPEG,
             # así que para estos archivos es la única fuente válida: bajar el
             # original o pasar por Special:FilePath daría un TIFF inservible.
+            # Con los SVG pasa lo mismo al revés: el original es XML válido,
+            # pero la miniatura ya viene rasterizada y es lo que se guarda.
             return candidatas
         if entrada.get("original"):
             candidatas.append(entrada["original"])    # CDN a tamaño completo
@@ -221,7 +223,17 @@ def es_tiff(nombre):
     return nombre.lower().endswith((".tif", ".tiff"))
 
 
+def es_svg(nombre):
+    return nombre.lower().endswith(".svg")
+
+
 def extension(url, nombre):
+    if es_svg(nombre):
+        # El CDN de Wikimedia rasteriza los SVG y entrega PNG. Guardarlo con el
+        # .svg del nombre original hacía que el servidor lo anunciara como
+        # image/svg+xml: el navegador intentaba interpretar bytes PNG como XML,
+        # fallaba, y la imagen no se veía nunca.
+        return ".png"
     if es_tiff(nombre):
         # De un TIFF de Commons solo se guarda su miniatura JPEG, así que el
         # archivo local debe llamarse .jpg. Con la extensión original, el
@@ -243,8 +255,8 @@ def nombre_local(url, usados):
         crudo = partes.path.split("/")[-1]
         crudo = urllib.parse.unquote(crudo)
         ext = extension(url, crudo)
-        if es_tiff(crudo):
-            # se guarda como .jpg, así que sobra el .tiff del nombre de Commons
+        if es_tiff(crudo) or es_svg(crudo):
+            # se guarda con otra extensión, así que sobra la del nombre original
             base = crudo.rsplit(".", 1)[0]
         else:
             base = crudo[: -len(ext)] if crudo.lower().endswith(ext) else crudo

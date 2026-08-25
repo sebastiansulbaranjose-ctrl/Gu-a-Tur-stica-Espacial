@@ -142,3 +142,4 @@ U.S._Department_of_Energy_-_Science_-_114_036_002_-14281232250.jpg  https://comm
 # tener URL, el modo --rehacer no puede regenerarla: el original está en el
 # historial de git junto a este commit.
 FullMoon2010.jpg                                            https://commons.wikimedia.org/wiki/Special:FilePath/FullMoon2010.jpg?width=1100
+Moon_nearside_LRO_color_mosaic.png                          https://commons.wikimedia.org/wiki/Special:FilePath/Moon_nearside_LRO_color_mosaic.png?width=1100

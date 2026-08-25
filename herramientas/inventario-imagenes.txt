@@ -142,3 +142,4 @@ U.S._Department_of_Energy_-_Science_-_114_036_002_-14281232250.jpg  https://comm
 # tener URL, el modo --rehacer no puede regenerarla: el original está en el
 # historial de git junto a este commit.
 FullMoon2010.jpg                                            https://commons.wikimedia.org/wiki/Special:FilePath/FullMoon2010.jpg?width=1100
+The_South_Side_of_Tycho_Crater_-LROC954_-_content_tycho_context.png  https://commons.wikimedia.org/wiki/Special:FilePath/The_South_Side_of_Tycho_Crater_(LROC954_-_content_tycho_context).png?width=1100

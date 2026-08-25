@@ -608,7 +608,7 @@
       {id:"lro",name:"Lunar Reconnaissance Orbiter (LRO)",orbit:"heo",type:"c",angle:225,duration:56,altitude:"≈ 384.400 km (órbita lunar)",velocity:"≈ 5.760 km/h (en torno a la Luna)",agency:"NASA",mission:"Cartografía y reconocimiento lunar",image:"img/Lunar_Reconnaissance_Orbiter_spacecraft_model_1.png",summary:"Sonda en órbita lunar que ha cartografiado la Luna con más detalle que ninguna otra misión, a solo 50 km de altitud sobre su superficie.",fact:"Ha detectado evidencia de hielo de agua en cráteres permanentemente sombreados cerca de los polos lunares.",
         gallery:[
           {src:"img/FullMoon2010.jpg",caption:"La cara visible de la Luna, el terreno que lleva más de una década midiendo"},
-          {src:"img/The_South_Side_of_Tycho_Crater_-LROC954_-_content_tycho_context.png",caption:"El cráter Tycho fotografiado por la propia cámara del LRO desde 50 km de altitud"}
+          {src:"https://commons.wikimedia.org/wiki/Special:FilePath/Moon_nearside_LRO_color_mosaic.png?width=1100",caption:"Mosaico en color de la cara visible, compuesto por el propio LRO: los tonos revelan la composición mineral del terreno"}
         ]}
     ];
     const satOrbitLabels={leo:"LEO // ÓRBITA BAJA",meo:"MEO // ÓRBITA MEDIA",geo:"GEO // ÓRBITA GEOESTACIONARIA",heo:"HEO // ESPACIO PROFUNDO"};

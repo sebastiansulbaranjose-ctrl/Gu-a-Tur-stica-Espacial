@@ -143,4 +143,3 @@ U.S._Department_of_Energy_-_Science_-_114_036_002_-14281232250.jpg  https://comm
 # historial de git junto a este commit.
 FullMoon2010.jpg                                            https://commons.wikimedia.org/wiki/Special:FilePath/FullMoon2010.jpg?width=1100
 Moon_nearside_LRO_color_mosaic.png                          https://commons.wikimedia.org/wiki/Special:FilePath/Moon_nearside_LRO_color_mosaic.png?width=1100
-2MASS_LSS_chart-NEW_Nasa_pt.jpg                             https://commons.wikimedia.org/wiki/Special:FilePath/2MASS_LSS_chart-NEW_Nasa_pt.jpg?width=1200

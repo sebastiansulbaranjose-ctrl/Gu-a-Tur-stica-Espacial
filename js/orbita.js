@@ -602,14 +602,13 @@
       {id:"meteosat11",name:"Meteosat-11",orbit:"geo",type:"c",angle:270,duration:40,altitude:"≈ 35.786 km",velocity:"≈ 11.070 km/h",agency:"EUMETSAT · ESA",mission:"Clima",image:"img/Meteosat_Third_Generation_ESA418057.jpg",summary:"Satélite meteorológico geoestacionario europeo que fotografía el hemisferio boreal cada 15 minutos para pronósticos del clima.",fact:"Forma parte del programa Meteosat de EUMETSAT, en operación continua desde 1977 sin interrupciones en la cobertura."},
       {id:"jwst",name:"Telescopio Espacial James Webb (JWST)",orbit:"heo",type:"a",angle:45,duration:60,altitude:"≈ 1.500.000 km (punto de Lagrange L2)",velocity:"≈ 3.700 km/h (órbita halo)",agency:"NASA · ESA · CSA",mission:"Investigación científica",image:"img/JWST_spacecraft_model_1.png",summary:"El observatorio infrarrojo más grande jamás construido, ubicado en el punto de Lagrange L2 para observar el universo primitivo.",fact:"Su espejo principal segmentado mide 6,5 metros de diámetro: el más grande jamás lanzado al espacio.",
         gallery:[
-          {src:"img/JWST_spacecraft_model_1.png",caption:"El observatorio con su espejo segmentado y el parasol desplegados"},
           {src:"img/Webb-s_First_Deep_Field_-adjusted.jpg",caption:"Su primer campo profundo: miles de galaxias en un fragmento diminuto de cielo"},
           {src:"img/STScI-Uranus-NIRCam.png",caption:"Urano y sus anillos captados por su cámara infrarroja NIRCam"}
         ]},
       {id:"lro",name:"Lunar Reconnaissance Orbiter (LRO)",orbit:"heo",type:"c",angle:225,duration:56,altitude:"≈ 384.400 km (órbita lunar)",velocity:"≈ 5.760 km/h (en torno a la Luna)",agency:"NASA",mission:"Cartografía y reconocimiento lunar",image:"img/Lunar_Reconnaissance_Orbiter_spacecraft_model_1.png",summary:"Sonda en órbita lunar que ha cartografiado la Luna con más detalle que ninguna otra misión, a solo 50 km de altitud sobre su superficie.",fact:"Ha detectado evidencia de hielo de agua en cráteres permanentemente sombreados cerca de los polos lunares.",
         gallery:[
-          {src:"img/Lunar_Reconnaissance_Orbiter_spacecraft_model_1.png",caption:"La sonda que cartografía la Luna sin interrupción desde 2009"},
-          {src:"img/FullMoon2010.jpg",caption:"La cara visible de la Luna, el terreno que lleva más de una década midiendo"}
+          {src:"img/FullMoon2010.jpg",caption:"La cara visible de la Luna, el terreno que lleva más de una década midiendo"},
+          {src:"https://commons.wikimedia.org/wiki/Special:FilePath/The_South_Side_of_Tycho_Crater_(LROC954_-_content_tycho_context).png?width=1100",caption:"El cráter Tycho fotografiado por la propia cámara del LRO desde 50 km de altitud"}
         ]}
     ];
     const satOrbitLabels={leo:"LEO // ÓRBITA BAJA",meo:"MEO // ÓRBITA MEDIA",geo:"GEO // ÓRBITA GEOESTACIONARIA",heo:"HEO // ESPACIO PROFUNDO"};

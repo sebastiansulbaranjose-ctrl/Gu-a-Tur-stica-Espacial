@@ -1,4 +1,4 @@
-Imágenes externas distintas: 138
+Imágenes externas distintas: 121
 
 photo-1462331940025-496dfbfc7564.jpg                        https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&amp;fit=crop&amp;w=1400&amp;q=85
 photo-1419242902214-272b3f66ee7a.jpg                        https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?auto=format&amp;fit=crop&amp;w=1400&amp;q=85
@@ -67,7 +67,6 @@ Eso1733s_Artist-s_impression_of_merging_neutron_stars.jpg   https://commons.wiki
 GW170817_Gravitational_Wave_Chirp_Spectrogram.jpg           https://commons.wikimedia.org/wiki/Special:FilePath/GW170817_Gravitational_Wave_Chirp_Spectrogram.jpg?width=1200
 GravitationalWave_CrossPolarization.gif                     https://commons.wikimedia.org/wiki/Special:FilePath/GravitationalWave_CrossPolarization.gif?width=1200
 Boovoid.png                                                 https://commons.wikimedia.org/wiki/Special:FilePath/Boovoid.png?width=1200
-Bo-tes_Void.gif                                             https://commons.wikimedia.org/wiki/Special:FilePath/Bo%C3%B6tes_Void.gif?width=1200
 White_hole_artistic_recreation-bpk.jpg                      https://commons.wikimedia.org/wiki/Special:FilePath/White_hole_artistic_recreation-bpk.jpg?width=1200
 Lorentzian_Wormhole.png                                     https://commons.wikimedia.org/wiki/Special:FilePath/Lorentzian_Wormhole.svg?width=1200
 Bullet_cluster.jpg                                          https://commons.wikimedia.org/wiki/Special:FilePath/Bullet_cluster.jpg?width=1200
@@ -91,12 +90,9 @@ Inmarsat-3_crop.jpg                                         https://commons.wiki
 Meteosat_Third_Generation_ESA418057.jpg                     https://commons.wikimedia.org/wiki/Special:FilePath/Meteosat_Third_Generation_ESA418057.jpg?width=700
 JWST_spacecraft_model_1.png                                 https://commons.wikimedia.org/wiki/Special:FilePath/JWST_spacecraft_model_1.png?width=700
 Lunar_Reconnaissance_Orbiter_spacecraft_model_1.png         https://commons.wikimedia.org/wiki/Special:FilePath/Lunar_Reconnaissance_Orbiter_spacecraft_model_1.png?width=700
-Communications_satellite_with_TEMPO_spacecraft_model-2.png  https://commons.wikimedia.org/wiki/Special:FilePath/Communications_satellite_with_TEMPO_spacecraft_model.png?width=900
 ISS_spacecraft_model_1.png                                  https://commons.wikimedia.org/wiki/Special:FilePath/ISS_spacecraft_model_1.png?width=900
 Hubble_Space_Telescope_spacecraft_model.png                 https://commons.wikimedia.org/wiki/Special:FilePath/Hubble_Space_Telescope_spacecraft_model.png?width=900
-Landsat_9_spacecraft_model_1-2.png                          https://commons.wikimedia.org/wiki/Special:FilePath/Landsat_9_spacecraft_model_1.png?width=900
 PIA19562-Ceres-DwarfPlanet-Dawn-RC3-image19-20150506.jpg    https://commons.wikimedia.org/wiki/Special:FilePath/PIA19562-Ceres-DwarfPlanet-Dawn-RC3-image19-20150506.jpg?width=900
-Pluto_in_True_Color_-_High-Res-2.jpg                        https://commons.wikimedia.org/wiki/Special:FilePath/Pluto_in_True_Color_-_High-Res.jpg?width=900
 The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA-s_Solar_Dynamics_Observatory_-_2010081.jpg  https://commons.wikimedia.org/wiki/Special:FilePath/The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.jpg?width=900
 Sirius_A_and_B_Hubble_photo.jpg                             https://commons.wikimedia.org/wiki/Special:FilePath/Sirius_A_and_B_Hubble_photo.jpg?width=900
 Pollux-Star.jpg                                             https://commons.wikimedia.org/wiki/Special:FilePath/Pollux-Star.jpg?width=900
@@ -110,29 +106,15 @@ Andromeda_Galaxy_M31_-_Heic1502a_Full_resolution.jpg        https://commons.wiki
 IC_1101.jpg                                                 https://commons.wikimedia.org/wiki/Special:FilePath/IC_1101.jpg?width=900
 Local_Group_and_nearest_galaxies.jpg                        https://commons.wikimedia.org/wiki/Special:FilePath/Local_Group_and_nearest_galaxies.jpg?width=900
 Observable_Universe_logarithmic_illustration_-circular_layout_english_annotations.png  https://commons.wikimedia.org/wiki/Special:FilePath/Observable_Universe_logarithmic_illustration_(circular_layout_english_annotations).png?width=900
-Observable_Universe_logarithmic_illustration_-circular_layout_english_annotations-2.png  https://commons.wikimedia.org/wiki/Special:FilePath/Observable_Universe_logarithmic_illustration_(circular_layout_english_annotations).png?width=1200
 photo-1462331940025-496dfbfc7564-2.jpg                      https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=85
-Orion_Nebula_-_Hubble_2006_mosaic_edit-2.jpg                https://commons.wikimedia.org/wiki/Special:FilePath/Orion_Nebula_-_Hubble_2006_mosaic_edit.jpg?width=1200
 WMAP_image_of_the_CMB_anisotropy.jpg                        https://commons.wikimedia.org/wiki/Special:FilePath/WMAP_image_of_the_CMB_anisotropy.jpg?width=1200
-Boovoid-2.png                                               https://commons.wikimedia.org/wiki/Special:FilePath/Boovoid.png?width=1100
-Image_of_Betelgeuse-s_surface_taken_in_January_2020_-eso2109d-2.jpg  https://commons.wikimedia.org/wiki/Special:FilePath/Image_of_Betelgeuse%E2%80%99s_surface_taken_in_January_2020_(eso2109d).jpg?width=1100
 Webb-s_First_Deep_Field_-adjusted.jpg                       https://commons.wikimedia.org/wiki/Special:FilePath/Webb%27s_First_Deep_Field_(adjusted).jpg?width=1200
-Black_hole_-_Messier_87-2.jpg                               https://commons.wikimedia.org/wiki/Special:FilePath/Black_hole_-_Messier_87.jpg?width=1100
 HL_Tau_protoplanetary_disk.jpg                              https://commons.wikimedia.org/wiki/Special:FilePath/HL_Tau_protoplanetary_disk.jpg?width=1100
-The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA-s_Solar_Dynamics_Observatory_-_2010081-2.jpg  https://commons.wikimedia.org/wiki/Special:FilePath/The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.jpg?width=1200
-OSIRIS_Mars_true_color-2.jpg                                https://commons.wikimedia.org/wiki/Special:FilePath/OSIRIS_Mars_true_color.jpg?width=1100
-Jupiter_and_its_shrunken_Great_Red_Spot-2.jpg               https://commons.wikimedia.org/wiki/Special:FilePath/Jupiter_and_its_shrunken_Great_Red_Spot.jpg?width=1100
-Callisto-2.jpg                                              https://commons.wikimedia.org/wiki/Special:FilePath/Callisto.jpg?width=1100
-Top_of_Atmosphere-2.jpg                                     https://commons.wikimedia.org/wiki/Special:FilePath/Top_of_Atmosphere.jpg?width=1200
 Stromatolite_-Strelley_Pool_Formation-_Paleoarchean-_3.35-3.46_Ga.jpg  https://commons.wikimedia.org/wiki/Special:FilePath/Stromatolite_(Strelley_Pool_Formation,_Paleoarchean,_3.35-3.46_Ga;_East_Strelley_Greenstone_Belt,_Pilbara_Craton,_Western_Australia)_1_(17346619166).jpg?width=1100
 Banded_iron_formation.jpg                                   https://commons.wikimedia.org/wiki/Special:FilePath/Banded_iron_formation.jpg?width=1100
 20191203_Anomalocaris_canadensis.png                        https://commons.wikimedia.org/wiki/Special:FilePath/20191203_Anomalocaris_canadensis.png?width=1100
-Andromeda_Galaxy_M31_-_Heic1502a_Full_resolution-2.jpg      https://commons.wikimedia.org/wiki/Special:FilePath/Andromeda_Galaxy_M31_-_Heic1502a_Full_resolution.jpg?width=1200
 photo-1446776811953-b23d57bd21aa-2.jpg                      https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=85
-The_Earth_seen_from_Apollo_17-2.jpg                         https://commons.wikimedia.org/wiki/Special:FilePath/The_Earth_seen_from_Apollo_17.jpg?width=1200
-International_Space_Station-2.jpg                           https://commons.wikimedia.org/wiki/Special:FilePath/International_Space_Station.jpg?width=1100
 Artist-s_impression_of_the_Milky_Way_-eso1339g.jpg          https://commons.wikimedia.org/wiki/Special:FilePath/Artist%27s_impression_of_the_Milky_Way_(eso1339g).tiff?width=900
-Artist-s_impression_of_the_Milky_Way_-eso1339g-2.jpg        https://commons.wikimedia.org/wiki/Special:FilePath/Artist%27s_impression_of_the_Milky_Way_(eso1339g).tiff?width=1200
 07-Laniakea_-LofE07240.png                                  https://commons.wikimedia.org/wiki/Special:FilePath/07-Laniakea_(LofE07240).png?width=900
 U.S._Department_of_Energy_-_Science_-_114_036_002_-14281232250.jpg  https://commons.wikimedia.org/wiki/Special:FilePath/U.S._Department_of_Energy_-_Science_-_114_036_002_(14281232250).jpg?width=1200
 
